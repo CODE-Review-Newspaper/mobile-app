@@ -8,6 +8,8 @@ import Logo from '../assets/images/codeReviewLogo.svg';
 
 import Floorplan from '../assets/images/floorplan/base.svg';
 
+import ReactNativeZoomableView from '@dudigital/react-native-zoomable-view/src/ReactNativeZoomableView';
+
 import Rooms from "../components/Rooms"
 
 import Slider from '@react-native-community/slider';
@@ -16,9 +18,21 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
 
   const [text, setText] = useState("not clicked")
 
-  return (
-    <ScrollView contentContainerStyle={styles.container}>
+  const [value, setValue] = useState(0)
 
+  return (
+    // <ScrollView contentContainerStyle={styles.container}>
+
+    <ReactNativeZoomableView
+      zoomEnabled={true}
+      maxZoom={1.5}
+      minZoom={0.5}
+      zoomStep={0.25}
+      initialZoom={0.9}
+      bindToBorders={true}
+      // onZoomAfter={this.logOutZoomState}
+      style={styles.container}
+    >
 
       {/* <View style={styles.header}>
 
@@ -29,11 +43,12 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
       {/* <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" /> */}
       <Text style={{ color: "#222" }}>{text}</Text>
       <Slider
-        style={{ width: 200, height: 40, backgroundColor: "yellow" }}
+        style={{ width: 200, height: 40 }}
         minimumValue={0}
         maximumValue={1}
         minimumTrackTintColor="#ff6961"
         maximumTrackTintColor="white"
+        onValueChange={e => setValue(e)}
       />
       <View style={styles.dings}>
 
@@ -49,13 +64,14 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
           width="100%"
           height="100%"
           style={styles.floorplan}
-          fill={["red", "yellow", "green"][Math.floor(Math.random() * 3)]}
+          fill={["#68c13a", "#e5a23c", "#f66b6e", "#efefef"][Math.floor(Math.random() * 4)]}
           onPress={() => setText("clicked " + i.name)
           }
         />)}
 
       </View>
-    </ScrollView>
+      {/* </ScrollView> */}
+    </ReactNativeZoomableView>
   );
 }
 
@@ -65,7 +81,7 @@ const styles = StyleSheet.create({
     width: "150%",
     height: "100%",
     transform: [{ rotate: "-90deg" }],
-    backgroundColor: "red",
+    backgroundColor: "transparent",
   },
   sache: {
     color: "#222",
@@ -88,6 +104,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: "#222",
   },
   title: {
     fontSize: 20,

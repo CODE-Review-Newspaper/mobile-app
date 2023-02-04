@@ -12,6 +12,7 @@
     "preset": "jest-expo"
   },
   "dependencies": {
+    "@dudigital/react-native-zoomable-view": "^1.1.4",
     "@expo/vector-icons": "^13.0.0",
     "@react-native-community/slider": "^4.4.2",
     "@react-navigation/bottom-tabs": "^6.0.5",
