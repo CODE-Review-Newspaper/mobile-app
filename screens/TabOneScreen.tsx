@@ -1,6 +1,8 @@
 import * as React from "react"
 import * as WebBroswer from "expo-web-browser"
 import * as Google from "expo-auth-session/providers/google"
+import {config} from "dotenv"
+
 
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
@@ -9,14 +11,15 @@ import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
 
 WebBroswer.maybeCompleteAuthSession()
+config()
 
 export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
     const [accessToken, setAccessToken] = React.useState(null)
     const [user, setUser] = React.useState(null)
     const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
-        clientId: "614417646190-dbl1mao4r8bcjmam2cmcgtfo4c35ho1h.apps.googleusercontent.com",
-        iosClientId: "614417646190-vcu5a3ini5nnr0elfaqt8fprs358mp2i.apps.googleusercontent.com",
-        androidClientId: "614417646190-hhupm8k97a22rvv2gfdcoqi1gus8qunq.apps.googleusercontent.com"
+        clientId: process.env.CLIENT_ID,
+        iosClientId: process.env.IOS_CLIENT_ID,
+        androidClientId: process.env.ANDROID_CLIENT
     })
      
     React.useEffect(() => {

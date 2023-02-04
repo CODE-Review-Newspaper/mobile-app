@@ -16,3 +16,5 @@ ios
 index.js
 metro.config.js
 android
+
+.env
