@@ -80,5 +80,5 @@ export default function bookRoomsController() {
         return true
     }
 
-    return [compareTimeFrames, createNewEvent] as const;
+    return [compareTimeFrames, createNewEvent, checkRoomAvailability] as const;
 }

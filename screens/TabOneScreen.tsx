@@ -10,12 +10,14 @@ import userLoginController from "../controller/userLogin.controller";
 import {useEffect} from "react";
 import bookRoomsController from "../controller/booking.controller";
 import { busyRoomMock, eventMock, timeFrames, timeend, timestart } from "../mock.data";
+import allRoomsController from "../controller/allRooms.controller";
 
 WebBrowser.maybeCompleteAuthSession()
 
 export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
     const [user, signIn, isLoggedIn, stupid, signOut] = userLoginController()
     const [compareTimeFrames, createNewEvent] = bookRoomsController()
+    const [getBusyTimeOfRooms] = allRoomsController()
 
     const ShowUserInfo = () => {
         if (user) {
@@ -70,6 +72,15 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
                     }}
                 >
                     <Text>Ich wenn ich den logaus durchführen werde</Text>
+                </TouchableOpacity>
+            }
+            {user &&
+                <TouchableOpacity
+                    onPress={async () => {
+                        await getBusyTimeOfRooms()
+                    }}
+                >
+                    <Text>DingsListe</Text>
                 </TouchableOpacity>
             }
         </View>

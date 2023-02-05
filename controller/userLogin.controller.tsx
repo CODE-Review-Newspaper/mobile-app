@@ -79,9 +79,16 @@ export default function userLoginController() {
 
         if ((authState.shouldRefresh())) {
             console.log("refreshing")
-            const refresh = await authState.refreshAsync({
-                clientId: "614417646190-dbl1mao4r8bcjmam2cmcgtfo4c35ho1h.apps.googleusercontent.com"
-            }, Google.discovery);
+            const refresh = await authState.refreshAsync(
+                {
+                    clientId: "614417646190-dbl1mao4r8bcjmam2cmcgtfo4c35ho1h.apps.googleusercontent.com",
+                    clientSecret: "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"
+                }, Google.discovery);
+                // const refresh = await AuthSession.refreshAsync({
+                //     clientId: "614417646190-dbl1mao4r8bcjmam2cmcgtfo4c35ho1h.apps.googleusercontent.com",
+                //     clientSecret: "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",
+
+                // }, Google.discovery)
 
             if (refresh.accessToken === undefined) {
                 return false;
