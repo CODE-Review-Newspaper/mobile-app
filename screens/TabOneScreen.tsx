@@ -8,11 +8,14 @@ import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
 import userLoginController from "../controller/userLogin.controller";
 import {useEffect} from "react";
+import bookRoomsController from "../controller/booking.controller";
+import { busyRoomMock, eventMock, timeFrames, timeend, timestart } from "../mock.data";
 
 WebBrowser.maybeCompleteAuthSession()
 
 export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
     const [user, signIn, isLoggedIn] = userLoginController()
+    const [compareTimeFrames, createNewEvent] = bookRoomsController()
 
     const ShowUserInfo = () => {
         if (user) {
@@ -40,6 +43,25 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
                     }}
                 >
                     <Text>Nacken</Text>
+                </TouchableOpacity>
+            }
+            {user &&
+                <TouchableOpacity
+                    onPress={async () => {
+                        compareTimeFrames(timeFrames, timestart, timeend)
+                    }}
+                >
+                    <Text>Nacken</Text>
+                </TouchableOpacity>
+            }
+            {user &&
+                <TouchableOpacity
+                    onPress={async () => {
+                        console.log("GENIAL!")
+                        console.log("KLASSE!")
+                    }}
+                >
+                    <Text>NUR WENN NACKEN</Text>
                 </TouchableOpacity>
             }
         </View>

@@ -2,25 +2,14 @@ import * as React from "react"
 import * as WebBrowser from "expo-web-browser"
 import * as Google from "expo-auth-session/providers/google"
 import * as AuthSession from 'expo-auth-session';
-import {fetchData} from "./wrapper";
+import { fetchData } from "./wrapper";
+import { User } from "../dings.types";
+import bookRoomsController from "./booking.controller";
+import { busyRoomMock, eventMock } from "../mock.data";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {TokenResponse, TokenResponseConfig} from "expo-auth-session";
 
 WebBrowser.maybeCompleteAuthSession()
-
-
-interface User {
-    id: string
-    email: string
-    verified_email: boolean,
-    name: string
-    given_name: string
-    family_name: string
-    picture: string // url
-    locale: string // en, de
-    hd: string // code.berlin
-
-}
 
 export default function userLoginController() {
 
@@ -63,6 +52,8 @@ export default function userLoginController() {
         await AsyncStorage.setItem('@authState', jsonValue)
     }
 
+    const [compareTimeFrames, createNewEvent] = bookRoomsController()
+
     async function ensureAuth() {
         const authState = await getAuthState();
 
@@ -100,6 +91,10 @@ export default function userLoginController() {
         setUser(userInfo)
     }
 
-    return [user, signIn, isLoggedIn, getAuthState] as const
+    async function callCreateEvent(){
+        createNewEvent(eventMock, busyRoomMock, await getAuthState())
+    }
+
+    return [user, signIn, isLoggedIn, getAuthState, callCreateEvent] as const
 
 }
