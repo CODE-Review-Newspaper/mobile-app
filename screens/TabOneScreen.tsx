@@ -10,6 +10,8 @@ import { RootTabScreenProps } from '../types';
 
 WebBroswer.maybeCompleteAuthSession()
 
+type url = string
+
 export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
     const [authState, setAuthState] = React.useState<AuthSession.TokenResponse | null>(null)
     const [user, setUser] = React.useState(null)
@@ -17,7 +19,7 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
         clientId: "614417646190-dbl1mao4r8bcjmam2cmcgtfo4c35ho1h.apps.googleusercontent.com",
         iosClientId: "614417646190-vcu5a3ini5nnr0elfaqt8fprs358mp2i.apps.googleusercontent.com",
         androidClientId: "614417646190-hhupm8k97a22rvv2gfdcoqi1gus8qunq.apps.googleusercontent.com",
-        scopes: ["https://www.googleapis.com/auth/calendar"]
+        scopes: ["https://www.googleapis.com/auth/calendar", "https://apps-apis.google.com/a/feeds/calendar/resource/"]
     })
 
     async function ensureAuth() {
@@ -40,33 +42,43 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
         }
     }, [response])
 
+    async function fetchData(urlToFetchFrom: url, headerAuth: any = null) {
+        await ensureAuth()
+        try {
+            let response;
+
+            if (headerAuth != null)
+                response = await fetch(urlToFetchFrom, {
+                    headers: {
+                        Authorization: `Bearer ${headerAuth}`
+                    }
+                })
+            else
+                response = await fetch(urlToFetchFrom)
+
+            return [null, response] as const
+        } catch (error) {
+            return [error, null] as const
+        }
+    }
+
     async function fetchUserInfo() {
         console.log("at1", authState?.accessToken)
-        await ensureAuth()
         console.log("at2", authState?.accessToken);
-        let response = await fetch("https://www.googleapis.com/userinfo/v2/me", {
-            headers: {
-                Authorization: `Bearer ${authState?.accessToken}`
-            }
-        }).catch((error) => {
-            console.log(authState?.accessToken)
-            console.log(error)
-        })
-        //console.log("JANNES SACK\n\n\n", await response.json())
 
-        let response2 = await fetch("https://www.googleapis.com/calendar/v3/users/me/calendarList", {
-            headers: {
-                Authorization: `Bearer ${authState?.accessToken}`
-            }
-        }).catch((error) => {
-            console.log(authState?.accessToken)
-            console.log(error)
-        })
-        const userInfo = await response.json();
+        const [errorUserData, responseUserData] = await fetchData("https://www.googleapis.com/userinfo/v2/me", authState?.accessToken)
+        const userInfo = await responseUserData!.json();
         console.log("usersache", JSON.stringify(userInfo))
-        console.log("calandAR", JSON.stringify(await response2.json()))
-
         setUser(userInfo)
+
+        const [errorCalender, responseCalender] = await fetchData("https://www.googleapis.com/calendar/v3/users/me/calendarList", authState?.accessToken)
+        const calenderInfo = await responseCalender!.json()
+        console.log("calandERRRR", JSON.stringify(calenderInfo))
+
+        const [errorCalResource, responseCalResource] = await fetchData(`https://admin.googleapis.com/admin/directory/v1/customer/my_customer/resources/calendars/`, authState?.accessToken)
+        const calResource = await responseCalResource!.json()
+        console.log("RESORUCE", JSON.stringify(calResource))
+
     }
 
     const ShowUserInfo = () => {
@@ -78,10 +90,8 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
                 </View>
             )
         }
-
         return null
     }
-
 
     return (
         <View>
