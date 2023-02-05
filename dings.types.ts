@@ -14,7 +14,7 @@ export interface CreateEventRequest {
 
 export interface Time{
     dateTime: Date,
-    timezone: string
+    timeZone: string
 }
 
 export interface Attendee {
@@ -24,8 +24,8 @@ export interface Attendee {
 
 export interface CheckBusyRoomRequest {
     items: ItemID[]
-    timeMin: string
-    timeMax: string
+    timeMin: Date
+    timeMax: Date
 }
 
 export interface ItemID {

@@ -4,18 +4,19 @@ import {url} from "../dings.types"
 import {fetchData} from "./wrapper"
 
 export default function bookRoomsController() {
+    
 
     async function createNewEvent(eventBody: CreateEventRequest, roomBusyBody: CheckBusyRoomRequest) {
         const url: url = "https://www.googleapis.com/calendar/v3/calendars/primary/events"
 
-        const data: CreateEventRequest = eventBody || {
+        const data: CreateEventRequest =  {
             'summary': 'TestDingsd',
             'start': {
-                'dateTime': '2023-02-10T14:00:00',
+                'dateTime': new Date('2023-02-10T14:00:00'),
                 'timeZone': 'Europe/Zurich'
             },
             'end': {
-                'dateTime': '2023-02-10T16:00:00',
+                'dateTime': new Date('2023-02-10T16:00:00'),
                 'timeZone': 'Europe/Zurich'
             },
             'attendees': [
@@ -29,8 +30,8 @@ export default function bookRoomsController() {
                     "id": "code.berlin_1883j5g4liq5ihuehfm64pgo3o66g@resource.calendar.google.com"
                 }
             ],
-            "timeMin": "2023-02-10T00:00:00+01:00",
-            "timeMax": "2023-02-10T23:00:00+01:00"
+            "timeMin": new Date("2023-02-10T00:00:00+01:00"),
+            "timeMax": new Date("2023-02-10T23:00:00+01:00")
         }
 
         const [errorRooms, roomTimes] = await checkRoomAvailability(roomBusyBody || testobj)
@@ -38,8 +39,8 @@ export default function bookRoomsController() {
         if (errorRooms != null)
             return [errorRooms, null] as const
 
-        const eventStart = data.start
-        const eventEnd = data.end
+        const eventStart = eventBody.start || data.start
+        const eventEnd = eventBody.end || data.end
 
         const confirmation = compareTimeFrames(roomTimes, eventStart, eventEnd)
 
