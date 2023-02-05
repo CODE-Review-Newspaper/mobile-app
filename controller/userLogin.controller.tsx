@@ -72,9 +72,11 @@ export default function userLoginController() {
             await AsyncStorage.removeItem('@authState')
             setIsSignedIn(false)
         } else {
-            setIsSignedIn(true)
+
             const jsonValue = JSON.stringify(authState.getRequestConfig())
             await AsyncStorage.setItem('@authState', jsonValue)
+
+            setIsSignedIn(true)
         }
     }
 
@@ -116,8 +118,10 @@ export default function userLoginController() {
 
     React.useEffect(() => {
         if (response?.type === "success") {
-            setIsSignedIn(true)
-            setAuthState(response.authentication)
+
+            setAuthState(response.authentication).then(() => setIsSignedIn(true))
+
+
         }
     }, [response])
 
