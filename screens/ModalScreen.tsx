@@ -1,15 +1,14 @@
 import Slider from '@react-native-community/slider';
 import { StatusBar } from 'expo-status-bar';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect } from 'react';
 import { Platform, Pressable, StyleSheet, TextInput } from 'react-native';
 
-import EditScreenInfo from '../components/EditScreenInfo';
 import { Text, View } from '../components/Themed';
 import CalendarContext from '../contexts/calendar.context';
 
 export default function ModalScreen() {
 
-  const { selectedRoomId, selectedDate, endDate, setEndDate } = useContext(CalendarContext)
+  const { selectedRoom, selectedDate, endDate, setEndDate, createEvent } = useContext(CalendarContext)
 
   const DEFAULT_DURATION_MINS = 60
   const MIN_DURATION_MINS = 15
@@ -21,17 +20,40 @@ export default function ModalScreen() {
 
   // await createNewEvent(eventMock, busyRoomMock)
 
+  async function submit() {
+
+    await createEvent({
+      start: {
+        dateTime: selectedDate.toDate(),
+        timeZone: "Europe/Berlin",
+      },
+      end: {
+        dateTime: endDate.toDate(),
+        timeZone: "Europe/Berlin",
+      },
+      attendees: [
+        { email: selectedRoom!.id },
+      ],
+    }, {
+      items: [{
+        id: selectedRoom!.id,
+      }],
+      timeMin: selectedDate.toDate(),
+      timeMax: endDate.toDate(),
+    })
+  }
+
   return (
     <View style={styles.container}>
 
       <TextInput
-        defaultValue={"Working session in " + selectedRoomId}
+        defaultValue={"Working session in " + selectedRoom!.displayName}
         placeholder="Meeting title"
         multiline
         style={styles.titleInput}
       />
 
-      <Text style={styles.text}>[4.11.10] {selectedRoomId}</Text>
+      <Text style={styles.text}>[{selectedRoom!.factoryRoomNumber}] {selectedRoom!.displayName}</Text>
 
       <Text style={styles.text}>{selectedDate.format("H:mma")} - {endDate.format("H:mma")}</Text>
 

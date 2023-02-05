@@ -2,7 +2,7 @@ import { rooms } from "../data/rooms.data"
 import { BusyRooms, CheckBusyRoomRequest } from "../types/dings.types"
 import bookRoomsController from "./booking.controller"
 
-export interface Rooms {
+export interface Room {
     id: string
     displayName?: string
     factoryRoomNumber?: number

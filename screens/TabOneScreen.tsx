@@ -19,7 +19,7 @@ import dayjs from "dayjs"
 
 export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
 
-    const { setSelectedRoomId, startDate, selectedDate, setSelectedDate, roomSchedules } = useContext(CalendarContext)
+    const { setSelectedRoom, startDate, selectedDate, setSelectedDate, roomSchedules } = useContext(CalendarContext)
 
     return (
         <>
@@ -70,8 +70,6 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
 
                         const scheduleInfo = roomSchedules[i.name]
 
-                        if (scheduleInfo != null) console.log(i.name + " found")
-
                         // @ts-ignore
                         const isUnavailable = scheduleInfo?.busyTimes?.some(i => {
 
@@ -99,7 +97,16 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
                             style={styles.floorplan}
                             fill={color}
                             // @ts-ignore
-                            onPress={() => { setSelectedRoomId(i.name); navigation.navigate('Modal') }
+                            onPress={() => {
+
+                                if (scheduleInfo == null) return
+
+                                console.log("setting selected room to:", scheduleInfo)
+
+                                setSelectedRoom(scheduleInfo);
+
+                                navigation.navigate('Modal')
+                            }
                             }
                         />
                     })}

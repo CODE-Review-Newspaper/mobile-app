@@ -1,10 +1,11 @@
 import { createContext } from "react";
 import dayjs from "dayjs"
 import { CheckBusyRoomRequest, CreateEventRequest } from "../types/dings.types";
+import { Room } from "../controller/allRooms.controller";
 
 interface CalendarContextType {
-    selectedRoomId: null | string
-    setSelectedRoomId: (id: string) => unknown
+    selectedRoom: Room | null,
+    setSelectedRoom: (room: Room | null) => unknown
 
     selectedDate: dayjs.Dayjs
     setSelectedDate: (date: dayjs.Dayjs) => unknown

@@ -1,7 +1,7 @@
-import { Rooms } from "../controller/allRooms.controller";
+import { Room } from "../controller/allRooms.controller";
 
 
-export const rooms: Record<string, Rooms> = {
+export const rooms: Record<string, Room> = {
     'Ada': {
         isBookable: true,
         id: 'code.berlin_188ff8i403g5ajughddn43j69rl166gb6oo38e9g74s3gchp60@resource.calendar.google.com'

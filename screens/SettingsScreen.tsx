@@ -8,6 +8,8 @@ export default function SettingsScreen() {
 
     const { signOut } = useContext(UserContext)
 
+    const { user } = useContext(UserContext)
+
     return (
         <View style={styles.container}>
             <Text style={styles.title}>
@@ -15,11 +17,11 @@ export default function SettingsScreen() {
                     Signed in as{" "}
                 </Text>
                 <Text style={{ color: "#FF6961", fontWeight: "900" }}>
-                    Linus Bolls
+                    {user?.name ?? "Unknown"}
                 </Text>
             </Text>
             <Text style={styles.text}>
-                Student
+                {user?.hd === "code.berlin" ? "Student" : "External"}
             </Text>
             <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
 

@@ -28,7 +28,7 @@ import LinkingConfiguration from './LinkingConfiguration';
 import CalendarContext from '../contexts/calendar.context';
 import userLoginController from "../controller/userLogin.controller";
 import bookRoomsController from "../controller/booking.controller";
-import allRoomsController from "../controller/allRooms.controller";
+import allRoomsController, { Room } from "../controller/allRooms.controller";
 import UserContext from "../contexts/user.context";
 
 interface User {
@@ -147,7 +147,7 @@ function RootNavigator() {
     return date.set("minutes", roundedMinutes)
   }
 
-  const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null)
+  const [selectedRoom, setSelectedRoom] = useState<Room | null>(null)
   const [startDate, setStartDate] = useState<dayjs.Dayjs>(roundDownToNearestQuarterHour(dayjs()))
   const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs>(startDate)
   const [endDate, setEndDate] = useState<dayjs.Dayjs>(selectedDate.add(6, "hours"))
@@ -167,8 +167,8 @@ function RootNavigator() {
   return (
     <UserContext.Provider value={userContextValue}>
       <CalendarContext.Provider value={{
-        selectedRoomId,
-        setSelectedRoomId,
+        selectedRoom,
+        setSelectedRoom,
         startDate,
         setStartDate,
         endDate,
