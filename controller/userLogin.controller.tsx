@@ -5,7 +5,7 @@ import * as AuthSession from 'expo-auth-session';
 import {fetchData} from "./wrapper";
 import {User} from "../types/dings.types";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {TokenResponse, TokenResponseConfig} from "expo-auth-session";
+import {TokenError, TokenResponse, TokenResponseConfig} from "expo-auth-session";
 
 WebBrowser.maybeCompleteAuthSession()
 
@@ -79,22 +79,28 @@ export default function userLoginController() {
 
         if ((authState.shouldRefresh())) {
             console.log("refreshing")
-            const refresh = await authState.refreshAsync(
-                {
+            try {
+                const refresh = await authState.refreshAsync({
                     clientId: "614417646190-dbl1mao4r8bcjmam2cmcgtfo4c35ho1h.apps.googleusercontent.com",
                     clientSecret: "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"
                 }, Google.discovery);
-                // const refresh = await AuthSession.refreshAsync({
-                //     clientId: "614417646190-dbl1mao4r8bcjmam2cmcgtfo4c35ho1h.apps.googleusercontent.com",
-                //     clientSecret: "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",
 
-                // }, Google.discovery)
+                if (refresh.accessToken === undefined) {
+                    return false;
+                }
 
-            if (refresh.accessToken === undefined) {
-                return false;
+                await setAuthState(refresh)
+            } catch (e) {
+                if (e instanceof TokenError) {
+                    if (e.code === 'invalid_grant') {
+                        console.log("invalid grant, prompting for new grant")
+
+                        await setAuthState(null)
+                        await signIn()
+                    }
+                }
+                console.log(JSON.stringify(e, null, 2))
             }
-
-            await setAuthState(refresh)
         }
 
         return true
