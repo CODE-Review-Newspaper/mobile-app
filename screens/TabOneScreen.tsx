@@ -9,7 +9,7 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
 import { BusyRooms, CheckBusyRoomRequest, CreateEventRequest, Time, TimeFrame, url } from "../dings.types";
-import userLoginController from "../conotrller/userLogin.controller";
+import userLoginController from "../controller/userLogin.controller";
 
 WebBrowser.maybeCompleteAuthSession()
 

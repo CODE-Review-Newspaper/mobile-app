@@ -1,7 +1,7 @@
 import * as React from "react"
-import { BusyRooms, CheckBusyRoomRequest, CreateEventRequest, Time, TimeFrame } from "../dings.types"
-import { url } from "../dings.types"
-import { fetchData } from "./wrapper"
+import {BusyRooms, CheckBusyRoomRequest, CreateEventRequest, Time, TimeFrame} from "../dings.types"
+import {url} from "../dings.types"
+import {fetchData} from "./wrapper"
 
 export default function bookRoomsController() {
 
@@ -19,7 +19,7 @@ export default function bookRoomsController() {
                 'timeZone': 'Europe/Zurich'
             },
             'attendees': [
-                { 'email': 'code.berlin_1883j5g4liq5ihuehfm64pgo3o66g@resource.calendar.google.com' },
+                {'email': 'code.berlin_1883j5g4liq5ihuehfm64pgo3o66g@resource.calendar.google.com'},
             ],
         }
         // weg so machen
@@ -33,7 +33,7 @@ export default function bookRoomsController() {
             "timeMax": "2023-02-10T23:00:00+01:00"
         }
 
-        const [errorRooms, roomTimes] = await checkRoomAvailability( roomBusyBody || testobj)
+        const [errorRooms, roomTimes] = await checkRoomAvailability(roomBusyBody || testobj)
 
         if (errorRooms != null)
             return [errorRooms, null] as const
@@ -64,12 +64,12 @@ export default function bookRoomsController() {
     async function checkRoomAvailability(body: CheckBusyRoomRequest) {
         const url: url = "https://www.googleapis.com/calendar/v3/freeBusy"
 
-        const data: CheckBusyRoomRequest = body 
+        const data: CheckBusyRoomRequest = body
         const [error, response] = await fetchData(url, true, data)
 
-        if (error!= null) 
+        if (error != null)
             return [error, null] as const
-        
+
 
         const content = await response!.json()
 
@@ -80,10 +80,13 @@ export default function bookRoomsController() {
 
 
     function compareTimeFrames(roomTimes: TimeFrame[], eventTimeStart: Time, eventTimeEnd: Time) {
-        if (roomTimes) {
-            return true
-        }
-        return false
+        roomTimes.forEach(time => {
+            if (time.start <= eventTimeStart.dateTime || time.end >= eventTimeEnd.dateTime) {
+                return false
+            }
+        })
+
+        return true
     }
 
     return [];

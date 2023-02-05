@@ -33,8 +33,8 @@ export interface ItemID {
 }
 
 export interface TimeFrame {
-    start: string
-    end: string
+    start: Date
+    end: Date
 }
 
 export type BusyRooms = TimeFrame
