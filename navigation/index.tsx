@@ -26,6 +26,10 @@ import SettingsScreen from '../screens/SettingsScreen';
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
 import CalendarContext from '../contexts/calendar.context';
+import userLoginController from "../controller/userLogin.controller";
+import bookRoomsController from "../controller/booking.controller";
+import allRoomsController from "../controller/allRooms.controller";
+import UserContext from "../contexts/user.context";
 
 interface User {
   id: string
@@ -60,70 +64,81 @@ maybeCompleteAuthSession()
 
 function RootNavigator() {
 
-  const [authState, setAuthState] = useState<AuthSession.TokenResponse | null>(null)
+  const [user, signIn, isSignedIn, _, signOut] = userLoginController()
+  const [compareTimeFrames, createNewEvent] = bookRoomsController()
+  const [getBusyTimeOfRooms] = allRoomsController()
 
-  const [user, setUser] = React.useState<User | null>(null)
-  const [calendar, setCalendar] = React.useState<any>(null)
-
-  const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
-    clientId: "614417646190-dbl1mao4r8bcjmam2cmcgtfo4c35ho1h.apps.googleusercontent.com",
-    iosClientId: "614417646190-vcu5a3ini5nnr0elfaqt8fprs358mp2i.apps.googleusercontent.com",
-    androidClientId: "614417646190-hhupm8k97a22rvv2gfdcoqi1gus8qunq.apps.googleusercontent.com",
-    scopes: ["https://www.googleapis.com/auth/calendar"]
-  })
-  const signIn = () => promptAsync()
-
-  async function ensureAuth() {
-
-    if (authState?.shouldRefresh()) {
-
-      setAuthState(await authState.refreshAsync({
-        clientId: "614417646190-dbl1mao4r8bcjmam2cmcgtfo4c35ho1h.apps.googleusercontent.com"
-      }, Google.discovery))
-    }
+  const userContextValue = {
+    user,
+    isSignedIn,
+    signIn,
+    signOut,
   }
 
-  React.useEffect(() => {
-    if (response?.type === "success") {
-      if (response.authentication?.accessToken !== authState?.accessToken) {
-        setAuthState(response.authentication)
-      } else {
-        if (authState?.accessToken != null) fetchUserInfo()
-      }
-    }
-  }, [response, authState?.accessToken])
+  // const [authState, setAuthState] = useState<AuthSession.TokenResponse | null>(null)
 
-  async function fetchUserInfo() {
-    await ensureAuth()
+  // const [user, setUser] = React.useState<User | null>(null)
+  // const [calendar, setCalendar] = React.useState<any>(null)
 
-    const meRes = await fetch("https://www.googleapis.com/userinfo/v2/me", {
-      headers: {
-        Authorization: `Bearer ${authState?.accessToken}`
-      }
-    }).catch((error) => {
-      console.log(authState?.accessToken)
-      console.log(error)
-    })
+  // const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
+  //   clientId: "614417646190-dbl1mao4r8bcjmam2cmcgtfo4c35ho1h.apps.googleusercontent.com",
+  //   iosClientId: "614417646190-vcu5a3ini5nnr0elfaqt8fprs358mp2i.apps.googleusercontent.com",
+  //   androidClientId: "614417646190-hhupm8k97a22rvv2gfdcoqi1gus8qunq.apps.googleusercontent.com",
+  //   scopes: ["https://www.googleapis.com/auth/calendar"]
+  // })
+  // const signIn = () => promptAsync()
 
-    const calendarRes = await fetch("https://www.googleapis.com/calendar/v3/users/me/calendarList", {
-      headers: {
-        Authorization: `Bearer ${authState?.accessToken}`
-      }
-    }).catch((error) => {
-      console.log(authState?.accessToken)
-      console.log(error)
-    })
-    const userInfo: User = await meRes!.json();
-    const calendarInfo = await calendarRes!.json()
+  // async function ensureAuth() {
 
-    // console.log("user:", JSON.stringify(userInfo, null, 2))
-    // console.log("calendar:", JSON.stringify(calendarInfo, null, 2))
+  //   if (authState?.shouldRefresh()) {
 
-    setUser(userInfo)
-    setCalendar(calendarInfo)
-  }
+  //     setAuthState(await authState.refreshAsync({
+  //       clientId: "614417646190-dbl1mao4r8bcjmam2cmcgtfo4c35ho1h.apps.googleusercontent.com"
+  //     }, Google.discovery))
+  //   }
+  // }
 
-  const isAuthenticated = user != null
+  // React.useEffect(() => {
+  //   if (response?.type === "success") {
+  //     if (response.authentication?.accessToken !== authState?.accessToken) {
+  //       setAuthState(response.authentication)
+  //     } else {
+  //       if (authState?.accessToken != null) fetchUserInfo()
+  //     }
+  //   }
+  // }, [response, authState?.accessToken])
+
+  // async function fetchUserInfo() {
+  //   await ensureAuth()
+
+  //   const meRes = await fetch("https://www.googleapis.com/userinfo/v2/me", {
+  //     headers: {
+  //       Authorization: `Bearer ${authState?.accessToken}`
+  //     }
+  //   }).catch((error) => {
+  //     console.log(authState?.accessToken)
+  //     console.log(error)
+  //   })
+
+  //   const calendarRes = await fetch("https://www.googleapis.com/calendar/v3/users/me/calendarList", {
+  //     headers: {
+  //       Authorization: `Bearer ${authState?.accessToken}`
+  //     }
+  //   }).catch((error) => {
+  //     console.log(authState?.accessToken)
+  //     console.log(error)
+  //   })
+  //   const userInfo: User = await meRes!.json();
+  //   const calendarInfo = await calendarRes!.json()
+
+  //   // console.log("user:", JSON.stringify(userInfo, null, 2))
+  //   // console.log("calendar:", JSON.stringify(calendarInfo, null, 2))
+
+  //   setUser(userInfo)
+  //   setCalendar(calendarInfo)
+  // }
+
+  // const isAuthenticated = user != null
 
   const roundDownToNearestQuarterHour = (date: dayjs.Dayjs) => {
 
@@ -137,47 +152,63 @@ function RootNavigator() {
   const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs>(startDate)
   const [endDate, setEndDate] = useState<dayjs.Dayjs>(selectedDate.add(6, "hours"))
 
+  const [busyTimes, setBusyTimes] = useState<any>({})
+
+  React.useEffect(() => {
+
+    (async () => {
+
+      const res = await getBusyTimeOfRooms()
+
+      setBusyTimes(res)
+    })()
+  }, [])
+
   return (
-    <CalendarContext.Provider value={{
-      selectedRoomId,
-      setSelectedRoomId,
-      startDate,
-      setStartDate,
-      endDate,
-      setEndDate,
-      selectedDate,
-      setSelectedDate
-    }}>
-      <Stack.Navigator>
+    <UserContext.Provider value={userContextValue}>
+      <CalendarContext.Provider value={{
+        selectedRoomId,
+        setSelectedRoomId,
+        startDate,
+        setStartDate,
+        endDate,
+        setEndDate,
+        selectedDate,
+        setSelectedDate,
+        roomSchedules: busyTimes,
+        createEvent: createNewEvent,
+      }}>
+        <Stack.Navigator>
 
-        {isAuthenticated ?
-          <>
-            <Stack.Screen name="Root" component={BottomTabNavigator}
-              options={{ headerShown: false }}
-            // options={{
-            //   title: 'CODE Review',
-            //   headerStyle: {
-            //     backgroundColor: '#222',
-            //   },
-            //   headerTintColor: '#fff',
-            //   headerTitleStyle: {
-            //     fontWeight: 'bold',
-            //   },
-            // }}
-            />
-            <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
-            <Stack.Group screenOptions={{ presentation: 'modal' }}>
-              <Stack.Screen name="Modal" component={ModalScreen} options={{
-                title: "Book room",
-              }} />
-            </Stack.Group>
-          </>
-          : <Stack.Screen name="Root" component={LoginScreen(signIn)}
-            options={{ headerShown: false }} />}
+          {isSignedIn ?
+            <>
+              <Stack.Screen name="Root" component={BottomTabNavigator}
+                options={{ headerShown: false }}
+              // options={{
+              //   title: 'CODE Review',
+              //   headerStyle: {
+              //     backgroundColor: '#222',
+              //   },
+              //   headerTintColor: '#fff',
+              //   headerTitleStyle: {
+              //     fontWeight: 'bold',
+              //   },
+              // }}
+              />
+              <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
+              <Stack.Group screenOptions={{ presentation: 'modal' }}>
+                <Stack.Screen name="Modal" component={ModalScreen} options={{
+                  title: "Book room",
+                }} />
+              </Stack.Group>
+            </>
+            : <Stack.Screen name="Root" component={LoginScreen}
+              options={{ headerShown: false }} />}
 
 
-      </Stack.Navigator >
-    </CalendarContext.Provider>
+        </Stack.Navigator >
+      </CalendarContext.Provider>
+    </UserContext.Provider>
   );
 }
 

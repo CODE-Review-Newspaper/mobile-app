@@ -3,33 +3,34 @@ import { Pressable, StyleSheet } from 'react-native';
 import { Text, View } from '../components/Themed';
 
 import Logo from '../assets/images/codeReviewLogo.svg';
+import { useContext } from 'react';
+import UserContext from '../contexts/user.context';
 
-export default function LoginScreen(signIn: () => unknown) {
+export default function LoginScreen() {
 
-    return function () {
+    const { signIn } = useContext(UserContext)
 
-        return (
-            <View style={{ backgroundColor: "#222", height: "100%" }}>
-                <View style={styles.sache}>
-                    {/* <Text style={{ color: "white" }}>Anbei die geile Sache</Text> */}
+    return (
+        <View style={{ backgroundColor: "#222", height: "100%" }}>
+            <View style={styles.sache}>
+                {/* <Text style={{ color: "white" }}>Anbei die geile Sache</Text> */}
 
-                    <Logo
-                        fill="white"
-                        width="60%"
-                        style={{ width: 100, height: 100, fill: "white" }}
-                    />
+                <Logo
+                    fill="white"
+                    width="60%"
+                    style={{ width: 100, height: 100, fill: "white" }}
+                />
 
-                    <Pressable
-                        onPress={signIn}
-                        style={({ pressed }) => pressed ? [styles.button, styles.buttonPressed] : styles.button}
-                        accessibilityLabel="Sign in with @code.berlin"
-                    >
-                        <Text style={styles.buttonText}>Sign in with @code.berlin</Text>
-                    </Pressable>
-                </View>
+                <Pressable
+                    onPress={signIn}
+                    style={({ pressed }) => pressed ? [styles.button, styles.buttonPressed] : styles.button}
+                    accessibilityLabel="Sign in with @code.berlin"
+                >
+                    <Text style={styles.buttonText}>Sign in with @code.berlin</Text>
+                </Pressable>
             </View>
-        );
-    }
+        </View>
+    );
 }
 
 const styles = StyleSheet.create({

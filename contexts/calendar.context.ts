@@ -1,5 +1,6 @@
 import { createContext } from "react";
 import dayjs from "dayjs"
+import { CheckBusyRoomRequest, CreateEventRequest } from "../types/dings.types";
 
 interface CalendarContextType {
     selectedRoomId: null | string
@@ -13,6 +14,9 @@ interface CalendarContextType {
 
     endDate: dayjs.Dayjs
     setEndDate: (date: dayjs.Dayjs) => unknown
+
+    roomSchedules: any
+    createEvent: (eventBody: CreateEventRequest, roomBusyBody: CheckBusyRoomRequest) => Promise<[any, any]>
 }
 // @ts-ignore
 const CalendarContext = createContext<CalendarContextType>();

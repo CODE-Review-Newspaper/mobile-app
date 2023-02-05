@@ -2,15 +2,17 @@ import * as React from "react"
 import * as WebBrowser from "expo-web-browser"
 import * as Google from "expo-auth-session/providers/google"
 import * as AuthSession from 'expo-auth-session';
-import {fetchData} from "./wrapper";
-import {User} from "../types/dings.types";
+import { fetchData } from "./wrapper";
+import { User } from "../types/dings.types";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {TokenError, TokenResponse, TokenResponseConfig} from "expo-auth-session";
+import { TokenError, TokenResponse, TokenResponseConfig } from "expo-auth-session";
 
 WebBrowser.maybeCompleteAuthSession()
 
 export default function userLoginController() {
     const [user, setUser] = React.useState<User | null>(null)
+
+    const [isSignedIn, setIsSignedIn] = React.useState(true)
 
     const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
         clientId: "614417646190-dbl1mao4r8bcjmam2cmcgtfo4c35ho1h.apps.googleusercontent.com",
@@ -20,8 +22,10 @@ export default function userLoginController() {
     })
 
     const signIn = async () => {
-        console.log(JSON.stringify(await getAuthState(), null, 2));
+        // console.log(JSON.stringify(await getAuthState(), null, 2));
+
         if (!await isLoggedIn()) {
+
             await promptAsync()
 
             fetchUserInfo()
@@ -29,18 +33,20 @@ export default function userLoginController() {
     }
 
     const signOut = async () => {
-        console.log("sache")
+
         if (await isLoggedIn(false)) {
             const authState = await getAuthState();
 
             if (authState != null) {
-                await AuthSession.revokeAsync({token: authState.accessToken}, Google.discovery)
+                await AuthSession.revokeAsync({ token: authState.accessToken }, Google.discovery)
                 console.log("revoked")
             }
         }
 
         await setAuthState(null)
         setUser(null)
+
+        setIsSignedIn(false)
     }
 
     async function isLoggedIn(fetchUser = true) {
@@ -64,7 +70,9 @@ export default function userLoginController() {
     async function setAuthState(authState: TokenResponse | null) {
         if (authState == null) {
             await AsyncStorage.removeItem('@authState')
+            setIsSignedIn(false)
         } else {
+            setIsSignedIn(true)
             const jsonValue = JSON.stringify(authState.getRequestConfig())
             await AsyncStorage.setItem('@authState', jsonValue)
         }
@@ -108,6 +116,7 @@ export default function userLoginController() {
 
     React.useEffect(() => {
         if (response?.type === "success") {
+            setIsSignedIn(true)
             setAuthState(response.authentication)
         }
     }, [response])
@@ -118,7 +127,11 @@ export default function userLoginController() {
         const userInfo: User = await meRes!.json();
         setUser(userInfo)
     }
+    React.useEffect(() => {
+        isLoggedIn()
+    }, [])
 
-    return [user, signIn, isLoggedIn, getAuthState, signOut] as const
+    // TODO: replace user != null by isSignedIn
+    return [user, signIn, user != null, getAuthState, signOut] as const
 
 }

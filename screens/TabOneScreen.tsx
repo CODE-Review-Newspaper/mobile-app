@@ -15,9 +15,11 @@ import CalendarContext from '../contexts/calendar.context';
 
 import LinearGradient from 'react-native-linear-gradient';
 
+import dayjs from "dayjs"
+
 export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
 
-    const { setSelectedRoomId, startDate, selectedDate, setSelectedDate } = useContext(CalendarContext)
+    const { setSelectedRoomId, startDate, selectedDate, setSelectedDate, roomSchedules } = useContext(CalendarContext)
 
     return (
         <>
@@ -64,16 +66,45 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
                         fill="white"
                     />
 
-                    {Object.values(Rooms).map(i => <i.Component
-                        key={i.name}
-                        width="100%"
-                        height="100%"
-                        style={styles.floorplan}
-                        fill={["#68c13a", "#e5a23c", "#f66b6e", "#efefef"][Math.floor(Math.random() * 4)]}
+                    {Object.values(Rooms).map(i => {
+
+                        const scheduleInfo = roomSchedules[i.name]
+
+                        if (scheduleInfo != null) console.log(i.name + " found")
+
                         // @ts-ignore
-                        onPress={() => { setSelectedRoomId(i.name); navigation.navigate('Modal') }
-                        }
-                    />)}
+                        const isUnavailable = scheduleInfo?.busyTimes?.some(i => {
+
+                            console.log("dongs:", i.start, dayjs(i.start).format("DD/MM/YYYY hh:mm"))
+
+                            const isUnavailable = selectedDate.isAfter(dayjs(i.start)) && selectedDate.isBefore(dayjs(i.end))
+
+                            return isUnavailable
+                        }) ?? true
+                        const isAvailable = !isUnavailable
+
+                        const color = (() => {
+
+                            if (scheduleInfo?.isBookable && isAvailable) return "green"
+
+                            if (scheduleInfo?.isBookable && isUnavailable) return "red"
+
+                            if (!scheduleInfo?.isBookable) return "#efefef"
+
+                            return "#222"
+                        })()
+
+                        return <i.Component
+                            key={i.name}
+                            width="100%"
+                            height="100%"
+                            style={styles.floorplan}
+                            fill={color}
+                            // @ts-ignore
+                            onPress={() => { setSelectedRoomId(i.name); navigation.navigate('Modal') }
+                            }
+                        />
+                    })}
 
                 </View>
                 {/* </ScrollView> */}

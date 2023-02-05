@@ -1,8 +1,13 @@
+import { useContext } from 'react';
 import { Pressable, StyleSheet } from 'react-native';
 
 import { Text, View } from '../components/Themed';
+import UserContext from '../contexts/user.context';
 
 export default function SettingsScreen() {
+
+    const { signOut } = useContext(UserContext)
+
     return (
         <View style={styles.container}>
             <Text style={styles.title}>
@@ -20,6 +25,7 @@ export default function SettingsScreen() {
 
 
             <Pressable
+                onPress={signOut}
                 style={({ pressed }) => pressed ? [styles.button, styles.buttonPressed] : styles.button}
                 accessibilityLabel="Sign out"
             >

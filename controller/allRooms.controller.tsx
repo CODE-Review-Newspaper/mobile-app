@@ -38,15 +38,15 @@ export default function allRoomsController() {
 
                 const [error, roomTimes] = await checkRoomAvailability(newBody)
 
-                if (error != null) 
+                if (error != null)
                     console.log("Could not find Busy times of Room. ", error)
 
                 value.busyTimes = roomTimes!
-                
+
             }
-            
+
         }
-        console.log(JSON.stringify(rooms))
+        return rooms
     }
     return [getBusyTimeOfRooms] as const
 }

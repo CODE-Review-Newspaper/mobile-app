@@ -19,6 +19,8 @@ export default function ModalScreen() {
     setEndDate(selectedDate.add(DEFAULT_DURATION_MINS, "minutes"))
   }, [])
 
+  // await createNewEvent(eventMock, busyRoomMock)
+
   return (
     <View style={styles.container}>
 
@@ -131,3 +133,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
+
