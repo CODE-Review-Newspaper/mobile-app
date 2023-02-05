@@ -14,7 +14,7 @@ import { busyRoomMock, eventMock, timeFrames, timeend, timestart } from "../mock
 WebBrowser.maybeCompleteAuthSession()
 
 export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
-    const [user, signIn, isLoggedIn] = userLoginController()
+    const [user, signIn, isLoggedIn, stupid, signOut] = userLoginController()
     const [compareTimeFrames, createNewEvent] = bookRoomsController()
 
     const ShowUserInfo = () => {
@@ -61,6 +61,15 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
                     }}
                 >
                     <Text>NUR WENN NACKEN</Text>
+                </TouchableOpacity>
+            }
+            {user &&
+                <TouchableOpacity
+                    onPress={async () => {
+                        await signOut()
+                    }}
+                >
+                    <Text>Ich wenn ich den logaus durchführen werde</Text>
                 </TouchableOpacity>
             }
         </View>

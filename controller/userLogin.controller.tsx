@@ -2,8 +2,8 @@ import * as React from "react"
 import * as WebBrowser from "expo-web-browser"
 import * as Google from "expo-auth-session/providers/google"
 import * as AuthSession from 'expo-auth-session';
-import { fetchData } from "./wrapper";
-import { User } from "../types/dings.types";
+import {fetchData} from "./wrapper";
+import {User} from "../types/dings.types";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {TokenResponse, TokenResponseConfig} from "expo-auth-session";
 
@@ -28,12 +28,27 @@ export default function userLoginController() {
         }
     }
 
-    async function isLoggedIn() {
+    const signOut = async () => {
+        console.log("sache")
+        if (await isLoggedIn(false)) {
+            const authState = await getAuthState();
+
+            if (authState != null) {
+                await AuthSession.revokeAsync({token: authState.accessToken}, Google.discovery)
+                console.log("revoked")
+            }
+        }
+
+        await setAuthState(null)
+        setUser(null)
+    }
+
+    async function isLoggedIn(fetchUser = true) {
         const authState = await getAuthState();
 
-        const loggedIn = authState != null && await ensureAuth();
+        const loggedIn = authState != null && await autoRenewAuth();
 
-        if (loggedIn) {
+        if (loggedIn && fetchUser) {
             fetchUserInfo()
         }
 
@@ -47,11 +62,15 @@ export default function userLoginController() {
     }
 
     async function setAuthState(authState: TokenResponse | null) {
-        const jsonValue = JSON.stringify(authState != null ? authState.getRequestConfig() : null)
-        await AsyncStorage.setItem('@authState', jsonValue)
+        if (authState == null) {
+            await AsyncStorage.removeItem('@authState')
+        } else {
+            const jsonValue = JSON.stringify(authState.getRequestConfig())
+            await AsyncStorage.setItem('@authState', jsonValue)
+        }
     }
 
-    async function ensureAuth() {
+    async function autoRenewAuth() {
         const authState = await getAuthState();
 
         if (authState === null) {
@@ -87,6 +106,6 @@ export default function userLoginController() {
         setUser(userInfo)
     }
 
-    return [user, signIn, isLoggedIn, getAuthState] as const
+    return [user, signIn, isLoggedIn, getAuthState, signOut] as const
 
 }
