@@ -20,11 +20,8 @@ export default function userLoginController() {
     })
 
     const signIn = async () => {
-        console.log(JSON.stringify(await getAuthState(), null, 2));
         if (!await isLoggedIn()) {
             await promptAsync()
-
-            fetchUserInfo()
         }
     }
 
@@ -108,7 +105,8 @@ export default function userLoginController() {
 
     React.useEffect(() => {
         if (response?.type === "success") {
-            setAuthState(response.authentication)
+            setAuthState(response.authentication).then(() => fetchUserInfo())
+
         }
     }, [response])
 
@@ -116,6 +114,7 @@ export default function userLoginController() {
 
         const [errorUserData, meRes] = await fetchData("https://www.googleapis.com/userinfo/v2/me", await getAuthState())
         const userInfo: User = await meRes!.json();
+        console.log(userInfo);
         setUser(userInfo)
     }
 

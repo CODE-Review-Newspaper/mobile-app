@@ -68,15 +68,13 @@ export default function bookRoomsController() {
             if (typeof time.end === "string"){
                 time.end = new Date(time.end)
             }
-            console.log(roomTimes)
-            console.log(eventTimeStart)
-            console.log(eventTimeEnd)
-            if (time.start <= eventTimeStart.dateTime || time.end >= eventTimeEnd.dateTime) {
-                console.log("dsings")
+
+            if (time.start >= eventTimeStart.dateTime || time.end >= eventTimeEnd.dateTime) {
+                console.log("Already booked haher.")
                 return false
             }
         }
-        console.log("DONGS")
+        console.log("Good job you own the room for the next hours")
         return true
     }
 
