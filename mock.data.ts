@@ -26,11 +26,11 @@ export const timeend: Time = {
 export const eventMock: CreateEventRequest = {
     'summary': 'TestDingsd',
     'start': {
-        'dateTime': new Date('2023-02-10T14:00:00'),
+        'dateTime': new Date('2023-02-12T14:00:00'),
         'timeZone': 'Europe/Zurich'
     },
     'end': {
-        'dateTime': new Date('2023-02-10T16:00:00'),
+        'dateTime': new Date('2023-02-12T16:00:00'),
         'timeZone': 'Europe/Zurich'
     },
     'attendees': [
@@ -44,6 +44,6 @@ export const busyRoomMock: CheckBusyRoomRequest = {
             "id": "code.berlin_1883j5g4liq5ihuehfm64pgo3o66g@resource.calendar.google.com"
         }
     ],
-    "timeMin": new Date("2023-02-10T00:00:00+01:00"),
-    "timeMax": new Date("2023-02-10T23:00:00+01:00")
+    "timeMin": new Date("2023-02-12T00:00:00+01:00"),
+    "timeMax": new Date("2023-02-12T23:00:00+01:00")
 }

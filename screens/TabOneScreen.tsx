@@ -57,8 +57,7 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
             {user &&
                 <TouchableOpacity
                     onPress={async () => {
-                        console.log("GENIAL!")
-                        console.log("KLASSE!")
+                        createNewEvent(eventMock, busyRoomMock)
                     }}
                 >
                     <Text>NUR WENN NACKEN</Text>

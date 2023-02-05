@@ -2,18 +2,18 @@ import * as React from "react"
 import { BusyRooms, CheckBusyRoomRequest, CreateEventRequest, Time, TimeFrame } from "../dings.types"
 import { url } from "../dings.types"
 import { fetchData } from "./wrapper"
+import userLoginController from "./userLogin.controller"
 
 
 
 export default function bookRoomsController() {
-    // const [authState, setAuthState] = React.useState<AuthSession.TokenResponse | null>(null)
+    const [user, signIn, isLoggedIn, getAuthState]= userLoginController()
 
-    async function createNewEvent(eventBody: CreateEventRequest, roomBusyBody: CheckBusyRoomRequest, authState: any) {
-        // setAuthState(temppAuthState)
+    async function createNewEvent(eventBody: CreateEventRequest, roomBusyBody: CheckBusyRoomRequest) {
 
         const url: url = "https://www.googleapis.com/calendar/v3/calendars/primary/events"
 
-        const [errorRooms, roomTimes] = await checkRoomAvailability(roomBusyBody, authState)
+        const [errorRooms, roomTimes] = await checkRoomAvailability(roomBusyBody)
 
         if (errorRooms != null)
             return [errorRooms, null] as const
@@ -28,7 +28,7 @@ export default function bookRoomsController() {
             return [errorMsg, null] as const
         }
 
-        const [error, response] = await fetchData(url, authState, true, eventBody)
+        const [error, response] = await fetchData(url, await getAuthState(), true, eventBody)
 
         if (error != null)
             return [error, null] as const
@@ -41,11 +41,11 @@ export default function bookRoomsController() {
     }
 
 
-    async function checkRoomAvailability(body: CheckBusyRoomRequest, authState:any) {
+    async function checkRoomAvailability(body: CheckBusyRoomRequest) {
 
         const url: url = "https://www.googleapis.com/calendar/v3/freeBusy"
 
-        const [error, response] = await fetchData(url, authState, true, body)
+        const [error, response] = await fetchData(url, await getAuthState(), true, body)
 
         if (error != null)
             return [error, null] as const
@@ -68,11 +68,15 @@ export default function bookRoomsController() {
             if (typeof time.end === "string"){
                 time.end = new Date(time.end)
             }
+            console.log(roomTimes)
+            console.log(eventTimeStart)
+            console.log(eventTimeEnd)
             if (time.start <= eventTimeStart.dateTime || time.end >= eventTimeEnd.dateTime) {
+                console.log("dsings")
                 return false
             }
         }
-
+        console.log("DONGS")
         return true
     }
 
