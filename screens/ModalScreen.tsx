@@ -33,7 +33,7 @@ export default function ModalScreen() {
 
       <Text style={styles.text}>[4.11.10] {selectedRoomId}</Text>
 
-      <Text style={styles.text}>{selectedDate.format("hh:mma")} - {endDate.format("hh:mma")}</Text>
+      <Text style={styles.text}>{selectedDate.format("H:mma")} - {endDate.format("H:mma")}</Text>
 
       <Text style={styles.lessText}>{endDate.diff(selectedDate, "minutes")} minutes</Text>
 

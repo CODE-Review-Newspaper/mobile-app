@@ -25,7 +25,7 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
         <>
             <LinearGradient colors={["rgba(0, 0, 0, 0.8)", "transparent"]} style={styles.toolBar}>
 
-                <Text style={styles.timeDisplay}>{selectedDate.format("MMM D, hh:mma")}</Text>
+                <Text style={styles.timeDisplay}>{selectedDate.format("MMM D, H:mma")}</Text>
                 <Slider
                     style={{ width: "100%", height: 40 }}
                     minimumValue={0}
@@ -74,8 +74,6 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
 
                         // @ts-ignore
                         const isUnavailable = scheduleInfo?.busyTimes?.some(i => {
-
-                            console.log("dongs:", i.start, dayjs(i.start).format("DD/MM/YYYY hh:mm"))
 
                             const isUnavailable = selectedDate.isAfter(dayjs(i.start)) && selectedDate.isBefore(dayjs(i.end))
 

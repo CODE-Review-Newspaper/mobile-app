@@ -18,11 +18,11 @@ export default function allRoomsController() {
     async function getBusyTimeOfRooms() {
         for (const [key, value] of Object.entries(rooms)) {
             if (value.isBookable) {
-                const beginOfDay = new Date("2023-02-10")
+                const beginOfDay = new Date()
                 beginOfDay.setUTCHours(0)
                 beginOfDay.setUTCMinutes(0)
                 beginOfDay.setUTCSeconds(0)
-                const endOfDay = new Date("2023-02-10")
+                const endOfDay = new Date()
                 endOfDay.setUTCHours(23)
                 endOfDay.setUTCMinutes(59)
                 endOfDay.setUTCSeconds(59)

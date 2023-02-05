@@ -65,7 +65,7 @@ maybeCompleteAuthSession()
 function RootNavigator() {
 
   const [user, signIn, isSignedIn, _, signOut] = userLoginController()
-  const [compareTimeFrames, createNewEvent] = bookRoomsController()
+  const [__, createNewEvent] = bookRoomsController()
   const [getBusyTimeOfRooms] = allRoomsController()
 
   const userContextValue = {
