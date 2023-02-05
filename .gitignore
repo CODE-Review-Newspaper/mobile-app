@@ -12,5 +12,11 @@ web-build/
 
 # macOS
 .DS_Store
+ios
+index.js
+metro.config.js
+android
 
-ios/
+.env
+
+.idea
