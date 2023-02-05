@@ -18,3 +18,5 @@ metro.config.js
 android
 
 .env
+
+.idea
