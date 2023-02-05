@@ -7,7 +7,7 @@ import userLoginController from "./userLogin.controller"
 
 
 export default function bookRoomsController() {
-    const [user, signIn, isLoggedIn, getAuthState]= userLoginController()
+    const [user, signIn, isLoggedIn, getAuthState] = userLoginController()
 
     async function createNewEvent(eventBody: CreateEventRequest, roomBusyBody: CheckBusyRoomRequest) {
 
@@ -54,7 +54,14 @@ export default function bookRoomsController() {
 
         const email = body.items[0].id
 
-        const roomBusyTimes: BusyRooms[] = content.calendars[email].busy
+        const roomCalendar = content.calendars[email]
+
+        if (roomCalendar == null) {
+
+            return ["roomCalendar is null", null] as const
+        }
+
+        const roomBusyTimes: BusyRooms[] = roomCalendar.busy
 
         return [null, roomBusyTimes] as const
     }
@@ -62,10 +69,10 @@ export default function bookRoomsController() {
 
     function compareTimeFrames(roomTimes: TimeFrame[], eventTimeStart: Time, eventTimeEnd: Time) {
         for (let time of roomTimes) {
-            if (typeof time.start === "string"){
+            if (typeof time.start === "string") {
                 time.start = new Date(time.start)
             }
-            if (typeof time.end === "string"){
+            if (typeof time.end === "string") {
                 time.end = new Date(time.end)
             }
             console.log(roomTimes)

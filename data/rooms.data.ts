@@ -14,14 +14,14 @@ export const rooms: Record<string, Room> = {
         id: 'code.berlin_188f0qjk7i3s8g6bj3dtntl59ppd46gb68r34c9l64p3achp60@resource.calendar.google.com',
         displayName: "8-Bit Studio",
         factoryRoomNumber: "4.",
-        category: "",
+        category: "STUDIO",
     },
     'Clap': {
         isBookable: true,
         id: 'c_1886mt36arccmg6gktcllmauqn0ro@resource.calendar.google.com',
         displayName: "Clap",
         factoryRoomNumber: "4.",
-        category: "",
+        category: "OFFICE_BOOTH",
     },
     'D2': {
         isBookable: true,
@@ -42,14 +42,14 @@ export const rooms: Record<string, Room> = {
         id: 'c_188803ttv3sgkjdtg78o39nkideck@resource.calendar.google.com',
         displayName: "Hat",
         factoryRoomNumber: "4.",
-        category: "",
+        category: "OFFICE_BOOTH",
     },
     'Hi': {
         isBookable: true,
         id: 'c_1881v5urdsafchk6n2mm25r7r0nji@resource.calendar.google.com',
         displayName: "Hi",
         factoryRoomNumber: "4.",
-        category: "",
+        category: "OFFICE_BOOTH",
     },
     'Jungle': {
         isBookable: true,
@@ -63,7 +63,7 @@ export const rooms: Record<string, Room> = {
         id: 'c_1887gbat61a14jbcjg0cv85i41t9s@resource.calendar.google.com',
         displayName: "Kick",
         factoryRoomNumber: "4.",
-        category: "",
+        category: "OFFICE_BOOTH",
     },
     'Lizard': {
         isBookable: true,
@@ -140,7 +140,7 @@ export const rooms: Record<string, Room> = {
         id: 'c_188d0sd2j8pnei5ai0f0ijl0p3bmg4gbcdnm8p9ec9in4r39do@resource.calendar.google.com',
         displayName: "Void",
         factoryRoomNumber: "4.",
-        category: "",
+        category: "PROJECT_LAB",
     },
     'Heaven': {
         isBookable: true,
@@ -153,6 +153,13 @@ export const rooms: Record<string, Room> = {
         isBookable: true,
         id: null,
         displayName: "Heaven",
+        factoryRoomNumber: "4.",
+        category: "WORKSPACES",
+    },
+    "Galaxy": {
+        isBookable: true,
+        id: null,
+        displayName: "Galaxy",
         factoryRoomNumber: "4.",
         category: "WORKSPACES",
     },
@@ -170,54 +177,96 @@ export const rooms: Record<string, Room> = {
         factoryRoomNumber: "4.",
         category: "SILENT_SPACE",
     },
-    "": {
+    "Spongebob": {
         isBookable: true,
         id: null,
-        displayName: "",
+        displayName: "Spongebob",
         factoryRoomNumber: "4.",
         category: "PROJECT_LAB",
     },
-    "": {
+    "Patrick": {
         isBookable: true,
         id: null,
-        displayName: "",
+        displayName: "Patrick",
         factoryRoomNumber: "4.",
         category: "PROJECT_LAB",
     },
-    "": {
+    "MrKrabs": {
         isBookable: true,
         id: null,
-        displayName: "",
+        displayName: "Mr. Krabs",
         factoryRoomNumber: "4.",
         category: "PROJECT_LAB",
     },
-    "": {
+    "Plankton": {
         isBookable: true,
         id: null,
-        displayName: "",
+        displayName: "Plankton",
         factoryRoomNumber: "4.",
         category: "PROJECT_LAB",
     },
-    "": {
+    "Squidward": {
         isBookable: true,
         id: null,
-        displayName: "",
+        displayName: "Squidward",
         factoryRoomNumber: "4.",
         category: "PROJECT_LAB",
     },
-    "": {
+    "Peace": {
         isBookable: true,
         id: null,
-        displayName: "",
+        displayName: "Peace",
         factoryRoomNumber: "4.",
         category: "PROJECT_LAB",
     },
-    "": {
+    "Roomy": {
         isBookable: true,
         id: null,
-        displayName: "",
+        displayName: "Roomy",
         factoryRoomNumber: "4.",
         category: "PROJECT_LAB",
+    },
+    "TeamRoom": {
+        isBookable: true,
+        id: null,
+        displayName: "Team Room",
+        factoryRoomNumber: "4.",
+        category: "TEAM_HQ",
+    },
+    "Cognito": {
+        isBookable: true,
+        id: null,
+        displayName: "Cognito",
+        factoryRoomNumber: "4.",
+        category: "TEAM_HQ",
+    },
+    "Nymeria": {
+        isBookable: true,
+        id: null,
+        displayName: "Nymeria",
+        factoryRoomNumber: "4.",
+        category: "TEAM_HQ",
+    },
+    "AFF": {
+        isBookable: true,
+        id: null,
+        displayName: "AFF",
+        factoryRoomNumber: "4.",
+        category: "TEAM_HQ",
+    },
+    "Otterspace": {
+        isBookable: true,
+        id: null,
+        displayName: "Otterspace",
+        factoryRoomNumber: "4.",
+        category: "TEAM_HQ",
+    },
+    "SixMinutes": {
+        isBookable: true,
+        id: null,
+        displayName: "6 Min",
+        factoryRoomNumber: "4.",
+        category: "TEAM_HQ",
     },
 }
 

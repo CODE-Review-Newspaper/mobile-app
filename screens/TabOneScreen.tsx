@@ -101,7 +101,7 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
 
                                 if (scheduleInfo == null) return
 
-                                console.log("setting selected room to:", scheduleInfo)
+                                if (!scheduleInfo.isBookable) return
 
                                 setSelectedRoom(scheduleInfo);
 

@@ -120,15 +120,17 @@ export default function userLoginController() {
         if (response?.type === "success") {
 
             setAuthState(response.authentication).then(() => setIsSignedIn(true))
-
-
         }
     }, [response])
 
     async function fetchUserInfo() {
 
         const [errorUserData, meRes] = await fetchData("https://www.googleapis.com/userinfo/v2/me", await getAuthState())
+
+        if (errorUserData != null) console.error("error trying to fetchUserInfo:", errorUserData)
+
         const userInfo: User = await meRes!.json();
+
         setUser(userInfo)
     }
     React.useEffect(() => {

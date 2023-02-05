@@ -1,6 +1,6 @@
 import Slider from '@react-native-community/slider';
 import { StatusBar } from 'expo-status-bar';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Platform, Pressable, StyleSheet, TextInput } from 'react-native';
 
 import { Text, View } from '../components/Themed';
@@ -18,7 +18,7 @@ export default function ModalScreen() {
     setEndDate(selectedDate.add(DEFAULT_DURATION_MINS, "minutes"))
   }, [])
 
-  // await createNewEvent(eventMock, busyRoomMock)
+  const [meetingTitle, setMeetingTitle] = useState("Working session in " + selectedRoom!.displayName)
 
   async function submit() {
 
@@ -32,11 +32,12 @@ export default function ModalScreen() {
         timeZone: "Europe/Berlin",
       },
       attendees: [
-        { email: selectedRoom!.id },
+        { email: selectedRoom!.id! },
       ],
+      summary: meetingTitle,
     }, {
       items: [{
-        id: selectedRoom!.id,
+        id: selectedRoom!.id!,
       }],
       timeMin: selectedDate.toDate(),
       timeMax: endDate.toDate(),
@@ -51,6 +52,8 @@ export default function ModalScreen() {
         placeholder="Meeting title"
         multiline
         style={styles.titleInput}
+        // @ts-ignore
+        onChange={e => setMeetingTitle(e.target.value)}
       />
 
       <Text style={styles.text}>[{selectedRoom!.factoryRoomNumber}] {selectedRoom!.displayName}</Text>

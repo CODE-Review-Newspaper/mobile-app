@@ -8,7 +8,7 @@ export default function SettingsScreen() {
 
     const { signOut } = useContext(UserContext)
 
-    const { user } = useContext(UserContext)
+    const { user, isSignedIn } = useContext(UserContext)
 
     return (
         <View style={styles.container}>

@@ -16,7 +16,7 @@ export default function allRoomsController() {
 
     async function getBusyTimeOfRooms() {
         for (const [key, value] of Object.entries(rooms)) {
-            if (value.isBookable) {
+            if (value.isBookable && value.id != null) {
                 const beginOfDay = new Date()
                 beginOfDay.setUTCHours(0)
                 beginOfDay.setUTCMinutes(0)
@@ -25,11 +25,12 @@ export default function allRoomsController() {
                 endOfDay.setUTCHours(23)
                 endOfDay.setUTCMinutes(59)
                 endOfDay.setUTCSeconds(59)
+
                 const newBody: CheckBusyRoomRequest = {
                     items: [
                         {
                             id: value.id
-                        }
+                        },
                     ],
                     timeMin: beginOfDay,
                     timeMax: endOfDay
