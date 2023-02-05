@@ -10,8 +10,14 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { ColorSchemeName, Pressable } from 'react-native';
 
+import { useState } from "react"
+import { maybeCompleteAuthSession } from "expo-web-browser"
+import * as Google from "expo-auth-session/providers/google"
+import * as AuthSession from 'expo-auth-session';
+
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
+import LoginScreen from '../screens/LoginScreen';
 import ModalScreen from '../screens/ModalScreen';
 import NotFoundScreen from '../screens/NotFoundScreen';
 import TabOneScreen from '../screens/TabOneScreen';
@@ -35,27 +41,100 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
  */
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
+maybeCompleteAuthSession()
+
 function RootNavigator() {
+
+  const [authState, setAuthState] = useState<AuthSession.TokenResponse | null>(null)
+
+  const [user, setUser] = React.useState(null)
+
+  const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
+    clientId: "614417646190-dbl1mao4r8bcjmam2cmcgtfo4c35ho1h.apps.googleusercontent.com",
+    iosClientId: "614417646190-vcu5a3ini5nnr0elfaqt8fprs358mp2i.apps.googleusercontent.com",
+    androidClientId: "614417646190-hhupm8k97a22rvv2gfdcoqi1gus8qunq.apps.googleusercontent.com",
+    scopes: ["https://www.googleapis.com/auth/calendar"]
+  })
+  const signIn = () => promptAsync()
+
+  async function ensureAuth() {
+
+    if (authState?.shouldRefresh()) {
+
+      setAuthState(await authState.refreshAsync({
+        clientId: "614417646190-dbl1mao4r8bcjmam2cmcgtfo4c35ho1h.apps.googleusercontent.com"
+      }, Google.discovery))
+    }
+  }
+
+  React.useEffect(() => {
+    if (response?.type === "success") {
+      if (response.authentication?.accessToken !== authState?.accessToken) {
+        setAuthState(response.authentication)
+      } else {
+        if (authState?.accessToken != null) fetchUserInfo()
+      }
+    }
+  }, [response, authState?.accessToken])
+
+  async function fetchUserInfo() {
+    await ensureAuth()
+
+    const meRes = await fetch("https://www.googleapis.com/userinfo/v2/me", {
+      headers: {
+        Authorization: `Bearer ${authState?.accessToken}`
+      }
+    }).catch((error) => {
+      console.log(authState?.accessToken)
+      console.log(error)
+    })
+
+    const calendarRes = await fetch("https://www.googleapis.com/calendar/v3/users/me/calendarList", {
+      headers: {
+        Authorization: `Bearer ${authState?.accessToken}`
+      }
+    }).catch((error) => {
+      console.log(authState?.accessToken)
+      console.log(error)
+    })
+    const userInfo = await meRes!.json();
+    const calendarInfo = await calendarRes!.json()
+
+    console.log("user:", JSON.stringify(userInfo, null, 2))
+    console.log("calendar:", JSON.stringify(calendarInfo, null, 2))
+
+    setUser(userInfo)
+  }
+
+  const isAuthenticated = user != null
+
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Root" component={BottomTabNavigator}
-        options={{ headerShown: false }}
-      // options={{
-      //   title: 'CODE Review',
-      //   headerStyle: {
-      //     backgroundColor: '#222',
-      //   },
-      //   headerTintColor: '#fff',
-      //   headerTitleStyle: {
-      //     fontWeight: 'bold',
-      //   },
-      // }}
-      />
-      <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
-      <Stack.Group screenOptions={{ presentation: 'modal' }}>
-        <Stack.Screen name="Modal" component={ModalScreen} />
-      </Stack.Group>
-    </Stack.Navigator>
+
+      {isAuthenticated ?
+        <>
+          <Stack.Screen name="Root" component={BottomTabNavigator}
+            options={{ headerShown: false }}
+          // options={{
+          //   title: 'CODE Review',
+          //   headerStyle: {
+          //     backgroundColor: '#222',
+          //   },
+          //   headerTintColor: '#fff',
+          //   headerTitleStyle: {
+          //     fontWeight: 'bold',
+          //   },
+          // }}
+          />
+          <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
+          <Stack.Group screenOptions={{ presentation: 'modal' }}>
+            <Stack.Screen name="Modal" component={ModalScreen} />
+          </Stack.Group>
+        </>
+        : <Stack.Screen name="Root" component={LoginScreen(signIn)}
+          options={{ headerShown: false }} />}
+
+    </Stack.Navigator >
   );
 }
 
@@ -73,7 +152,9 @@ function BottomTabNavigator() {
       initialRouteName="TabOne"
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme].tint,
-      }}>
+      }}
+      sceneContainerStyle={{ backgroundColor: "#222" }}
+    >
       <BottomTab.Screen
         name="TabOne"
         component={TabOneScreen}

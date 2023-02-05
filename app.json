@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "code-review-mobile-app",
-    "slug": "code-review-mobile-app",
+    "name": "roomey",
+    "slug": "roomey",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -20,9 +20,10 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.code-review-mobile-app"
+      "bundleIdentifier": "berlin.code.roomey"
     },
     "android": {
+      "package": "berlin.code.roomey",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
