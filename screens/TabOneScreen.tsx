@@ -1,14 +1,16 @@
 import * as React from "react"
-import * as WebBroswer from "expo-web-browser"
+import * as WebBrowser from "expo-web-browser"
 import * as Google from "expo-auth-session/providers/google"
 import * as AuthSession from 'expo-auth-session';
+
 
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
 import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
-
-WebBroswer.maybeCompleteAuthSession()
+import { BusyRooms, CheckBusyRoomRequest, CreateEventRequest, Time, TimeFrame } from "../dings.types";
+WebBrowser
+WebBrowser.maybeCompleteAuthSession()
 
 type url = string
 
@@ -19,13 +21,13 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
         clientId: "614417646190-dbl1mao4r8bcjmam2cmcgtfo4c35ho1h.apps.googleusercontent.com",
         iosClientId: "614417646190-vcu5a3ini5nnr0elfaqt8fprs358mp2i.apps.googleusercontent.com",
         androidClientId: "614417646190-hhupm8k97a22rvv2gfdcoqi1gus8qunq.apps.googleusercontent.com",
-        scopes: ["https://www.googleapis.com/auth/calendar", "https://apps-apis.google.com/a/feeds/calendar/resource/"]
+        scopes: ["https://www.googleapis.com/auth/calendar", "https://apps-apis.google.com/a/feeds/calendar/resource/", "https://www.googleapis.com/auth/admin.directory.resource.calendar"]
     })
 
     async function ensureAuth() {
-        console.log("refresh check")
+        // console.log("refresh check")
         if (authState?.shouldRefresh()) {
-            console.log("SACHE WIRD REFRESHIERT!!!!!!!!!!!1111!")
+            // console.log("SACHE WIRD REFRESHIERT!!!!!!!!!!!1111!")
             //lol wenn lol
             setAuthState(await authState.refreshAsync({
                 clientId: "614417646190-dbl1mao4r8bcjmam2cmcgtfo4c35ho1h.apps.googleusercontent.com"
@@ -35,24 +37,38 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
 
     React.useEffect(() => {
         if (response?.type === "success") {
-            console.log(response.authentication)
+            // console.log(response.authentication)
             setAuthState(response.authentication)
 
             if (authState?.accessToken != null) fetchUserInfo()
         }
     }, [response])
 
-    async function fetchData(urlToFetchFrom: url, headerAuth: any = null) {
+    async function fetchData(urlToFetchFrom: url, postRequest: any = false, body: any = {}) {
+        let request;
+        const data = body
+        if (postRequest) {
+            request = {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${authState?.accessToken}`
+                },
+                body: JSON.stringify(data)
+            }
+        } else{
+            request = {
+                headers: {
+                    Authorization: `Bearer ${authState?.accessToken}`
+                }
+            }
+        }
         await ensureAuth()
         try {
             let response;
 
-            if (headerAuth != null)
-                response = await fetch(urlToFetchFrom, {
-                    headers: {
-                        Authorization: `Bearer ${headerAuth}`
-                    }
-                })
+            if (request != null)
+                response = await fetch(urlToFetchFrom, request)
             else
                 response = await fetch(urlToFetchFrom)
 
@@ -63,22 +79,107 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
     }
 
     async function fetchUserInfo() {
-        console.log("at1", authState?.accessToken)
-        console.log("at2", authState?.accessToken);
-
-        const [errorUserData, responseUserData] = await fetchData("https://www.googleapis.com/userinfo/v2/me", authState?.accessToken)
+        const [errorUserData, responseUserData] = await fetchData("https://www.googleapis.com/userinfo/v2/me")
         const userInfo = await responseUserData!.json();
-        console.log("usersache", JSON.stringify(userInfo))
         setUser(userInfo)
 
-        const [errorCalender, responseCalender] = await fetchData("https://www.googleapis.com/calendar/v3/users/me/calendarList", authState?.accessToken)
-        const calenderInfo = await responseCalender!.json()
-        console.log("calandERRRR", JSON.stringify(calenderInfo))
+        // const [errorCalender, responseCalender] = await fetchData("https://www.googleapis.com/calendar/v3/users/me/calendarList", request)
+        // const calenderInfo = await responseCalender!.json()
+        // console.log("calandERRRR", JSON.stringify(calenderInfo))
 
-        const [errorCalResource, responseCalResource] = await fetchData(`https://admin.googleapis.com/admin/directory/v1/customer/my_customer/resources/calendars/`, authState?.accessToken)
-        const calResource = await responseCalResource!.json()
-        console.log("RESORUCE", JSON.stringify(calResource))
 
+        // await createNewEvent()
+        // weg so machen
+        const testobj = {
+            "items": [
+                {
+                    "id": "code.berlin_1883j5g4liq5ihuehfm64pgo3o66g@resource.calendar.google.com"
+                }
+            ],
+            "timeMin": "2023-02-10T00:00:00+01:00",
+            "timeMax": "2023-02-10T23:00:00+01:00"
+        }
+        await checkRoomAvailability(testobj)
+    }
+
+    function compareTimeFrames(roomTimes: TimeFrame[], eventTimeStart: Time, eventTimeEnd: Time) {
+        if (roomTimes) {
+            return true
+        }
+        return false
+    }
+
+    async function createNewEvent(eventBody: CreateEventRequest, roomBusyBody: CheckBusyRoomRequest) {
+        const url: url = "https://www.googleapis.com/calendar/v3/calendars/primary/events"
+
+        const data: CreateEventRequest = eventBody || {
+            'summary': 'TestDingsd',
+            'start': {
+                'dateTime': '2023-02-10T14:00:00',
+                'timeZone': 'Europe/Zurich'
+            },
+            'end': {
+                'dateTime': '2023-02-10T16:00:00',
+                'timeZone': 'Europe/Zurich'
+            },
+            'attendees': [
+                { 'email': 'code.berlin_1883j5g4liq5ihuehfm64pgo3o66g@resource.calendar.google.com' },
+            ],
+        }
+        // weg so machen
+        const testobj: CheckBusyRoomRequest = {
+            "items": [
+                {
+                    "id": "code.berlin_1883j5g4liq5ihuehfm64pgo3o66g@resource.calendar.google.com"
+                }
+            ],
+            "timeMin": "2023-02-10T00:00:00+01:00",
+            "timeMax": "2023-02-10T23:00:00+01:00"
+        }
+
+        const [errorRooms, roomTimes] = await checkRoomAvailability( roomBusyBody || testobj)
+
+        if (errorRooms != null)
+            return [errorRooms, null] as const
+
+        const eventStart = data.start
+        const eventEnd = data.end
+
+        const confirmation = compareTimeFrames(roomTimes, eventStart, eventEnd)
+
+        if (!confirmation) {
+            const errorMsg = "No Available Time haher."
+            return [errorMsg, null] as const
+        }
+
+        const [error, response] = await fetchData(url, true, data)
+
+        if (error != null)
+            return [error, null] as const
+
+        const content = await response!.json()
+
+        const successMsg = "Successfully booked a room."
+
+        return [error, successMsg] as const
+    }
+
+
+    async function checkRoomAvailability(body: CheckBusyRoomRequest) {
+        const url: url = "https://www.googleapis.com/calendar/v3/freeBusy"
+
+        const data: CheckBusyRoomRequest = body 
+        const [error, response] = await fetchData(url, true, data)
+
+        if (error!= null) 
+            return [error, null] as const
+        
+
+        const content = await response!.json()
+
+        const roomBusyTimes: BusyRooms[] = content.calendars[body.items[0].id].busy
+
+        return [null, roomBusyTimes] as const
     }
 
     const ShowUserInfo = () => {
