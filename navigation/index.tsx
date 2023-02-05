@@ -25,6 +25,19 @@ import TabTwoScreen from '../screens/TabTwoScreen';
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
 
+interface User {
+  id: string
+  email: string
+  verified_email: boolean,
+  name: string
+  given_name: string
+  family_name: string
+  picture: string // url
+  locale: string // en, de
+  hd: string // code.berlin
+
+}
+
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
     <NavigationContainer
@@ -47,7 +60,8 @@ function RootNavigator() {
 
   const [authState, setAuthState] = useState<AuthSession.TokenResponse | null>(null)
 
-  const [user, setUser] = React.useState(null)
+  const [user, setUser] = React.useState<User | null>(null)
+  const [calendar, setCalendar] = React.useState<any>(null)
 
   const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
     clientId: "614417646190-dbl1mao4r8bcjmam2cmcgtfo4c35ho1h.apps.googleusercontent.com",
@@ -97,13 +111,14 @@ function RootNavigator() {
       console.log(authState?.accessToken)
       console.log(error)
     })
-    const userInfo = await meRes!.json();
+    const userInfo: User = await meRes!.json();
     const calendarInfo = await calendarRes!.json()
 
-    console.log("user:", JSON.stringify(userInfo, null, 2))
-    console.log("calendar:", JSON.stringify(calendarInfo, null, 2))
+    // console.log("user:", JSON.stringify(userInfo, null, 2))
+    // console.log("calendar:", JSON.stringify(calendarInfo, null, 2))
 
     setUser(userInfo)
+    setCalendar(calendarInfo)
   }
 
   const isAuthenticated = user != null
