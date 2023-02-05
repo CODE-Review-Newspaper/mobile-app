@@ -4,87 +4,220 @@ import { Room } from "../controller/allRooms.controller";
 export const rooms: Record<string, Room> = {
     'Ada': {
         isBookable: true,
-        id: 'code.berlin_188ff8i403g5ajughddn43j69rl166gb6oo38e9g74s3gchp60@resource.calendar.google.com'
+        id: 'code.berlin_188ff8i403g5ajughddn43j69rl166gb6oo38e9g74s3gchp60@resource.calendar.google.com',
+        displayName: "Ada",
+        factoryRoomNumber: "4.",
+        category: "MEETING_ROOM",
     },
     'EightBit': {
         isBookable: true,
-        id: 'code.berlin_188f0qjk7i3s8g6bj3dtntl59ppd46gb68r34c9l64p3achp60@resource.calendar.google.com'
+        id: 'code.berlin_188f0qjk7i3s8g6bj3dtntl59ppd46gb68r34c9l64p3achp60@resource.calendar.google.com',
+        displayName: "8-Bit Studio",
+        factoryRoomNumber: "4.",
+        category: "",
     },
     'Clap': {
         isBookable: true,
-        id: 'c_1886mt36arccmg6gktcllmauqn0ro@resource.calendar.google.com'
+        id: 'c_1886mt36arccmg6gktcllmauqn0ro@resource.calendar.google.com',
+        displayName: "Clap",
+        factoryRoomNumber: "4.",
+        category: "",
     },
     'D2': {
         isBookable: true,
-        id: 'code.berlin_1883j5g4liq5ihuehfm64pgo3o66g@resource.calendar.google.com'
+        id: 'code.berlin_1883j5g4liq5ihuehfm64pgo3o66g@resource.calendar.google.com',
+        displayName: "D2",
+        factoryRoomNumber: "4.",
+        category: "MEETING_ROOM",
     },
     'Echo': {
         isBookable: true,
-        id: 'code.berlin_188b923imhgm0g6vmhocej0lfi15e6gb74sjachk6cr32dpl68@resource.calendar.google.com'
+        id: 'code.berlin_188b923imhgm0g6vmhocej0lfi15e6gb74sjachk6cr32dpl68@resource.calendar.google.com',
+        displayName: "Echo",
+        factoryRoomNumber: "4.",
+        category: "MEETING_ROOM",
     },
     'Hat': {
         isBookable: true,
-        id: 'c_188803ttv3sgkjdtg78o39nkideck@resource.calendar.google.com'
+        id: 'c_188803ttv3sgkjdtg78o39nkideck@resource.calendar.google.com',
+        displayName: "Hat",
+        factoryRoomNumber: "4.",
+        category: "",
     },
     'Hi': {
         isBookable: true,
-        id: 'c_1881v5urdsafchk6n2mm25r7r0nji@resource.calendar.google.com'
+        id: 'c_1881v5urdsafchk6n2mm25r7r0nji@resource.calendar.google.com',
+        displayName: "Hi",
+        factoryRoomNumber: "4.",
+        category: "",
     },
     'Jungle': {
         isBookable: true,
-        id: 'code.berlin_188b81q8a620qia5jnkdohp7bu0ug6g96ss32d1i6cq3ae0@resource.calendar.google.com'
+        id: 'code.berlin_188b81q8a620qia5jnkdohp7bu0ug6g96ss32d1i6cq3ae0@resource.calendar.google.com',
+        displayName: "Jungle",
+        factoryRoomNumber: "4.",
+        category: "LEARNING_UNITS",
     },
     'Kick': {
         isBookable: true,
-        id: 'c_1887gbat61a14jbcjg0cv85i41t9s@resource.calendar.google.com'
+        id: 'c_1887gbat61a14jbcjg0cv85i41t9s@resource.calendar.google.com',
+        displayName: "Kick",
+        factoryRoomNumber: "4.",
+        category: "",
     },
     'Lizard': {
         isBookable: true,
-        id: 'code.berlin_1885dv1guu8e4gsdmna2vusmqgqh2@resource.calendar.google.com'
+        id: 'code.berlin_1885dv1guu8e4gsdmna2vusmqgqh2@resource.calendar.google.com',
+        displayName: "Lizard",
+        factoryRoomNumber: "4.",
+        category: "LEARNING_UNITS",
     },
     'Morty': {
         isBookable: true,
-        id: 'code.berlin_31333137303136343636@resource.calendar.google.com'
+        id: 'code.berlin_31333137303136343636@resource.calendar.google.com',
+        displayName: "Morty",
+        factoryRoomNumber: "4.",
+        category: "MEETING_ROOM",
     },
     'Paper': {
         isBookable: true,
-        id: 'code.berlin_3635313131353437333332@resource.calendar.google.com'
+        id: 'code.berlin_3635313131353437333332@resource.calendar.google.com',
+        displayName: "Paper",
+        factoryRoomNumber: "4.",
+        category: "LEARNING_UNITS",
     },
     'R2': {
         isBookable: true,
-        id: 'c_1889sg0kntgi2hllj05ckqp121enm@resource.calendar.google.com'
+        id: 'c_1889sg0kntgi2hllj05ckqp121enm@resource.calendar.google.com',
+        displayName: "R2",
+        factoryRoomNumber: "4.",
+        category: "MEETING_ROOM",
     },
     'Rick': {
         isBookable: true,
-        id: 'code.berlin_3736373335323835363837@resource.calendar.google.com'
+        id: 'code.berlin_3736373335323835363837@resource.calendar.google.com',
+        displayName: "Rick",
+        factoryRoomNumber: "4.",
+        category: "MEETING_ROOM",
     },
     'Rock': {
         isBookable: true,
-        id: 'c_1886i0393ltc8gqgmach00hf1odhg@resource.calendar.google.com'
+        id: 'c_1886i0393ltc8gqgmach00hf1odhg@resource.calendar.google.com',
+        displayName: "Rock",
+        factoryRoomNumber: "4.",
+        category: "LEARNING_UNITS",
     },
     'Scissors': {
         isBookable: true,
-        id: 'code.berlin_3934313230373536353639@resource.calendar.google.com'
+        id: 'code.berlin_3934313230373536353639@resource.calendar.google.com',
+        displayName: "Scissors",
+        factoryRoomNumber: "4.",
+        category: "LEARNING_UNITS",
     },
     'Spock': {
         isBookable: true,
-        id: 'c_188a3b98kiajagpgl4of58hbhq7lk@resource.calendar.google.com'
+        id: 'c_188a3b98kiajagpgl4of58hbhq7lk@resource.calendar.google.com',
+        displayName: "Spock",
+        factoryRoomNumber: "4.",
+        category: "PROJECT_LAB",
     },
     'Warp': {
         isBookable: true,
-        id: 'code.berlin_188f2u4uqje8uh9sh50ell5nlacva6gb6op34d9l6sq34chk6g@resource.calendar.google.com'
+        id: 'code.berlin_188f2u4uqje8uh9sh50ell5nlacva6gb6op34d9l6sq34chk6g@resource.calendar.google.com',
+        displayName: "Warp",
+        factoryRoomNumber: "4.",
+        category: "MEETING_ROOM",
     },
     'Zuse': {
         isBookable: true,
-        id: 'code.berlin_1888rqjtdkh70i80n4v45e7km81ua6gb68pjae1k74qjcdhk68@resource.calendar.google.com'
+        id: 'code.berlin_1888rqjtdkh70i80n4v45e7km81ua6gb68pjae1k74qjcdhk68@resource.calendar.google.com',
+        displayName: "Zuse",
+        factoryRoomNumber: "4.",
+        category: "MEETING_ROOM",
     },
     'VoidHardwareRoom': {
         isBookable: true,
-        id: 'c_188d0sd2j8pnei5ai0f0ijl0p3bmg4gbcdnm8p9ec9in4r39do@resource.calendar.google.com'
+        id: 'c_188d0sd2j8pnei5ai0f0ijl0p3bmg4gbcdnm8p9ec9in4r39do@resource.calendar.google.com',
+        displayName: "Void",
+        factoryRoomNumber: "4.",
+        category: "",
     },
     'Heaven': {
         isBookable: true,
-        id: 'c_188cdiodrmjlkjgih2c5386g4mf2q@resource.calendar.google.com'
+        id: 'c_188cdiodrmjlkjgih2c5386g4mf2q@resource.calendar.google.com',
+        displayName: "Heaven",
+        factoryRoomNumber: "4.",
+        category: "LEARNING_UNITS",
+    },
+    "BikiniBottom": {
+        isBookable: true,
+        id: null,
+        displayName: "Heaven",
+        factoryRoomNumber: "4.",
+        category: "WORKSPACES",
+    },
+    "HallyMcHallface": {
+        isBookable: true,
+        id: null,
+        displayName: "Heaven",
+        factoryRoomNumber: "4.",
+        category: "WORKSPACES",
+    },
+    "Space": {
+        isBookable: true,
+        id: null,
+        displayName: "Silent Space",
+        factoryRoomNumber: "4.",
+        category: "SILENT_SPACE",
+    },
+    "": {
+        isBookable: true,
+        id: null,
+        displayName: "",
+        factoryRoomNumber: "4.",
+        category: "PROJECT_LAB",
+    },
+    "": {
+        isBookable: true,
+        id: null,
+        displayName: "",
+        factoryRoomNumber: "4.",
+        category: "PROJECT_LAB",
+    },
+    "": {
+        isBookable: true,
+        id: null,
+        displayName: "",
+        factoryRoomNumber: "4.",
+        category: "PROJECT_LAB",
+    },
+    "": {
+        isBookable: true,
+        id: null,
+        displayName: "",
+        factoryRoomNumber: "4.",
+        category: "PROJECT_LAB",
+    },
+    "": {
+        isBookable: true,
+        id: null,
+        displayName: "",
+        factoryRoomNumber: "4.",
+        category: "PROJECT_LAB",
+    },
+    "": {
+        isBookable: true,
+        id: null,
+        displayName: "",
+        factoryRoomNumber: "4.",
+        category: "PROJECT_LAB",
+    },
+    "": {
+        isBookable: true,
+        id: null,
+        displayName: "",
+        factoryRoomNumber: "4.",
+        category: "PROJECT_LAB",
     },
 }
 

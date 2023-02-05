@@ -3,13 +3,12 @@ import { BusyRooms, CheckBusyRoomRequest } from "../types/dings.types"
 import bookRoomsController from "./booking.controller"
 
 export interface Room {
-    id: string
-    displayName?: string
-    factoryRoomNumber?: number
-    isBookable?: boolean
-    facultyRoom?: boolean
+    id: string | null
+    displayName: string
+    factoryRoomNumber: string
+    isBookable: boolean
     busyTimes?: BusyRooms[]
-    category?: "LEARNING_UNITS" | "PROJECT_ROOM" | "MEETING_ROOM" | "TEAM_HQ" | "PROJECT_LAB" | "SILENT_SPACE" | "STUDIO" | "OFFICE_BOOTH" | "WORKSPACES"
+    category: "LEARNING_UNITS" | "PROJECT_ROOM" | "MEETING_ROOM" | "TEAM_HQ" | "PROJECT_LAB" | "SILENT_SPACE" | "STUDIO" | "OFFICE_BOOTH" | "WORKSPACES"
 
 }
 export default function allRoomsController() {
