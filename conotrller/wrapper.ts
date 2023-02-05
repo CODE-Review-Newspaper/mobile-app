@@ -3,8 +3,10 @@ import * as React from "react"
 import userLoginController from "./userLogin.controller";
 import { url } from "../dings.types";
 
-export async function fetchData(urlToFetchFrom: url, postRequest: any = false, body: any = {}) {
-    const [authState, user] = await userLoginController()
+export async function fetchData(urlToFetchFrom: url,authState: any, postRequest: any = false, body: any = {}, ) {
+    // const [authState] =  userLoginController()
+
+    
 
     let request;
     const data = body

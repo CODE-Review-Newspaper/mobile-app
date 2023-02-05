@@ -51,13 +51,9 @@ export default function userLoginController() {
     }, [response, authState?.accessToken])
 
     async function fetchUserInfo() {
-        const [errorUserData, meRes] = await fetchData("https://www.googleapis.com/userinfo/v2/me")
+        await ensureAuth()
+        const [errorUserData, meRes] = await fetchData("https://www.googleapis.com/userinfo/v2/me", authState)
         const userInfo: User = await meRes!.json();
-        setUser(userInfo)
-
-
-
-
         setUser(userInfo)
     }
 
