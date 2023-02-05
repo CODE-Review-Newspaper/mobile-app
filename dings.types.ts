@@ -38,3 +38,5 @@ export interface TimeFrame {
 }
 
 export type BusyRooms = TimeFrame
+
+export type url = string
