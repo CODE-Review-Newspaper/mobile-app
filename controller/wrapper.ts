@@ -1,16 +1,12 @@
 import * as React from "react"
- 
-import userLoginController from "./userLogin.controller";
+
 import { url } from "../dings.types";
 
-export async function fetchData(urlToFetchFrom: url,authState: any, postRequest: any = false, body: any = {}, ) {
-    // const [authState] =  userLoginController()
-
-    
-
+export async function fetchData(urlToFetchFrom: url, authState: any, postRequest: any = false, body: any = {},) {
     let request;
     const data = body
     if (postRequest) {
+
         request = {
             method: "POST",
             headers: {
@@ -19,7 +15,7 @@ export async function fetchData(urlToFetchFrom: url,authState: any, postRequest:
             },
             body: JSON.stringify(data)
         }
-    } else{
+    } else {
         request = {
             headers: {
                 Authorization: `Bearer ${authState?.accessToken}`

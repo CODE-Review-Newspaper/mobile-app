@@ -40,3 +40,16 @@ export interface TimeFrame {
 export type BusyRooms = TimeFrame
 
 export type url = string
+
+export interface User {
+    id: string
+    email: string
+    verified_email: boolean,
+    name: string
+    given_name: string
+    family_name: string
+    picture: string // url
+    locale: string // en, de
+    hd: string // code.berlin
+
+}

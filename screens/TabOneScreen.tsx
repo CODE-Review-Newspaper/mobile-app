@@ -10,11 +10,15 @@ import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
 import { BusyRooms, CheckBusyRoomRequest, CreateEventRequest, Time, TimeFrame, url } from "../dings.types";
 import userLoginController from "../controller/userLogin.controller";
+import bookRoomsController from "../controller/booking.controller";
+import { busyRoomMock, eventMock, timeFrames, timeend, timestart } from "../mock.data";
 
 WebBrowser.maybeCompleteAuthSession()
 
+
 export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
-    const [authState, user, promptAsync, request] = userLoginController()
+    const [authState, user, promptAsync, request, callCreateEvent] = userLoginController()
+    const [compareTimeFrames, createNewEvent] = bookRoomsController()
 
     const ShowUserInfo = () => {
         if (user) {
@@ -41,6 +45,22 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
                     <Text>Nacken</Text>
                 </TouchableOpacity>
             }
+            <TouchableOpacity
+                disabled={!request}
+                onPress={async () => {
+                    compareTimeFrames(timeFrames, timestart, timeend)
+                }}
+            >
+                <Text>Nacken</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+                disabled={!request}
+                onPress={async () => {
+                    callCreateEvent()
+                }}
+            >
+                <Text>NUR WENN NACKEN</Text>
+            </TouchableOpacity>
         </View>
 
     );
