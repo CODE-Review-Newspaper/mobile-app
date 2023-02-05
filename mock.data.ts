@@ -1,4 +1,4 @@
-import { CheckBusyRoomRequest, CreateEventRequest, Time, TimeFrame } from "./dings.types"
+import { CheckBusyRoomRequest, CreateEventRequest, Time, TimeFrame } from "./types/dings.types"
 
 export const timeframe1: TimeFrame = {
     "start": new Date("2023-02-10T10:00:00Z"),

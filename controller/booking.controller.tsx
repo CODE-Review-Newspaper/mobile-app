@@ -1,6 +1,6 @@
 import * as React from "react"
-import { BusyRooms, CheckBusyRoomRequest, CreateEventRequest, Time, TimeFrame } from "../dings.types"
-import { url } from "../dings.types"
+import { BusyRooms, CheckBusyRoomRequest, CreateEventRequest, Time, TimeFrame } from "../types/dings.types"
+import { url } from "../types/dings.types"
 import { fetchData } from "./wrapper"
 import userLoginController from "./userLogin.controller"
 
