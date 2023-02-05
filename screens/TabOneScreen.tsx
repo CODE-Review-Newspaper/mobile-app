@@ -1,5 +1,5 @@
-import { Button, ScrollView, StyleSheet } from 'react-native';
-import { useState } from 'react';
+import { StyleSheet } from 'react-native';
+import { useContext } from 'react';
 
 import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
@@ -11,68 +11,90 @@ import ReactNativeZoomableView from '@dudigital/react-native-zoomable-view/src/R
 import Rooms from "../components/Rooms"
 
 import Slider from '@react-native-community/slider';
+import CalendarContext from '../contexts/calendar.context';
+
+import LinearGradient from 'react-native-linear-gradient';
 
 export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
 
-    const [text, setText] = useState("not clicked")
-
-    const [value, setValue] = useState(0)
+    const { setSelectedRoomId, startDate, selectedDate, setSelectedDate } = useContext(CalendarContext)
 
     return (
-        // <ScrollView contentContainerStyle={styles.container}>
+        <>
+            <LinearGradient colors={["rgba(0, 0, 0, 0.8)", "transparent"]} style={styles.toolBar}>
 
-        <ReactNativeZoomableView
-            zoomEnabled={true}
-            maxZoom={2}
-            minZoom={1}
-            zoomStep={0.25}
-            initialZoom={1}
-            bindToBorders={true}
-            // onZoomAfter={this.logOutZoomState}
-            style={styles.container}
-        >
+                <Text style={styles.timeDisplay}>{selectedDate.format("MMM D, hh:mma")}</Text>
+                <Slider
+                    style={{ width: "100%", height: 40 }}
+                    minimumValue={0}
+                    maximumValue={1}
+                    step={1 / 12 / 4}
+                    minimumTrackTintColor="#ff6961"
+                    maximumTrackTintColor="white"
+                    onValueChange={numberBetween0and1 => setSelectedDate(startDate.add(numberBetween0and1 * 12, "hours"))}
+                />
 
-            {/* <View style={styles.header}>
+            </LinearGradient>
+
+            <ReactNativeZoomableView
+                zoomEnabled={true}
+                maxZoom={2}
+                minZoom={1}
+                zoomStep={0.25}
+                initialZoom={1}
+                bindToBorders={true}
+                // onZoomAfter={this.logOutZoomState}
+                style={styles.container}
+            >
+
+                {/* <View style={styles.header}>
 
         <Text style={styles.title}>Tab One</Text>
         <Logo style={styles.logo} height="100" />
       </View> */}
-            {/* <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" /> */}
-            <Slider
-                style={{ width: 200, height: 40 }}
-                minimumValue={0}
-                maximumValue={1}
-                minimumTrackTintColor="#ff6961"
-                maximumTrackTintColor="white"
-                onValueChange={e => setValue(e)}
-            />
-            <View style={styles.dings}>
+                {/* <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" /> */}
 
-                <Floorplan
-                    width="100%"
-                    height="100%"
-                    style={styles.floorplan}
-                    fill="white"
-                />
 
-                {Object.values(Rooms).map(i => <i.Component
-                    key={i.name}
-                    width="100%"
-                    height="100%"
-                    style={styles.floorplan}
-                    fill={["#68c13a", "#e5a23c", "#f66b6e", "#efefef"][Math.floor(Math.random() * 4)]}
-                    // @ts-ignore
-                    onPress={() => { setText("clicked " + i.name); navigation.navigate('Modal') }
-                    }
-                />)}
+                <View style={styles.dings}>
 
-            </View>
-            {/* </ScrollView> */}
-        </ReactNativeZoomableView>
+                    <Floorplan
+                        width="100%"
+                        height="100%"
+                        style={styles.floorplan}
+                        fill="white"
+                    />
+
+                    {Object.values(Rooms).map(i => <i.Component
+                        key={i.name}
+                        width="100%"
+                        height="100%"
+                        style={styles.floorplan}
+                        fill={["#68c13a", "#e5a23c", "#f66b6e", "#efefef"][Math.floor(Math.random() * 4)]}
+                        // @ts-ignore
+                        onPress={() => { setSelectedRoomId(i.name); navigation.navigate('Modal') }
+                        }
+                    />)}
+
+                </View>
+                {/* </ScrollView> */}
+            </ReactNativeZoomableView>
+        </>
     );
 }
 
 const styles = StyleSheet.create({
+    toolBar: {
+        width: "100%",
+        padding: 16,
+        alignItems: "center",
+        zIndex: 3,
+        elevation: 3,
+    },
+    timeDisplay: {
+        color: "#ccc",
+        fontSize: 16,
+        fontWeight: "700",
+    },
     buttonText: {
         color: "white",
         fontWeight: "900",
@@ -92,8 +114,8 @@ const styles = StyleSheet.create({
     },
     dings: {
         position: "relative",
-        width: "150%",
-        height: "100%",
+        width: "120%",
+        height: "80%",
         transform: [{ rotate: "-90deg" }],
         backgroundColor: "transparent",
     },

@@ -35,9 +35,11 @@ export default function LoginScreen(signIn: () => unknown) {
 const styles = StyleSheet.create({
     buttonPressed: {
 
-        left: 4,
-        top: 4,
-        shadowOffset: { width: 0, height: 0 },
+        // left: 4,
+        // top: 4,
+        // shadowOffset: { width: 0, height: 0 },
+
+        transform: [{ scale: 0.95 }],
 
         backgroundColor: "#fe746a",
     },
@@ -60,12 +62,10 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
 
-        shadowColor: '#000',
-        shadowOffset: { width: 4, height: 4 },
-        shadowOpacity: 1,
-        shadowRadius: 0,
-
-
+        // shadowColor: '#000',
+        // shadowOffset: { width: 4, height: 4 },
+        // shadowOpacity: 1,
+        // shadowRadius: 0,
     },
     buttonText: {
         color: "white",
