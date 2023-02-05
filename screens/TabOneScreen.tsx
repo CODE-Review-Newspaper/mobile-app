@@ -5,24 +5,19 @@ import * as AuthSession from 'expo-auth-session';
 
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
-import EditScreenInfo from '../components/EditScreenInfo';
 import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
-import { Function } from "@babel/types";
 
 WebBroswer.maybeCompleteAuthSession()
 
 export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
-    //const [accessToken, setAccessToken] = React.useState(null)
     const [authState, setAuthState] = React.useState<AuthSession.TokenResponse | null>(null)
-    const [tokenResponse, setTokenResponse] = React.useState<AuthSession.TokenResponse | null>(null)
-
     const [user, setUser] = React.useState(null)
     const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
         clientId: "614417646190-dbl1mao4r8bcjmam2cmcgtfo4c35ho1h.apps.googleusercontent.com",
         iosClientId: "614417646190-vcu5a3ini5nnr0elfaqt8fprs358mp2i.apps.googleusercontent.com",
         androidClientId: "614417646190-hhupm8k97a22rvv2gfdcoqi1gus8qunq.apps.googleusercontent.com",
-
+        scopes: ["https://www.googleapis.com/auth/calendar"]
     })
 
     async function ensureAuth() {
