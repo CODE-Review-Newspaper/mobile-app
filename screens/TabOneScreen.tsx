@@ -1,20 +1,18 @@
 import * as React from "react"
 import * as WebBrowser from "expo-web-browser"
-import * as Google from "expo-auth-session/providers/google"
-import * as AuthSession from 'expo-auth-session';
 
 
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
 import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
-import { BusyRooms, CheckBusyRoomRequest, CreateEventRequest, Time, TimeFrame, url } from "../dings.types";
 import userLoginController from "../controller/userLogin.controller";
+import {useEffect} from "react";
 
 WebBrowser.maybeCompleteAuthSession()
 
 export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
-    const [authState, user, promptAsync, request] = userLoginController()
+    const [user, signIn, isLoggedIn] = userLoginController()
 
     const ShowUserInfo = () => {
         if (user) {
@@ -27,15 +25,18 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
         }
         return null
     }
+    useEffect(() => {
+        isLoggedIn()
+    }, [])
 
     return (
         <View>
+            {user && <Text>user so dings</Text>}
             {user && <ShowUserInfo />}
-            {user === null &&
+            {user == null &&
                 <TouchableOpacity
-                    disabled={!request}
                     onPress={async () => {
-                        promptAsync()
+                        await signIn()
                     }}
                 >
                     <Text>Nacken</Text>
