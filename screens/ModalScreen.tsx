@@ -77,7 +77,7 @@ export default function ModalScreen() {
       {/* Use a light status bar on iOS to account for the black space above the modal */}
       {/* <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} /> */}
 
-      <View style={{ width: "100%", paddingHorizontal: 16, marginTop: 32 }}>
+      <View style={{ width: "100%", paddingHorizontal: 16, marginTop: 32, backgroundColor: "transparent" }}>
 
         <Slider
           style={{ width: "100%", height: 40 }}
@@ -131,6 +131,8 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+
+    backgroundColor: "white",
   },
   title: {
     fontSize: 20,

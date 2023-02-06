@@ -102,6 +102,7 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
 
                         const scheduleInfo = roomSchedules[i.name]
 
+
                         // @ts-ignore
                         const isUnavailable = scheduleInfo?.busyTimes?.some(i => {
 
@@ -120,6 +121,8 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
                             if (displayMode === "ROOM_TYPE") return roomCategory?.color
 
                             if (displayMode === "ROOM_AVAILABILITY") {
+
+                                console.log(i.name, JSON.stringify(scheduleInfo, null, 2))
 
                                 if (scheduleInfo?.bookable === "BOOKABLE" && isAvailable) return "green"
 
@@ -140,9 +143,7 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
                             // @ts-ignore
                             onPress={() => {
 
-                                if (scheduleInfo == null) return
-
-                                if (!scheduleInfo.isBookable) return
+                                if (!(scheduleInfo?.bookable === "BOOKABLE" && isAvailable)) return
 
                                 setSelectedRoom(scheduleInfo);
 

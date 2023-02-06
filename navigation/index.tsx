@@ -186,6 +186,7 @@ function RootNavigator() {
               <Stack.Group screenOptions={{ presentation: 'modal' }}>
                 <Stack.Screen name="Modal" component={ModalScreen} options={{
                   title: "Book room",
+                  headerShown: false,
                 }} />
               </Stack.Group>
             </>
