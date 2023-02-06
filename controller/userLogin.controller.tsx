@@ -22,7 +22,7 @@ export default function userLoginController() {
     })
 
     const signIn = async () => {
-        // console.log(JSON.stringify(await getAuthState(), null, 2));
+        console.log(JSON.stringify(await getAuthState(), null, 2));
 
         if (!await isLoggedIn()) {
 
@@ -112,7 +112,6 @@ export default function userLoginController() {
                 console.log(JSON.stringify(e, null, 2))
             }
         }
-
         return true
     }
 

@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 
 import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
@@ -15,11 +15,19 @@ import CalendarContext from '../contexts/calendar.context';
 
 import LinearGradient from 'react-native-linear-gradient';
 
+import SkeletonLoader from "../assets/images/test.svg"
+
+import ErrorTriangle from "../assets/images/errorTriangle.svg"
+
 import dayjs from "dayjs"
 
 export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
 
     const { setSelectedRoom, startDate, selectedDate, setSelectedDate, roomSchedules } = useContext(CalendarContext)
+
+    const [state, setState] = useState<"ERROR" | "SUCCESS" | "LOADING">("SUCCESS")
+
+    if (state === "LOADING") return <SkeletonLoader fill="red" width="500" height="500" />
 
     return (
         <>
@@ -66,7 +74,9 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
                         fill="white"
                     />
 
-                    {Object.values(Rooms).map(i => {
+
+
+                    {state === "SUCCESS" && Object.values(Rooms).map(i => {
 
                         const scheduleInfo = roomSchedules[i.name]
 
@@ -112,13 +122,24 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
                     })}
 
                 </View>
-                {/* </ScrollView> */}
+                {state === "ERROR" && <View style={styles.staticOverlay}>
+                    <ErrorTriangle fill="red" width="30%" height="30%" />
+                </View>}
+
             </ReactNativeZoomableView>
         </>
     );
 }
 
 const styles = StyleSheet.create({
+    staticOverlay: {
+        position: "absolute",
+        alignItems: "center",
+        justifyContent: "center",
+        width: "100%",
+        height: "100%",
+        backgroundColor: "transparent",
+    },
     toolBar: {
         width: "100%",
         padding: 16,
@@ -193,3 +214,36 @@ const styles = StyleSheet.create({
         width: '80%',
     },
 });
+
+
+// import {
+//     Animated,
+//     useSharedValue,
+//     useAnimatedProps,
+//     withTiming
+// } from 'react-native-reanimated';
+// import Svg, { Path } from 'react-native-svg';
+
+// const AnimatedPath = Animated.createAnimatedComponent(Path);
+
+// export default function App() {
+//     const radius = useSharedValue(50);
+
+//     const animatedProps = useAnimatedProps(() => {
+//         // draw a circle
+//         const path = `
+//     M 100, 100
+//     m -${radius}, 0
+//     a ${radius},${radius} 0 1,0 ${radius * 2},0
+//     a ${radius},${radius} 0 1,0 ${-radius * 2},0
+//     `;
+//         return {
+//             d: path
+//         };
+//     });
+
+//     return null
+
+//     // attach animated props to an SVG path using animatedProps
+//     // return <Svg><AnimatedPath animatedProps={animatedProps} fill="black" onPress={() => radius.value = withTiming(Math.random() * 180)} /></Svg>
+// }

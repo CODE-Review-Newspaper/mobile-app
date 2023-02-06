@@ -31,8 +31,6 @@ import bookRoomsController from "../controller/booking.controller";
 import allRoomsController, { Room } from "../controller/allRooms.controller";
 import UserContext from "../contexts/user.context";
 
-console.info("navigation loaded")
-
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
     <NavigationContainer

@@ -5,6 +5,16 @@ import { Platform, Pressable, StyleSheet, TextInput } from 'react-native';
 
 import { Text, View } from '../components/Themed';
 import CalendarContext from '../contexts/calendar.context';
+import { Room } from '../controller/allRooms.controller';
+
+const getRoomDescription = (room: Room) => {
+
+  if (room.factoryRoomNumber != null) return `[${room.factoryRoomNumber}] ${room.displayName}`
+
+  if (room.displayName != null) return room.displayName
+
+  return "Unknown room"
+}
 
 export default function ModalScreen() {
 
@@ -56,7 +66,7 @@ export default function ModalScreen() {
         onChange={e => setMeetingTitle(e.target.value)}
       />
 
-      <Text style={styles.text}>[{selectedRoom!.factoryRoomNumber}] {selectedRoom!.displayName}</Text>
+      <Text style={styles.text}>{getRoomDescription(selectedRoom!)}</Text>
 
       <Text style={styles.text}>{selectedDate.format("H:mma")} - {endDate.format("H:mma")}</Text>
 
@@ -65,10 +75,9 @@ export default function ModalScreen() {
 
 
       {/* Use a light status bar on iOS to account for the black space above the modal */}
-      <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
+      {/* <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} /> */}
 
       <View style={{ width: "100%", paddingHorizontal: 16, marginTop: 32 }}>
-        {/* <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" /> */}
 
         <Slider
           style={{ width: "100%", height: 40 }}
@@ -139,7 +148,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#fe746a",
   },
   button: {
-    // paddingHorizontal: 32,
     height: 48,
     backgroundColor: "#FF6961",
     alignItems: "center",
@@ -148,9 +156,6 @@ const styles = StyleSheet.create({
     marginTop: 24,
 
     width: "100%",
-
-    // borderColor: "black",
-    // borderWidth: 1
   },
   buttonText: {
     color: "white",
