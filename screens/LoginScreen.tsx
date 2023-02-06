@@ -8,6 +8,8 @@ import Logo from '../assets/images/codeReviewLogo.svg';
 import { useContext } from 'react';
 import UserContext from '../contexts/user.context';
 
+import GoogleIcon from "../assets/images/googleIcon.svg"
+
 export default function LoginScreen() {
 
     const { signIn } = useContext(UserContext)
@@ -28,6 +30,8 @@ export default function LoginScreen() {
                     style={({ pressed }) => pressed ? [styles.button, styles.buttonPressed] : styles.button}
                     accessibilityLabel="Sign in with @code.berlin"
                 >
+
+                    <GoogleIcon width="16" height="16" fill="white" style={{ marginBottom: 1 }} />
                     <Text style={styles.buttonText}>Sign in with @code.berlin</Text>
                 </Pressable>
             </View>
@@ -65,6 +69,8 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
 
+        flexDirection: "row",
+
         // shadowColor: '#000',
         // shadowOffset: { width: 4, height: 4 },
         // shadowOpacity: 1,
@@ -74,5 +80,7 @@ const styles = StyleSheet.create({
         color: "white",
         fontWeight: "900",
         fontSize: 16,
+
+        paddingLeft: 10,
     },
 });
