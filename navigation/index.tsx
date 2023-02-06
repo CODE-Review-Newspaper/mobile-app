@@ -30,6 +30,8 @@ import allRoomsController, { Room } from "../controller/allRooms.controller";
 import UserContext, { UserContextType } from "../contexts/user.context";
 import LoadingScreen from "../screens/LoadingScreen";
 
+import { useInterval } from 'usehooks-ts'
+
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
     <NavigationContainer
@@ -80,6 +82,8 @@ function RootNavigator() {
 
     if (scheduleError != null) {
 
+      console.error("error loading room schedules:", scheduleError)
+
       setRoomScheduleState(prev => ({
         ...prev,
         isLoading: false,
@@ -94,12 +98,18 @@ function RootNavigator() {
       hasData: true,
     }))
     setRoomSchedules(scheduleData)
+
+    console.info("loaded room schedules")
   }
 
   React.useEffect(() => {
 
     loadRoomSchedules()
-  }, [isLoadingAuthState, isSignedIn])
+  }, [])
+
+  const REFETCH_ROOMS_INTERVAL_SECONDS = 30
+
+  useInterval(loadRoomSchedules, REFETCH_ROOMS_INTERVAL_SECONDS * 1000)
 
   const userContextValue: UserContextType = {
     user,
