@@ -122,6 +122,7 @@ const styles = StyleSheet.create({
     toolBar: {
         width: "100%",
         padding: 16,
+        paddingTop: 32,
         alignItems: "center",
         zIndex: 3,
         elevation: 3,

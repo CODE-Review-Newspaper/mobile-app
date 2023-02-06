@@ -6,7 +6,7 @@ export interface Room {
     id: string | null
     displayName: string
     factoryRoomNumber: string
-    isBookable: boolean
+    bookable: "BOOKABLE" | "UNBOOKABLE" | "APPLICATION_REQUIRED" | "TEAM_ONLY"
     busyTimes?: BusyRooms[]
     category: "LEARNING_UNITS" | "PROJECT_ROOM" | "MEETING_ROOM" | "TEAM_HQ" | "PROJECT_LAB" | "SILENT_SPACE" | "STUDIO" | "OFFICE_BOOTH" | "WORKSPACES"
 

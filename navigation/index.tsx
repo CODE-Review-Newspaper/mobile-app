@@ -31,18 +31,7 @@ import bookRoomsController from "../controller/booking.controller";
 import allRoomsController, { Room } from "../controller/allRooms.controller";
 import UserContext from "../contexts/user.context";
 
-interface User {
-  id: string
-  email: string
-  verified_email: boolean,
-  name: string
-  given_name: string
-  family_name: string
-  picture: string // url
-  locale: string // en, de
-  hd: string // code.berlin
-
-}
+console.info("navigation loaded")
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
@@ -225,7 +214,10 @@ function BottomTabNavigator() {
     <BottomTab.Navigator
       initialRouteName="TabOne"
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme].tint,
+        tabBarStyle: {
+          backgroundColor: "#111",
+          borderTopColor: "#444",
+        },
       }}
       sceneContainerStyle={{ backgroundColor: "#222" }}
     >
@@ -235,6 +227,9 @@ function BottomTabNavigator() {
         options={({ navigation }: RootTabScreenProps<'TabOne'>) => ({
           title: 'Floorplan',
           tabBarActiveTintColor: "#FF6961",
+          // tabBarInactiveTintColor: "#efefef",
+          // tabBarActiveBackgroundColor: "blue",
+          // tabBarInActiveBackgroundColor: "green",
           headerShown: false,
           tabBarIcon: ({ color }) => <TabBarIcon name="map-marker" color={color} />,
           headerRight: () => (
@@ -301,7 +296,7 @@ function BottomTabNavigator() {
           ),
         }}
       />
-    </BottomTab.Navigator>
+    </BottomTab.Navigator >
   );
 }
 
