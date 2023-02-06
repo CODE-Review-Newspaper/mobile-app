@@ -7,7 +7,7 @@ import userLoginController from "./userLogin.controller"
 
 
 export default function bookRoomsController() {
-    const [user, signIn, isLoggedIn, getAuthState] = userLoginController()
+    const {getAuthState} = userLoginController()
 
     async function createNewEvent(eventBody: CreateEventRequest, roomBusyBody: CheckBusyRoomRequest) {
 
@@ -84,7 +84,7 @@ export default function bookRoomsController() {
             console.log(roomTimes)
             console.log(eventTimeStart)
             console.log(eventTimeEnd)
-            if (time.start <= eventTimeStart.dateTime || time.end >= eventTimeEnd.dateTime) {
+            if (time.start >= eventTimeStart.dateTime || time.end >= eventTimeEnd.dateTime) {
                 console.log("dsings")
                 return false
             }
@@ -93,5 +93,5 @@ export default function bookRoomsController() {
         return true
     }
 
-    return [compareTimeFrames, createNewEvent, checkRoomAvailability] as const;
+    return { compareTimeFrames, createNewEvent, checkRoomAvailability }
 }

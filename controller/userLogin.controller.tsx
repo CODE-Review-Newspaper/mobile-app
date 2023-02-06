@@ -129,7 +129,15 @@ export default function userLoginController() {
         isLoggedIn()
     }, [])
 
+    React.useEffect(() => {
+        if (user != null){
+            setIsSignedIn(true)
+        } else{
+            setIsSignedIn(false)
+        }
+    }, [])
     // TODO: replace user != null by isSignedIn
-    return [user, signIn, user != null, getAuthState, signOut] as const
+    return { user, signIn, isSignedIn, getAuthState, signOut
+}
 
 }
