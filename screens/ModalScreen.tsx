@@ -95,6 +95,7 @@ export default function ModalScreen() {
           // onPress={signIn}
           style={({ pressed }) => pressed ? [styles.button, styles.buttonPressed] : styles.button}
           accessibilityLabel="Book room"
+          onPress={() => submit()}
         >
           <Text style={styles.buttonText}>Book room</Text>
         </Pressable>
