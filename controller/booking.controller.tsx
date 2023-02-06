@@ -27,7 +27,6 @@ export default function bookRoomsController() {
             const errorMsg = "No Available Time haher."
             return [errorMsg, null] as const
         }
-
         const [error, response] = await fetchData(url, await getAuthState(), true, eventBody)
 
         if (error != null) {
@@ -43,7 +42,6 @@ export default function bookRoomsController() {
 
         return [error, successMsg] as const
     }
-
 
     async function checkRoomAvailability(body: CheckBusyRoomRequest) {
 
