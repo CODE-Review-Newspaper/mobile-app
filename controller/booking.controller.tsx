@@ -89,7 +89,7 @@ export default function bookRoomsController() {
 
         const email = body.items[0].id
 
-        const roomCalendar = content.calendars[email]
+        const roomCalendar = content?.calendars?.[email]
 
         if (roomCalendar == null) {
 

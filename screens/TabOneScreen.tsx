@@ -56,7 +56,6 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
             next: "MAP_MODE" as const,
         },
     }
-
     const [displayMode, setDisplayMode] = useState<typeof DisplayMode[keyof typeof DisplayMode]>(DisplayMode.BOOK_MODE)
 
     function switchDisplayMode() {
@@ -72,7 +71,10 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
             {state === "ERROR" && <View style={{ position: "absolute", width: "100%", height: 150, backgroundColor: "transparent", alignItems: "center", justifyContent: "center" }}>
                 <Text style={{ color: "#FF160A", fontWeight: "900", fontSize: 25 }}>An error occured.</Text>
             </View>}
-            <LinearGradient colors={["rgba(0, 0, 0, 0.8)", "transparent"]} style={{ ...styles.toolBar, opacity: state === "SUCCESS" ? 1 : 0 }}>
+            <LinearGradient
+                colors={["rgba(0, 0, 0, 0.8)", "transparent"]}
+                style={{ ...styles.toolBar, opacity: state === "SUCCESS" ? 1 : 0 }}
+            >
 
                 <Text style={styles.timeDisplay}>{selectedDate.format("MMM D, H:mma")}</Text>
                 <Slider
@@ -86,7 +88,7 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
                 />
                 <Pressable
                     accessibilityLabel="Switch to next display mode"
-                    style={{ flexDirection: "row", alignItems: "center", backgroundColor: "transparent" }}
+                    style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", width: "100%", paddingBottom: 16, backgroundColor: "transparent" }}
                     onPress={switchDisplayMode}
                 >
                     <Text style={{ ...styles.timeDisplay, textDecorationLine: "underline" }}>{displayMode.displayName}</Text>
@@ -94,18 +96,6 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
                         name="arrows-v"
                         style={{ marginLeft: 5, color: "#ccc", fontSize: 15 }}
                     />
-                    {/* <Switch
-                        onValueChange={e => {
-
-                            setDisplayMode(e ? "BOOK_MODE" : "MAP_MODE")
-                        }}
-                        trackColor={{
-                            true: "#FF6961",
-
-                        }}
-                        value={displayMode === "BOOK_MODE"}
-                        style={{ marginLeft: 16 }}
-                    /> */}
                 </Pressable>
             </LinearGradient>
 
