@@ -1,15 +1,12 @@
-import * as React from "react"
 import { BusyRooms, CheckBusyRoomRequest, CreateEventRequest, Time, TimeFrame } from "../types/dings.types"
 import { url } from "../types/dings.types"
 import { fetchData } from "./wrapper"
 import userLoginController from "./userLogin.controller"
 
-
-
 export default function bookRoomsController() {
-    const {getAuthState} = userLoginController()
+    const { getAuthState } = userLoginController()
 
-    async function createNewEvent(eventBody: CreateEventRequest, roomBusyBody: CheckBusyRoomRequest) {
+    async function createEvent(eventBody: CreateEventRequest, roomBusyBody: CheckBusyRoomRequest) {
 
         const url: url = "https://www.googleapis.com/calendar/v3/calendars/primary/events"
 
@@ -31,7 +28,7 @@ export default function bookRoomsController() {
 
         if (error != null) {
 
-            console.error("dings passiert huch")
+            console.error("error inside createEvent:", error)
 
             return [error, null] as const
         }
@@ -51,7 +48,7 @@ export default function bookRoomsController() {
 
         if (error != null) {
 
-            console.error("dings passiert hach")
+            console.error("error inside checkRoomAvailability:", error)
 
             return [error, null] as const
         }
@@ -81,17 +78,12 @@ export default function bookRoomsController() {
             if (typeof time.end === "string") {
                 time.end = new Date(time.end)
             }
-            console.log(roomTimes)
-            console.log(eventTimeStart)
-            console.log(eventTimeEnd)
             if (time.start >= eventTimeStart.dateTime || time.end >= eventTimeEnd.dateTime) {
-                console.log("dsings")
                 return false
             }
         }
-        console.log("DONGS")
         return true
     }
 
-    return { compareTimeFrames, createNewEvent, checkRoomAvailability }
+    return { compareTimeFrames, createEvent, checkRoomAvailability }
 }

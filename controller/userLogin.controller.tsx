@@ -33,7 +33,6 @@ export default function userLoginController() {
 
             if (authState != null) {
                 await AuthSession.revokeAsync({ token: authState.accessToken }, Google.discovery)
-                console.log("revoked")
             }
         }
 
@@ -41,14 +40,14 @@ export default function userLoginController() {
         setUser(null)
     }
 
-    async function isLoggedIn(fetchUser = true) {
+    async function isLoggedIn(shouldFetchUserInfo = true) {
         const authState = await getAuthState();
 
         const loggedIn = authState != null && await autoRenewAuth();
-        if (loggedIn && fetchUser) {
+
+        if (loggedIn && shouldFetchUserInfo) {
             fetchUserInfo()
         }
-
         return loggedIn
     }
 
@@ -76,7 +75,6 @@ export default function userLoginController() {
         }
 
         if ((authState.shouldRefresh())) {
-            console.log("refreshing")
             try {
                 const refresh = await authState.refreshAsync({
                     clientId: "614417646190-dbl1mao4r8bcjmam2cmcgtfo4c35ho1h.apps.googleusercontent.com",
@@ -91,13 +89,15 @@ export default function userLoginController() {
             } catch (e) {
                 if (e instanceof TokenError) {
                     if (e.code === 'invalid_grant') {
-                        console.log("invalid grant, prompting for new grant")
+                        console.error("invalid grant, prompting for new grant")
 
                         await setAuthState(null)
                         await signIn()
+
+                        return
                     }
                 }
-                console.log(JSON.stringify(e, null, 2))
+                console.error("error inside autoRenewAuth:", JSON.stringify(e, null, 2))
             }
         }
         return true

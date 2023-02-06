@@ -17,7 +17,12 @@ interface CalendarContextType {
     setEndDate: (date: dayjs.Dayjs) => unknown
 
     roomSchedules: any
-    createEvent: (eventBody: CreateEventRequest, roomBusyBody: CheckBusyRoomRequest) => Promise<[any, any]>
+    createEvent: (eventBody: CreateEventRequest, roomBusyBody: CheckBusyRoomRequest) => Promise<readonly [{}, null] | readonly [null | undefined, string]>,
+    loadRoomSchedules: () => Promise<any>
+
+    isLoading: boolean
+    hasData: boolean
+    hasError: boolean
 }
 // @ts-ignore
 const CalendarContext = createContext<CalendarContextType>();

@@ -19,7 +19,7 @@ const getRoomDescription = (room: Room) => {
 
 export default function ModalScreen({ navigation }: RootTabScreenProps<"Modal">) {
 
-  const { selectedRoom, selectedDate, endDate, setEndDate, createEvent } = useContext(CalendarContext)
+  const { selectedRoom, selectedDate, endDate, setEndDate, createEvent, loadRoomSchedules } = useContext(CalendarContext)
 
   const DEFAULT_DURATION_MINS = 60
   const MIN_DURATION_MINS = 15
@@ -64,6 +64,8 @@ export default function ModalScreen({ navigation }: RootTabScreenProps<"Modal">)
       return
     }
     setState("SUCCESS")
+
+    loadRoomSchedules()
 
     setTimeout(() => navigation.navigate('TabOne'), 300)
   }

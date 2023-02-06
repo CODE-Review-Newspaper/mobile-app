@@ -24,14 +24,35 @@ import { RoomBookableData, RoomCategoryData, rooms } from '../data/rooms.data';
 
 export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
 
-    const { setSelectedRoom, startDate, selectedDate, setSelectedDate, roomSchedules } = useContext(CalendarContext)
+    const {
+        setSelectedRoom,
+        startDate,
+        selectedDate,
+        setSelectedDate,
+        roomSchedules,
+        isLoading,
+        hasData,
+        hasError,
+    } = useContext(CalendarContext)
 
-    const [state, setState] = useState<"ERROR" | "SUCCESS" | "LOADING">("SUCCESS")
+    const state = (() => {
+        if (hasData) return "SUCCESS"
+        if (hasError) return "ERROR"
+        if (isLoading) return "LOADING"
+
+        return "ERROR"
+    })()
 
     const [displayMode, setDisplayMode] = useState<"ROOM_TYPE" | "ROOM_AVAILABILITY">("ROOM_AVAILABILITY")
 
     return (
         <>
+            {state === "LOADING" && <View style={{ position: "absolute", width: "100%", height: 150, backgroundColor: "transparent", alignItems: "center", justifyContent: "center" }}>
+                <Text style={{ color: "white", fontWeight: "900", fontSize: 25 }}>Loading...</Text>
+            </View>}
+            {state === "ERROR" && <View style={{ position: "absolute", width: "100%", height: 150, backgroundColor: "transparent", alignItems: "center", justifyContent: "center" }}>
+                <Text style={{ color: "#FF160A", fontWeight: "900", fontSize: 25 }}>An error occured.</Text>
+            </View>}
             <LinearGradient colors={["rgba(0, 0, 0, 0.8)", "transparent"]} style={{ ...styles.toolBar, opacity: state === "SUCCESS" ? 1 : 0 }}>
 
                 <Text style={styles.timeDisplay}>{selectedDate.format("MMM D, H:mma")}</Text>
@@ -151,8 +172,8 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
 
                 </View>
                 {state === "ERROR" && <View style={styles.staticOverlay}>
-                    <ErrorTriangle fill="#FF160A" width="30%" height="30%" />
-                    <Text style={{ color: "#FF160A", fontWeight: "900", fontSize: 25 }}>An error occured.</Text>
+                    <ErrorTriangle fill="#FF160A" width="45%" height="45%" />
+                    {/* <Text style={{ color: "#FF160A", fontWeight: "900", fontSize: 25 }}>An error occured.</Text> */}
                 </View>}
 
             </ReactNativeZoomableView>
@@ -245,12 +266,12 @@ const styles = StyleSheet.create({
 });
 
 
-import {
-    Animated,
-    useSharedValue,
-    useAnimatedProps,
-    withTiming
-} from 'react-native-reanimated';
+// import {
+//     Animated,
+//     useSharedValue,
+//     useAnimatedProps,
+//     withTiming
+// } from 'react-native-reanimated';
 // import Svg, { Path } from 'react-native-svg';
 
 // const AnimatedPath = Animated.createAnimatedComponent(Path);

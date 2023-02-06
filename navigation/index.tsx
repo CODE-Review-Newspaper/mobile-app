@@ -51,81 +51,11 @@ maybeCompleteAuthSession()
 
 function RootNavigator() {
 
-  const {user, signIn, isSignedIn, signOut} = userLoginController()
-  const {createNewEvent} = bookRoomsController()
-  const {getBusyTimeOfRooms} = allRoomsController()
+  const [roomScheduleState, setRoomScheduleState] = useState<{ isLoading: boolean, hasData: boolean, hasError: boolean }>({ isLoading: true, hasData: false, hasError: false })
 
-  const userContextValue = {
-    user,
-    isSignedIn,
-    signIn,
-    signOut,
-  }
-
-  // const [authState, setAuthState] = useState<AuthSession.TokenResponse | null>(null)
-
-  // const [user, setUser] = React.useState<User | null>(null)
-  // const [calendar, setCalendar] = React.useState<any>(null)
-
-  // const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
-  //   clientId: "614417646190-dbl1mao4r8bcjmam2cmcgtfo4c35ho1h.apps.googleusercontent.com",
-  //   iosClientId: "614417646190-vcu5a3ini5nnr0elfaqt8fprs358mp2i.apps.googleusercontent.com",
-  //   androidClientId: "614417646190-hhupm8k97a22rvv2gfdcoqi1gus8qunq.apps.googleusercontent.com",
-  //   scopes: ["https://www.googleapis.com/auth/calendar"]
-  // })
-  // const signIn = () => promptAsync()
-
-  // async function ensureAuth() {
-
-  //   if (authState?.shouldRefresh()) {
-
-  //     setAuthState(await authState.refreshAsync({
-  //       clientId: "614417646190-dbl1mao4r8bcjmam2cmcgtfo4c35ho1h.apps.googleusercontent.com"
-  //     }, Google.discovery))
-  //   }
-  // }
-
-  // React.useEffect(() => {
-  //   if (response?.type === "success") {
-  //     if (response.authentication?.accessToken !== authState?.accessToken) {
-  //       setAuthState(response.authentication)
-  //     } else {
-  //       if (authState?.accessToken != null) fetchUserInfo()
-  //     }
-  //   }
-  // }, [response, authState?.accessToken])
-
-  // async function fetchUserInfo() {
-  //   await ensureAuth()
-
-  //   const meRes = await fetch("https://www.googleapis.com/userinfo/v2/me", {
-  //     headers: {
-  //       Authorization: `Bearer ${authState?.accessToken}`
-  //     }
-  //   }).catch((error) => {
-  //     console.log(authState?.accessToken)
-  //     console.log(error)
-  //   })
-
-  //   const calendarRes = await fetch("https://www.googleapis.com/calendar/v3/users/me/calendarList", {
-  //     headers: {
-  //       Authorization: `Bearer ${authState?.accessToken}`
-  //     }
-  //   }).catch((error) => {
-  //     console.log(authState?.accessToken)
-  //     console.log(error)
-  //   })
-  //   const userInfo: User = await meRes!.json();
-  //   const calendarInfo = await calendarRes!.json()
-
-  //   // console.log("user:", JSON.stringify(userInfo, null, 2))
-  //   // console.log("calendar:", JSON.stringify(calendarInfo, null, 2))
-
-  //   setUser(userInfo)
-  //   setCalendar(calendarInfo)
-  // }
-
-  // const isAuthenticated = user != null
+  const { user, signIn, isSignedIn, signOut } = userLoginController()
+  const { createEvent } = bookRoomsController()
+  const { getBusyTimeOfRooms } = allRoomsController()
 
   const roundDownToNearestQuarterHour = (date: dayjs.Dayjs) => {
 
@@ -138,33 +68,64 @@ function RootNavigator() {
   const [startDate, setStartDate] = useState<dayjs.Dayjs>(roundDownToNearestQuarterHour(dayjs()))
   const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs>(startDate)
   const [endDate, setEndDate] = useState<dayjs.Dayjs>(selectedDate.add(6, "hours"))
+  const [roomSchedules, setRoomSchedules] = useState<any>({})
 
-  const [busyTimes, setBusyTimes] = useState<any>({})
+  async function loadRoomSchedules() {
+
+    setRoomScheduleState(prev => ({
+      ...prev,
+      isLoading: true,
+    }))
+
+    const [scheduleError, scheduleData] = await getBusyTimeOfRooms()
+
+    if (scheduleError != null) {
+
+      setRoomScheduleState(prev => ({
+        ...prev,
+        isLoading: false,
+        hasError: true,
+      }))
+      return
+    }
+    setRoomScheduleState(prev => ({
+      ...prev,
+      isLoading: false,
+      hasError: false,
+      hasData: true,
+    }))
+    setRoomSchedules(scheduleData)
+  }
 
   React.useEffect(() => {
 
-    (async () => {
-
-      const res = await getBusyTimeOfRooms()
-
-      setBusyTimes(res)
-    })()
+    loadRoomSchedules()
   }, [])
+
+  const userContextValue = {
+    user,
+    isSignedIn,
+    signIn,
+    signOut,
+  }
+  const calendarContextValue = {
+    selectedRoom,
+    setSelectedRoom,
+    startDate,
+    setStartDate,
+    endDate,
+    setEndDate,
+    selectedDate,
+    setSelectedDate,
+    roomSchedules,
+    createEvent,
+    loadRoomSchedules,
+    ...roomScheduleState,
+  }
 
   return (
     <UserContext.Provider value={userContextValue}>
-      <CalendarContext.Provider value={{
-        selectedRoom,
-        setSelectedRoom,
-        startDate,
-        setStartDate,
-        endDate,
-        setEndDate,
-        selectedDate,
-        setSelectedDate,
-        roomSchedules: busyTimes,
-        createEvent: createNewEvent,
-      }}>
+      <CalendarContext.Provider value={calendarContextValue}>
         <Stack.Navigator>
 
           {isSignedIn ?

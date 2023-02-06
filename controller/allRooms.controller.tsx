@@ -1,3 +1,5 @@
+import dayjs from "dayjs"
+
 import { rooms } from "../data/rooms.data"
 import { BusyRooms, CheckBusyRoomRequest } from "../types/dings.types"
 import bookRoomsController from "./booking.controller"
@@ -9,45 +11,40 @@ export interface Room {
     bookable: "BOOKABLE" | "UNBOOKABLE" | "APPLICATION_REQUIRED" | "TEAM_ONLY"
     busyTimes?: BusyRooms[]
     category: "LEARNING_UNITS" | "PROJECT_ROOM" | "MEETING_ROOM" | "TEAM_HQ" | "PROJECT_LAB" | "SILENT_SPACE" | "STUDIO" | "OFFICE_BOOTH" | "WORKSPACES"
-
 }
 export default function allRoomsController() {
-    const {checkRoomAvailability} = bookRoomsController()
+    const { checkRoomAvailability } = bookRoomsController()
 
     async function getBusyTimeOfRooms() {
 
-        for (const [key, value] of Object.entries(rooms)) {
-            if (value.bookable === "BOOKABLE" && value.id != null) {
-                const beginOfDay = new Date()
-                beginOfDay.setUTCHours(0)
-                beginOfDay.setUTCMinutes(0)
-                beginOfDay.setUTCSeconds(0)
-                const endOfDay = new Date()
-                endOfDay.setUTCHours(23)
-                endOfDay.setUTCMinutes(59)
-                endOfDay.setUTCSeconds(59)
+        const newRooms = Object.fromEntries(await Promise.all(Object.entries(rooms).map(async ([key, room]) => {
 
-                const newBody: CheckBusyRoomRequest = {
-                    items: [
-                        {
-                            id: value.id
-                        },
-                    ],
-                    timeMin: beginOfDay,
-                    timeMax: endOfDay
-                }
+            if (!(room.bookable === "BOOKABLE" && room.id != null)) return [key, room]
 
-                const [error, roomTimes] = await checkRoomAvailability(newBody)
-
-                if (error != null)
-                    console.log("Could not find Busy times of Room. ", error)
-
-                value.busyTimes = roomTimes!
-
+            const newBody: CheckBusyRoomRequest = {
+                items: [
+                    {
+                        id: room.id,
+                    },
+                ],
+                timeMin: dayjs().startOf("day").toDate(),
+                timeMax: dayjs().endOf("day").toDate(),
             }
+            const [error, busyTimes] = await checkRoomAvailability(newBody)
 
-        }
-        return rooms
+            if (error != null) {
+
+                console.error("error inside checkRoomAvailability:", error)
+
+                return [key, room]
+            }
+            const newRoom = {
+                ...room,
+                busyTimes,
+            }
+            return [key, newRoom]
+        })))
+        return [null, newRooms] as const
     }
-    return {getBusyTimeOfRooms}
+    return { getBusyTimeOfRooms }
 }

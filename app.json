@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "roomey",
-    "slug": "CODE Navigator",
+    "name": "CODE Navigator",
+    "slug": "code-navigator",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/codeReviewAppIcon.png",
@@ -10,7 +10,7 @@
     "splash": {
       "image": "./assets/images/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#222"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -26,7 +26,7 @@
       "package": "berlin.code.roomey",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#222"
       }
     },
     "web": {
