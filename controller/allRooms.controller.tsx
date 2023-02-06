@@ -12,7 +12,7 @@ export interface Room {
 
 }
 export default function allRoomsController() {
-    const [compareTimeFrames, createNewEvent, checkRoomAvailability] = bookRoomsController()
+    const {checkRoomAvailability} = bookRoomsController()
 
     async function getBusyTimeOfRooms() {
 
@@ -49,5 +49,5 @@ export default function allRoomsController() {
         }
         return rooms
     }
-    return [getBusyTimeOfRooms] as const
+    return {getBusyTimeOfRooms}
 }
