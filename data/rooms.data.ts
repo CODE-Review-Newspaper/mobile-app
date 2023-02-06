@@ -304,26 +304,34 @@ export const RoomCategoryData = {
         displayName: "Music Studio",
     },
     OFFICE_BOOTH: {
-        color: "##f2b01d",
+        color: "#f2b01d",
         displayName: "Office booth",
+    },
+    DEFAULT: {
+        color: "#D9D9D9",
+        displayName: "Normal room",
     },
 }
 
 export const RoomBookableData = {
     BOOKABLE: {
-        color: "green",
+        color: "#2CF261",
         displayName: "Bookable",
+    },
+    UNAVAILABLE: {
+        color: "#FF3D33",
+        displayName: "Booked right now",
     },
     UNBOOKABLE: {
         color: "cyan",
         displayName: "Not bookable",
     },
     APPLICATION_REQUIRED: {
-        color: "yellow",
+        color: "#FAFFBB",
         displayName: "Application required",
     },
     TEAM_ONLY: {
-        color: "blue",
+        color: "#BEFBCF",
         displayName: "Team only",
     },
 }

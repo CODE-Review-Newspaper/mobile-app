@@ -1,5 +1,5 @@
 import { StyleSheet, Switch } from 'react-native';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
@@ -28,22 +28,11 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
 
     const [state, setState] = useState<"ERROR" | "SUCCESS" | "LOADING">("SUCCESS")
 
-    if (state === "LOADING") return <View style={styles.dings}>
-        <Floorplan
-            width="100%"
-            height="100%"
-            style={styles.floorplan}
-            fill="white"
-        />
-    </View>
-
-    // return <SkeletonLoader fill="red" width="500" height="500" />
-
     const [displayMode, setDisplayMode] = useState<"ROOM_TYPE" | "ROOM_AVAILABILITY">("ROOM_AVAILABILITY")
 
     return (
         <>
-            <LinearGradient colors={["rgba(0, 0, 0, 0.8)", "transparent"]} style={styles.toolBar}>
+            <LinearGradient colors={["rgba(0, 0, 0, 0.8)", "transparent"]} style={{ ...styles.toolBar, opacity: state === "SUCCESS" ? 1 : 0 }}>
 
                 <Text style={styles.timeDisplay}>{selectedDate.format("MMM D, H:mma")}</Text>
                 <Slider
@@ -72,7 +61,7 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
 
             <ReactNativeZoomableView
                 zoomEnabled={true}
-                maxZoom={2}
+                maxZoom={state === "SUCCESS" ? 2 : 1}
                 minZoom={1}
                 zoomStep={0.25}
                 initialZoom={1}
@@ -94,9 +83,16 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
                     <Floorplan
                         width="100%"
                         height="100%"
-                        style={styles.floorplan}
                         fill="white"
+                        style={styles.floorPlanComponent}
                     />
+
+                    {state !== "SUCCESS" && <Rooms.Heaven.Component
+                        width="100%"
+                        height="100%"
+                        fill="white"
+                        style={styles.floorPlanComponent}
+                    />}
 
                     {state === "SUCCESS" && Object.values(Rooms).map(i => {
 
@@ -124,21 +120,21 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
 
                                 console.log(i.name, JSON.stringify(scheduleInfo, null, 2))
 
-                                if (scheduleInfo?.bookable === "BOOKABLE" && isAvailable) return "green"
+                                if (scheduleInfo?.bookable === "BOOKABLE" && isAvailable) return RoomBookableData.BOOKABLE.color
 
-                                if (scheduleInfo?.bookable === "BOOKABLE" && isUnavailable) return "red"
+                                if (scheduleInfo?.bookable === "BOOKABLE" && isUnavailable) return RoomBookableData.UNAVAILABLE.color
 
-                                return roomBookable.color
-
+                                return RoomCategoryData.DEFAULT.color
                             }
-                            return "#222"
+                            // this should never happen so we make it black to stand out
+                            return "black"
                         })()
 
                         return <i.Component
                             key={i.name}
                             width="100%"
                             height="100%"
-                            style={styles.floorplan}
+                            style={styles.floorPlanComponent}
                             fill={color}
                             // @ts-ignore
                             onPress={() => {
@@ -155,7 +151,8 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
 
                 </View>
                 {state === "ERROR" && <View style={styles.staticOverlay}>
-                    <ErrorTriangle fill="red" width="30%" height="30%" />
+                    <ErrorTriangle fill="#FF160A" width="30%" height="30%" />
+                    <Text style={{ color: "#FF160A", fontWeight: "900", fontSize: 25 }}>An error occured.</Text>
                 </View>}
 
             </ReactNativeZoomableView>
@@ -221,7 +218,7 @@ const styles = StyleSheet.create({
         height: "100%",
         backgroundColor: "#222",
     },
-    floorplan: {
+    floorPlanComponent: {
         position: "absolute",
         left: 0,
         top: 0,
@@ -248,12 +245,12 @@ const styles = StyleSheet.create({
 });
 
 
-// import {
-//     Animated,
-//     useSharedValue,
-//     useAnimatedProps,
-//     withTiming
-// } from 'react-native-reanimated';
+import {
+    Animated,
+    useSharedValue,
+    useAnimatedProps,
+    withTiming
+} from 'react-native-reanimated';
 // import Svg, { Path } from 'react-native-svg';
 
 // const AnimatedPath = Animated.createAnimatedComponent(Path);

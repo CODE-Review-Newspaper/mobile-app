@@ -6,6 +6,7 @@ import { Platform, Pressable, StyleSheet, TextInput } from 'react-native';
 import { Text, View } from '../components/Themed';
 import CalendarContext from '../contexts/calendar.context';
 import { Room } from '../controller/allRooms.controller';
+import { RootTabScreenProps } from '../types';
 
 const getRoomDescription = (room: Room) => {
 
@@ -16,7 +17,7 @@ const getRoomDescription = (room: Room) => {
   return "Unknown room"
 }
 
-export default function ModalScreen() {
+export default function ModalScreen({ navigation }: RootTabScreenProps<"Modal">) {
 
   const { selectedRoom, selectedDate, endDate, setEndDate, createEvent } = useContext(CalendarContext)
 
@@ -30,9 +31,13 @@ export default function ModalScreen() {
 
   const [meetingTitle, setMeetingTitle] = useState("Working session in " + selectedRoom!.displayName)
 
+  const [state, setState] = useState<"DEFAULT" | "ERROR" | "SUCCESS" | "LOADING">("DEFAULT")
+
   async function submit() {
 
-    await createEvent({
+    setState("LOADING")
+
+    const [createEventError, createEventData] = await createEvent({
       start: {
         dateTime: selectedDate.toDate(),
         timeZone: "Europe/Berlin",
@@ -52,6 +57,15 @@ export default function ModalScreen() {
       timeMin: selectedDate.toDate(),
       timeMax: endDate.toDate(),
     })
+    if (createEventError != null) {
+
+      setState("ERROR")
+
+      return
+    }
+    setState("SUCCESS")
+
+    setTimeout(() => navigation.navigate('TabOne'), 300)
   }
 
   return (
@@ -97,7 +111,15 @@ export default function ModalScreen() {
           accessibilityLabel="Book room"
           onPress={() => submit()}
         >
-          <Text style={styles.buttonText}>Book room</Text>
+          <Text style={styles.buttonText}>{
+            (() => {
+              if (state === "SUCCESS") return "Booked room!"
+              if (state === "ERROR") return "Failed to book room"
+              if (state === "LOADING") return "Loading..."
+
+              return "Book room"
+            })()
+          }</Text>
         </Pressable>
       </View>
     </View>
