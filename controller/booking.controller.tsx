@@ -27,22 +27,21 @@ export default function bookRoomsController() {
             const errorMsg = "No Available Time haher."
             return [errorMsg, null] as const
         }
-
         const [error, response] = await fetchData(url, await getAuthState(), true, eventBody)
 
         if (error != null)
-            return [error, null] as const
 
+        return [error, null] as const
+        
         const content = await response!.json()
-
+        
         const successMsg = "Successfully booked a room."
-
+        
         return [error, successMsg] as const
     }
 
-
     async function checkRoomAvailability(body: CheckBusyRoomRequest) {
-
+        
         const url: url = "https://www.googleapis.com/calendar/v3/freeBusy"
 
         const [error, response] = await fetchData(url, await getAuthState(), true, body)
