@@ -28,7 +28,7 @@ export default function allRoomsController() {
                     },
                 ],
                 timeMin: dayjs().startOf("day").toDate(),
-                timeMax: dayjs().endOf("day").toDate(),
+                timeMax: dayjs().endOf("day").add(7, "days").toDate(),
             }
             const [error, busyTimes] = await checkRoomAvailability(newBody)
 
