@@ -176,7 +176,7 @@ export const rooms: Record<string, Room> = {
         factoryRoomNumber: "4.8.3",
         category: "PROJECT_LAB",
     },
-    'VoidHardwareRoom': {
+    'Void': {
         bookable: "APPLICATION_REQUIRED",
         id: 'c_188d0sd2j8pnei5ai0f0ijl0p3bmg4gbcdnm8p9ec9in4r39do@resource.calendar.google.com',
         displayName: "Void",
@@ -292,7 +292,7 @@ export const RoomCategoryData = {
         displayName: "Project room",
     },
     PROJECT_LAB: {
-        color: "FAFFBB",
+        color: "#FAFFBB",
         displayName: "Project lab",
     },
     SILENT_SPACE: {
@@ -311,19 +311,19 @@ export const RoomCategoryData = {
 
 export const RoomBookableData = {
     BOOKABLE: {
-        color: "",
+        color: "green",
         displayName: "Bookable",
     },
     UNBOOKABLE: {
-        color: "",
+        color: "cyan",
         displayName: "Not bookable",
     },
     APPLICATION_REQUIRED: {
-        color: "",
+        color: "yellow",
         displayName: "Application required",
     },
     TEAM_ONLY: {
-        color: "",
+        color: "blue",
         displayName: "Team only",
     },
 }

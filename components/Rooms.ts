@@ -15,6 +15,12 @@ import Rick from "../assets/images/floorplan/Rick.svg";
 import R2 from "../assets/images/floorplan/R2.svg";
 import D2 from "../assets/images/floorplan/D2.svg";
 import Space from "../assets/images/floorplan/Space.svg";
+import Otterspace from "../assets/images/floorplan/Otterspace.svg";
+import Cognito from "../assets/images/floorplan/Cognito.svg";
+import SixMinutes from "../assets/images/floorplan/SixMinutes.svg";
+import TeamRoom from "../assets/images/floorplan/TeamRoom.svg";
+import AFF from "../assets/images/floorplan/AFF.svg";
+import Nymeria from "../assets/images/floorplan/Nymeria.svg";
 import Void from "../assets/images/floorplan/Void.svg";
 import Spongebob from "../assets/images/floorplan/Spongebob.svg";
 import Patrick from "../assets/images/floorplan/Patrick.svg";
@@ -22,6 +28,7 @@ import Squidward from "../assets/images/floorplan/Squidward.svg";
 import MrKrabs from "../assets/images/floorplan/MrKrabs.svg";
 import Plankton from "../assets/images/floorplan/Plankton.svg";
 import Ada from "../assets/images/floorplan/Ada.svg";
+import Heaven from "../assets/images/floorplan/Heaven.svg";
 
 const Rooms = {
     Zuse: {
@@ -92,6 +99,30 @@ const Rooms = {
         name: "Space",
         Component: Space,
     },
+    Otterspace: {
+        name: "Otterspace",
+        Component: Otterspace,
+    },
+    Cognito: {
+        name: "Cognito",
+        Component: Cognito,
+    },
+    SixMinutes: {
+        name: "SixMinutes",
+        Component: SixMinutes,
+    },
+    TeamRoom: {
+        name: "TeamRoom",
+        Component: TeamRoom,
+    },
+    AFF: {
+        name: "AFF",
+        Component: AFF,
+    },
+    Nymeria: {
+        name: "Nymeria",
+        Component: Nymeria,
+    },
     Void: {
         name: "Void",
         Component: Void,
@@ -119,6 +150,10 @@ const Rooms = {
     Ada: {
         name: "Ada",
         Component: Ada,
+    },
+    Heaven: {
+        name: "Heaven",
+        Component: Heaven,
     },
 };
 export default Rooms

@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Switch } from 'react-native';
 import { useContext, useState } from 'react';
 
 import { Text, View } from '../components/Themed';
@@ -20,6 +20,7 @@ import SkeletonLoader from "../assets/images/test.svg"
 import ErrorTriangle from "../assets/images/errorTriangle.svg"
 
 import dayjs from "dayjs"
+import { RoomBookableData, RoomCategoryData, rooms } from '../data/rooms.data';
 
 export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
 
@@ -27,7 +28,18 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
 
     const [state, setState] = useState<"ERROR" | "SUCCESS" | "LOADING">("SUCCESS")
 
-    if (state === "LOADING") return <SkeletonLoader fill="red" width="500" height="500" />
+    if (state === "LOADING") return <View style={styles.dings}>
+        <Floorplan
+            width="100%"
+            height="100%"
+            style={styles.floorplan}
+            fill="white"
+        />
+    </View>
+
+    // return <SkeletonLoader fill="red" width="500" height="500" />
+
+    const [displayMode, setDisplayMode] = useState<"ROOM_TYPE" | "ROOM_AVAILABILITY">("ROOM_AVAILABILITY")
 
     return (
         <>
@@ -42,6 +54,18 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
                     minimumTrackTintColor="#ff6961"
                     maximumTrackTintColor="white"
                     onValueChange={numberBetween0and1 => setSelectedDate(startDate.add(numberBetween0and1 * 12, "hours"))}
+                />
+                <Switch
+
+                    onValueChange={e => {
+
+                        setDisplayMode(e ? "ROOM_AVAILABILITY" : "ROOM_TYPE")
+                    }}
+                    trackColor={{
+                        true: "#FF6961",
+
+                    }}
+                    value={displayMode === "ROOM_AVAILABILITY"}
                 />
 
             </LinearGradient>
@@ -74,8 +98,6 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
                         fill="white"
                     />
 
-
-
                     {state === "SUCCESS" && Object.values(Rooms).map(i => {
 
                         const scheduleInfo = roomSchedules[i.name]
@@ -91,12 +113,21 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
 
                         const color = (() => {
 
-                            if (scheduleInfo?.isBookable && isAvailable) return "green"
+                            const roomCategory = RoomCategoryData[rooms[i.name].category]
 
-                            if (scheduleInfo?.isBookable && isUnavailable) return "red"
+                            const roomBookable = RoomBookableData[rooms[i.name].bookable]
 
-                            if (!scheduleInfo?.isBookable) return "#efefef"
+                            if (displayMode === "ROOM_TYPE") return roomCategory?.color
 
+                            if (displayMode === "ROOM_AVAILABILITY") {
+
+                                if (scheduleInfo?.bookable === "BOOKABLE" && isAvailable) return "green"
+
+                                if (scheduleInfo?.bookable === "BOOKABLE" && isUnavailable) return "red"
+
+                                return roomBookable.color
+
+                            }
                             return "#222"
                         })()
 

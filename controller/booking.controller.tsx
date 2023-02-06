@@ -30,8 +30,12 @@ export default function bookRoomsController() {
 
         const [error, response] = await fetchData(url, await getAuthState(), true, eventBody)
 
-        if (error != null)
+        if (error != null) {
+
+            console.error("dings passiert huch")
+
             return [error, null] as const
+        }
 
         const content = await response!.json()
 
@@ -47,8 +51,12 @@ export default function bookRoomsController() {
 
         const [error, response] = await fetchData(url, await getAuthState(), true, body)
 
-        if (error != null)
+        if (error != null) {
+
+            console.error("dings passiert hach")
+
             return [error, null] as const
+        }
 
         const content = await response!.json()
 
