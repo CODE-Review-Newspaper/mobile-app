@@ -23,11 +23,11 @@ import TabOneScreen from '../screens/TabOneScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
-import CalendarContext from '../contexts/calendar.context';
+import CalendarContext, { CalendarContextType } from '../contexts/calendar.context';
 import userLoginController from "../controller/userLogin.controller";
 import bookRoomsController from "../controller/booking.controller";
 import allRoomsController, { Room } from "../controller/allRooms.controller";
-import UserContext from "../contexts/user.context";
+import UserContext, { UserContextType } from "../contexts/user.context";
 import LoadingScreen from "../screens/LoadingScreen";
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
@@ -101,13 +101,13 @@ function RootNavigator() {
     loadRoomSchedules()
   }, [isLoadingAuthState, isSignedIn])
 
-  const userContextValue = {
+  const userContextValue: UserContextType = {
     user,
     isSignedIn,
     signIn,
     signOut,
   }
-  const calendarContextValue = {
+  const calendarContextValue: CalendarContextType = {
     selectedRoom,
     setSelectedRoom,
     startDate,

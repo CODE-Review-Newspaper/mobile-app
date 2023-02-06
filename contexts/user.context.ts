@@ -1,7 +1,7 @@
 import { createContext } from "react";
 import { User } from "../types/dings.types";
 
-interface UserContextType {
+export interface UserContextType {
     user: User | null
     isSignedIn: boolean
     signIn: () => unknown

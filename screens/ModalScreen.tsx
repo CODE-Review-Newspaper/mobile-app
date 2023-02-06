@@ -1,11 +1,12 @@
 import Slider from '@react-native-community/slider';
 import { StatusBar } from 'expo-status-bar';
 import { useContext, useEffect, useState } from 'react';
-import { Platform, Pressable, StyleSheet, TextInput } from 'react-native';
+import { Linking, Platform, Pressable, StyleSheet, TextInput } from 'react-native';
 
 import { Text, View } from '../components/Themed';
 import CalendarContext from '../contexts/calendar.context';
 import { Room } from '../controller/allRooms.controller';
+import { CreateEventResponse } from '../controller/booking.controller';
 import { RootTabScreenProps } from '../types';
 
 const getRoomDescription = (room: Room) => {
@@ -28,6 +29,8 @@ export default function ModalScreen({ navigation }: RootTabScreenProps<"Modal">)
   useEffect(() => {
     setEndDate(selectedDate.add(DEFAULT_DURATION_MINS, "minutes"))
   }, [])
+
+  const [createdEventData, setCreatedEventData] = useState<CreateEventResponse | null>(null)
 
   const [meetingTitle, setMeetingTitle] = useState("Working session in " + selectedRoom!.displayName)
 
@@ -63,11 +66,13 @@ export default function ModalScreen({ navigation }: RootTabScreenProps<"Modal">)
 
       return
     }
+    setCreatedEventData(createEventData)
+
     setState("SUCCESS")
 
     loadRoomSchedules()
 
-    setTimeout(() => navigation.navigate('TabOne'), 300)
+    // setTimeout(() => navigation.navigate('TabOne'), 300)
   }
 
   return (
@@ -107,8 +112,12 @@ export default function ModalScreen({ navigation }: RootTabScreenProps<"Modal">)
           onValueChange={durationMinutes => setEndDate(selectedDate.add(durationMinutes, "minutes"))}
         />
 
+        {state === "SUCCESS" && <Pressable
+          onPress={() => Linking.openURL(createdEventData!.htmlLink)}>
+          <Text style={{ color: "blue", textDecorationLine: "underline" }}>Open event in Google Calendar</Text>
+        </Pressable>}
+
         <Pressable
-          // onPress={signIn}
           style={({ pressed }) => pressed ? [styles.button, styles.buttonPressed] : styles.button}
           accessibilityLabel="Book room"
           onPress={() => submit()}

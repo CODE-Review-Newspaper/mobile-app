@@ -319,7 +319,7 @@ export const RoomBookableData = {
         displayName: "Bookable",
     },
     UNAVAILABLE: {
-        color: "#FF3D33",
+        color: "#FF6961",
         displayName: "Booked right now",
     },
     UNBOOKABLE: {

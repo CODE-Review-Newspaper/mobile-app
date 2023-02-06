@@ -2,8 +2,9 @@ import { createContext } from "react";
 import dayjs from "dayjs"
 import { CheckBusyRoomRequest, CreateEventRequest } from "../types/dings.types";
 import { Room } from "../controller/allRooms.controller";
+import { CreateEventResponse } from "../controller/booking.controller";
 
-interface CalendarContextType {
+export interface CalendarContextType {
     selectedRoom: Room | null,
     setSelectedRoom: (room: Room | null) => unknown
 
@@ -17,7 +18,7 @@ interface CalendarContextType {
     setEndDate: (date: dayjs.Dayjs) => unknown
 
     roomSchedules: any
-    createEvent: (eventBody: CreateEventRequest, roomBusyBody: CheckBusyRoomRequest) => Promise<readonly [{}, null] | readonly [null | undefined, string]>,
+    createEvent: (eventBody: CreateEventRequest, roomBusyBody: CheckBusyRoomRequest) => Promise<readonly [{}, null] | readonly [null | undefined, CreateEventResponse]>,
     loadRoomSchedules: () => Promise<any>
 
     isLoading: boolean

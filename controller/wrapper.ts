@@ -2,7 +2,9 @@ import { url } from "../types/dings.types";
 
 export async function fetchData(urlToFetchFrom: url, authState: any, postRequest: any = false, body: any = {},) {
     let request;
+
     const data = body
+
     if (postRequest) {
 
         request = {

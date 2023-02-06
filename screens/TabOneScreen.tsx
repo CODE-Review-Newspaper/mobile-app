@@ -1,4 +1,4 @@
-import { StyleSheet, Switch } from 'react-native';
+import { Pressable, StyleSheet, Switch } from 'react-native';
 import { useContext, useEffect, useState } from 'react';
 
 import { Text, View } from '../components/Themed';
@@ -21,6 +21,7 @@ import ErrorTriangle from "../assets/images/errorTriangle.svg"
 
 import dayjs from "dayjs"
 import { RoomBookableData, RoomCategoryData, rooms } from '../data/rooms.data';
+import { FontAwesome } from '@expo/vector-icons';
 
 export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
 
@@ -43,7 +44,25 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
         return "ERROR"
     })()
 
-    const [displayMode, setDisplayMode] = useState<"ROOM_TYPE" | "ROOM_AVAILABILITY">("ROOM_AVAILABILITY")
+    const DisplayMode = {
+        MAP_MODE: {
+            id: "MAP_MODE",
+            displayName: "Map mode",
+            next: "BOOK_MODE" as const,
+        },
+        BOOK_MODE: {
+            id: "BOOK_MODE",
+            displayName: "Book mode",
+            next: "MAP_MODE" as const,
+        },
+    }
+
+    const [displayMode, setDisplayMode] = useState<typeof DisplayMode[keyof typeof DisplayMode]>(DisplayMode.BOOK_MODE)
+
+    function switchDisplayMode() {
+
+        setDisplayMode(DisplayMode[displayMode.next])
+    }
 
     return (
         <>
@@ -65,19 +84,29 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
                     maximumTrackTintColor="white"
                     onValueChange={numberBetween0and1 => setSelectedDate(startDate.add(numberBetween0and1 * 12, "hours"))}
                 />
-                <Switch
+                <Pressable
+                    accessibilityLabel="Switch to next display mode"
+                    style={{ flexDirection: "row", alignItems: "center", backgroundColor: "transparent" }}
+                    onPress={switchDisplayMode}
+                >
+                    <Text style={{ ...styles.timeDisplay, textDecorationLine: "underline" }}>{displayMode.displayName}</Text>
+                    <FontAwesome
+                        name="arrows-v"
+                        style={{ marginLeft: 5, color: "#ccc", fontSize: 15 }}
+                    />
+                    {/* <Switch
+                        onValueChange={e => {
 
-                    onValueChange={e => {
+                            setDisplayMode(e ? "BOOK_MODE" : "MAP_MODE")
+                        }}
+                        trackColor={{
+                            true: "#FF6961",
 
-                        setDisplayMode(e ? "ROOM_AVAILABILITY" : "ROOM_TYPE")
-                    }}
-                    trackColor={{
-                        true: "#FF6961",
-
-                    }}
-                    value={displayMode === "ROOM_AVAILABILITY"}
-                />
-
+                        }}
+                        value={displayMode === "BOOK_MODE"}
+                        style={{ marginLeft: 16 }}
+                    /> */}
+                </Pressable>
             </LinearGradient>
 
             <ReactNativeZoomableView
@@ -135,9 +164,9 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
 
                             const roomBookable = RoomBookableData[rooms[i.name].bookable]
 
-                            if (displayMode === "ROOM_TYPE") return roomCategory?.color
+                            if (displayMode.id === "MAP_MODE") return roomCategory?.color
 
-                            if (displayMode === "ROOM_AVAILABILITY") {
+                            if (displayMode.id === "BOOK_MODE") {
 
                                 if (scheduleInfo?.bookable === "BOOKABLE" && isAvailable) return RoomBookableData.BOOKABLE.color
 

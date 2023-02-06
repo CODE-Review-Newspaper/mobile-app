@@ -3,6 +3,43 @@ import { url } from "../types/dings.types"
 import { fetchData } from "./wrapper"
 import userLoginController from "./userLogin.controller"
 
+export interface EventTime {
+    "dateTime": string // "2023-02-06T22:45:26+01:00",
+    "timeZone": string // "Europe/Berlin"
+}
+
+export interface EventAttendee {
+    email: string
+    self: boolean
+    displayName?: string
+    resource?: boolean
+    responseStatus?: "needsAction"
+}
+
+export interface CreateEventResponse {
+    "kind": "calendar#event",
+    "etag": string // "\"3351441171534000\"",
+    "id": string // "edsudrvom8t03j72pe89i7dtac",
+    "status": "confirmed",
+    "htmlLink": string, // "https://www.google.com/calendar/event?eid=ZWRzdWRydm9tOHQwM2o3MnBlODlpN2R0YWMgbGludXMuYm9sbHNAY29kZS5iZXJsaW4",
+    "created": string //  // "2023-02-06T21:56:25.000Z",
+    "updated": string // "2023-02-06T21:56:25.767Z",
+    "summary": string // "Working session in Jungle",
+    "location": string // "--4-Jungle (35)",
+    "creator": EventAttendee,
+    "organizer": EventAttendee,
+    "start": EventTime,
+    "end": EventTime,
+    "iCalUID": string // "edsudrvom8t03j72pe89i7dtac@google.com",
+    "sequence": 0,
+    "attendees": EventAttendee[],
+    "reminders": {
+        "useDefault": boolean
+    },
+    "eventType": "default"
+}
+
+
 export default function bookRoomsController() {
     const { getAuthState } = userLoginController()
 
@@ -21,10 +58,9 @@ export default function bookRoomsController() {
         const confirmation = compareTimeFrames(roomTimes, eventStart, eventEnd)
 
         if (!confirmation) {
-            const errorMsg = "No Available Time haher."
-            return [errorMsg, null] as const
+            return ["No available time.", null] as const
         }
-        const [error, response] = await fetchData(url, await getAuthState(), true, eventBody)
+        const [error, res] = await fetchData(url, await getAuthState(), true, eventBody)
 
         if (error != null) {
 
@@ -32,12 +68,9 @@ export default function bookRoomsController() {
 
             return [error, null] as const
         }
+        const data: CreateEventResponse = await res!.json()
 
-        const content = await response!.json()
-
-        const successMsg = "Successfully booked a room."
-
-        return [error, successMsg] as const
+        return [error, data] as const
     }
 
     async function checkRoomAvailability(body: CheckBusyRoomRequest) {
@@ -52,7 +85,6 @@ export default function bookRoomsController() {
 
             return [error, null] as const
         }
-
         const content = await response!.json()
 
         const email = body.items[0].id
@@ -61,9 +93,8 @@ export default function bookRoomsController() {
 
         if (roomCalendar == null) {
 
-            return ["roomCalendar is null", null] as const
+            return ["Failed to find calendar for room.", null] as const
         }
-
         const roomBusyTimes: BusyRooms[] = roomCalendar.busy
 
         return [null, roomBusyTimes] as const
