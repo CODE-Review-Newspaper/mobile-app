@@ -13,8 +13,6 @@ import { ColorSchemeName, Pressable } from 'react-native';
 
 import { useState } from "react"
 import { maybeCompleteAuthSession } from "expo-web-browser"
-import * as Google from "expo-auth-session/providers/google"
-import * as AuthSession from 'expo-auth-session';
 
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
@@ -30,6 +28,7 @@ import userLoginController from "../controller/userLogin.controller";
 import bookRoomsController from "../controller/booking.controller";
 import allRoomsController, { Room } from "../controller/allRooms.controller";
 import UserContext from "../contexts/user.context";
+import LoadingScreen from "../screens/LoadingScreen";
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
@@ -53,7 +52,7 @@ function RootNavigator() {
 
   const [roomScheduleState, setRoomScheduleState] = useState<{ isLoading: boolean, hasData: boolean, hasError: boolean }>({ isLoading: true, hasData: false, hasError: false })
 
-  const { user, signIn, isSignedIn, signOut } = userLoginController()
+  const { user, isSignedIn, isLoadingAuthState, signIn, signOut } = userLoginController()
   const { createEvent } = bookRoomsController()
   const { getBusyTimeOfRooms } = allRoomsController()
 
@@ -100,7 +99,7 @@ function RootNavigator() {
   React.useEffect(() => {
 
     loadRoomSchedules()
-  }, [])
+  }, [isLoadingAuthState, isSignedIn])
 
   const userContextValue = {
     user,
@@ -127,34 +126,69 @@ function RootNavigator() {
     <UserContext.Provider value={userContextValue}>
       <CalendarContext.Provider value={calendarContextValue}>
         <Stack.Navigator>
+          {(() => {
 
-          {isSignedIn ?
-            <>
-              <Stack.Screen name="Root" component={BottomTabNavigator}
+            if (isLoadingAuthState) return <Stack.Screen
+              name="Root"
+              component={LoadingScreen}
+              options={{ headerShown: false }}
+            />
+
+            if (!isSignedIn) return <Stack.Screen
+              name="Root"
+              component={LoginScreen}
+              options={{ headerShown: false }}
+            />
+
+            return <>
+              <Stack.Screen
+                name="Root"
+                component={BottomTabNavigator}
                 options={{ headerShown: false }}
-              // options={{
-              //   title: 'CODE Review',
-              //   headerStyle: {
-              //     backgroundColor: '#222',
-              //   },
-              //   headerTintColor: '#fff',
-              //   headerTitleStyle: {
-              //     fontWeight: 'bold',
-              //   },
-              // }}
               />
-              <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
-              <Stack.Group screenOptions={{ presentation: 'modal' }}>
-                <Stack.Screen name="Modal" component={ModalScreen} options={{
-                  title: "Book room",
-                  headerShown: false,
-                }} />
+              <Stack.Screen
+                name="NotFound"
+                component={NotFoundScreen}
+                options={{ title: 'Oops!' }}
+              />
+              <Stack.Group
+                screenOptions={{ presentation: 'modal' }}
+              >
+                <Stack.Screen
+                  name="Modal"
+                  component={ModalScreen}
+                  options={{ headerShown: false }}
+                />
               </Stack.Group>
             </>
-            : <Stack.Screen name="Root" component={LoginScreen}
-              options={{ headerShown: false }} />}
-
-
+          })()}
+          {/* {isSignedIn ?
+            <>
+              <Stack.Screen
+                name="Root"
+                component={BottomTabNavigator}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="NotFound"
+                component={NotFoundScreen}
+                options={{ title: 'Oops!' }}
+              />
+              <Stack.Group
+                screenOptions={{ presentation: 'modal' }}
+              >
+                <Stack.Screen
+                  name="Modal"
+                  component={ModalScreen}
+                  options={{ headerShown: false }}
+                />
+              </Stack.Group>
+            </>
+            : <Stack.Screen
+              name="Root"
+              component={LoginScreen}
+              options={{ headerShown: false }}
+            />} */}
         </Stack.Navigator >
       </CalendarContext.Provider>
     </UserContext.Provider>

@@ -139,8 +139,6 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
 
                             if (displayMode === "ROOM_AVAILABILITY") {
 
-                                console.log(i.name, JSON.stringify(scheduleInfo, null, 2))
-
                                 if (scheduleInfo?.bookable === "BOOKABLE" && isAvailable) return RoomBookableData.BOOKABLE.color
 
                                 if (scheduleInfo?.bookable === "BOOKABLE" && isUnavailable) return RoomBookableData.UNAVAILABLE.color

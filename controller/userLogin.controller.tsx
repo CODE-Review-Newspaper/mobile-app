@@ -12,6 +12,9 @@ WebBrowser.maybeCompleteAuthSession()
 export default function userLoginController() {
     const [user, setUser] = React.useState<User | null>(null)
 
+    const [isSignedIn, setIsSignedIn] = React.useState(false)
+    const [isLoadingAuthState, setIsLoadingAuthState] = React.useState(true)
+
     const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
         clientId: "614417646190-dbl1mao4r8bcjmam2cmcgtfo4c35ho1h.apps.googleusercontent.com",
         iosClientId: "614417646190-vcu5a3ini5nnr0elfaqt8fprs358mp2i.apps.googleusercontent.com",
@@ -25,6 +28,7 @@ export default function userLoginController() {
 
             await promptAsync()
         }
+        setIsSignedIn(true)
     }
 
     const signOut = async () => {
@@ -35,25 +39,31 @@ export default function userLoginController() {
                 await AuthSession.revokeAsync({ token: authState.accessToken }, Google.discovery)
             }
         }
-
         await setAuthState(null)
+
         setUser(null)
+        setIsSignedIn(false)
     }
 
     async function isLoggedIn(shouldFetchUserInfo = true) {
         const authState = await getAuthState();
 
-        const loggedIn = authState != null && await autoRenewAuth();
+        const loggedIn = (authState != null && await autoRenewAuth())!;
+
+        setIsSignedIn(loggedIn)
 
         if (loggedIn && shouldFetchUserInfo) {
             fetchUserInfo()
         }
+        setIsLoadingAuthState(false)
+
         return loggedIn
     }
 
     async function getAuthState(): Promise<TokenResponse | null> {
         const jsonValue = await AsyncStorage.getItem('@authState')
         const obj: TokenResponseConfig = JSON.parse(jsonValue!);
+
         return obj != null ? new AuthSession.TokenResponse(obj) : null;
     }
 
@@ -122,10 +132,12 @@ export default function userLoginController() {
         isLoggedIn()
     }, [])
 
-    const isSignedIn = user != null
-
     return {
-        user, signIn, isSignedIn, getAuthState, signOut
+        user,
+        isSignedIn,
+        isLoadingAuthState,
+        signIn,
+        signOut,
+        getAuthState,
     }
-
 }
