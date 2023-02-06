@@ -12,8 +12,6 @@ WebBrowser.maybeCompleteAuthSession()
 export default function userLoginController() {
     const [user, setUser] = React.useState<User | null>(null)
 
-    const [isSignedIn, setIsSignedIn] = React.useState(true)
-
     const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
         clientId: "614417646190-dbl1mao4r8bcjmam2cmcgtfo4c35ho1h.apps.googleusercontent.com",
         iosClientId: "614417646190-vcu5a3ini5nnr0elfaqt8fprs358mp2i.apps.googleusercontent.com",
@@ -41,8 +39,6 @@ export default function userLoginController() {
 
         await setAuthState(null)
         setUser(null)
-
-        setIsSignedIn(false)
     }
 
     async function isLoggedIn(fetchUser = true) {
@@ -65,13 +61,10 @@ export default function userLoginController() {
     async function setAuthState(authState: TokenResponse | null) {
         if (authState == null) {
             await AsyncStorage.removeItem('@authState')
-            setIsSignedIn(false)
         } else {
 
             const jsonValue = JSON.stringify(authState.getRequestConfig())
             await AsyncStorage.setItem('@authState', jsonValue)
-
-            setIsSignedIn(true)
         }
     }
 
@@ -112,7 +105,7 @@ export default function userLoginController() {
 
     React.useEffect(() => {
         if (response?.type === "success") {
-            setAuthState(response.authentication).then(() => setIsSignedIn(true)).then(() => fetchUserInfo())
+            setAuthState(response.authentication).then(() => fetchUserInfo())
         }
     }, [response])
 
@@ -129,15 +122,10 @@ export default function userLoginController() {
         isLoggedIn()
     }, [])
 
-    React.useEffect(() => {
-        if (user != null){
-            setIsSignedIn(true)
-        } else{
-            setIsSignedIn(false)
-        }
-    }, [])
-    // TODO: replace user != null by isSignedIn
-    return { user, signIn, isSignedIn, getAuthState, signOut
-}
+    const isSignedIn = user != null
+
+    return {
+        user, signIn, isSignedIn, getAuthState, signOut
+    }
 
 }
