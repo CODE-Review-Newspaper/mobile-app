@@ -148,7 +148,6 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
 
                         const scheduleInfo = roomSchedules[i.name]
 
-
                         // @ts-ignore
                         const isUnavailable = scheduleInfo?.busyTimes?.some(i => {
 
