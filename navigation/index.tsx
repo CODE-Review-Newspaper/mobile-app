@@ -126,11 +126,14 @@ function RootNavigator() {
 
   useEffect(() => {
     loadRoomSchedules();
-  }, []);
+  }, [isSignedIn, isLoadingAuthState]);
 
   const REFETCH_ROOMS_INTERVAL_SECONDS = 30;
 
-  useInterval(loadRoomSchedules, REFETCH_ROOMS_INTERVAL_SECONDS * 1000);
+  useInterval(() => {
+    loadRoomSchedules();
+    setSelectedDate(roundDownToNearestQuarterHour(dayjs()));
+  }, REFETCH_ROOMS_INTERVAL_SECONDS * 1000);
 
   const userContextValue: UserContextType = {
     user,

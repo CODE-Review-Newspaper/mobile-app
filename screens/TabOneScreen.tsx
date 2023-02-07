@@ -60,19 +60,24 @@ export default function TabOneScreen({
     setDisplayMode(DisplayMode[displayMode.next]);
   }
 
-  if (!about.isCodeMember) {
-    return (
-      <>
-        <View
-          style={{
-            position: 'absolute',
-            width: '100%',
-            height: 150,
-            backgroundColor: 'transparent',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
+  return (
+    <>
+      {state === 'LOADING' && (
+        <View style={styles.statusTopBar}>
+          <Text style={{ color: 'white', fontWeight: '900', fontSize: 25 }}>
+            Loading...
+          </Text>
+        </View>
+      )}
+      {state === 'ERROR' && (
+        <View style={styles.statusTopBar}>
+          <Text style={{ color: '#FF160A', fontWeight: '900', fontSize: 25 }}>
+            An error occured.
+          </Text>
+        </View>
+      )}
+      {!about.isCodeMember && (
+        <View style={{ ...styles.statusTopBar, position: "absolute", zIndex: 4, elevation: 4 }}>
           <Pressable
             onPress={signIn}
             style={({ pressed }) =>
@@ -89,47 +94,13 @@ export default function TabOneScreen({
             <Text style={styles.buttonText}>Sign in with @code.berlin</Text>
           </Pressable>
         </View>
-      </>
-    );
-  }
-
-  return (
-    <>
-      {state === 'LOADING' && (
-        <View
-          style={{
-            position: 'absolute',
-            width: '100%',
-            height: 150,
-            backgroundColor: 'transparent',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <Text style={{ color: 'white', fontWeight: '900', fontSize: 25 }}>
-            Loading...
-          </Text>
-        </View>
-      )}
-      {state === 'ERROR' && (
-        <View
-          style={{
-            position: 'absolute',
-            width: '100%',
-            height: 150,
-            backgroundColor: 'transparent',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <Text style={{ color: '#FF160A', fontWeight: '900', fontSize: 25 }}>
-            An error occured.
-          </Text>
-        </View>
       )}
       <LinearGradient
         colors={['rgba(0, 0, 0, 0.8)', 'transparent']}
-        style={{ ...styles.toolBar, opacity: state === 'SUCCESS' ? 1 : 0 }}
+        style={{
+          ...styles.toolBar,
+          opacity: state === 'SUCCESS' && about.isCodeMember ? 1 : 0,
+        }}
       >
         <Text style={styles.timeDisplay}>
           {selectedDate.format('MMM D, H:mma')}
@@ -400,6 +371,14 @@ const styles = StyleSheet.create({
     marginVertical: 30,
     height: 1,
     width: '80%',
+  },
+  statusTopBar: {
+    position: 'absolute',
+    width: '100%',
+    height: 150,
+    backgroundColor: 'transparent',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 
