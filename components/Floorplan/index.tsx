@@ -76,36 +76,6 @@ export default function Floorplan({
         style={styles.container}
       >
         <View style={styles.dings}>
-          {displayMode.id === 'MAP_MODE' && (
-            <View style={styles.legend}>
-              {Object.values(RoomCategoryData)
-                .filter((i) => i.showInLegend)
-                .map((i) => {
-                  return (
-                    <View
-                      key={i.displayName}
-                      style={{
-                        backgroundColor: 'transparent',
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        paddingVertical: 2,
-                      }}
-                    >
-                      <View
-                        style={{
-                          ...styles.legendColorCircle,
-                          backgroundColor: i.color,
-                        }}
-                      />
-                      <Text style={{ color: 'white', fontWeight: '500' }}>
-                        {i.displayName}
-                      </Text>
-                    </View>
-                  );
-                })}
-            </View>
-          )}
-
           <FloorplanBase
             width="100%"
             height="100%"
@@ -178,6 +148,34 @@ export default function Floorplan({
           </View>
         )}
       </ReactNativeZoomableView>
+      {displayMode.id === 'MAP_MODE' && (
+        <View style={styles.legend}>
+          {Object.values(RoomCategoryData)
+            .filter((i) => i.showInLegend)
+            .map((i) => {
+              return (
+                <View
+                  key={i.displayName}
+                  style={{
+                    backgroundColor: 'transparent',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    paddingVertical: 2,
+                  }}
+                >
+                  <View
+                    style={{
+                      ...styles.legendColorCircle,
+                      backgroundColor: i.color,
+                    }}
+                  />
+                  <Text style={{ color: 'white', fontWeight: '500' }}>
+                    {i.displayName}
+                  </Text>
+                </View>
+              );
+            })}
+        </View>)}
       {/* <Pressable
         style={{
           position: 'absolute',
@@ -255,10 +253,8 @@ const styles = StyleSheet.create({
 
     backgroundColor: 'transparent',
 
-    transform: [{ rotate: '90deg' }],
-
-    left: -4,
-    top: 6,
+    left: 8,
+    bottom: 8,
   },
   legendColorCircle: {
     width: 16,
@@ -288,8 +284,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#222',
-
-    transform: [{ scale: 10 }]
   },
   title: {
     fontSize: 20,
