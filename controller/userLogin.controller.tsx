@@ -99,7 +99,6 @@ export default function userLoginController() {
           {
             clientId:
               '614417646190-dbl1mao4r8bcjmam2cmcgtfo4c35ho1h.apps.googleusercontent.com',
-            clientSecret: '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',
           },
           Google.discovery
         );
