@@ -35,7 +35,7 @@ export default function allRoomsController() {
           const [error, busyTimes] = await checkRoomAvailability(newBody);
 
           if (error != null) {
-            // console.error('error inside getBusyTimeOfRooms:', error);
+            console.error('error inside getBusyTimeOfRooms:', error);
 
             return [key, room] as const;
           }

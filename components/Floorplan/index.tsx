@@ -1,7 +1,8 @@
 import ReactNativeZoomableView from '@dudigital/react-native-zoomable-view/src/ReactNativeZoomableView';
 import dayjs from 'dayjs';
-import { StyleSheet } from 'react-native';
+import { Pressable, StyleSheet } from 'react-native';
 
+import Layers from '../../assets/icons/layers.svg';
 import ErrorTriangle from '../../assets/images/errorTriangle.svg';
 import FloorplanBase from '../../assets/images/floorplan/base.svg';
 import { Room } from '../../controller/allRooms.controller';
@@ -61,119 +62,140 @@ export default function Floorplan({
     return 'ERROR';
   })();
 
+  function goToNextFloor() { }
+
   return (
-    <ReactNativeZoomableView
-      zoomEnabled={isZoomEnabled}
-      maxZoom={2}
-      minZoom={1}
-      zoomStep={0.25}
-      initialZoom={1}
-      bindToBorders={true}
-      style={styles.container}
-    >
-      <View style={styles.dings}>
-        {displayMode.id === 'MAP_MODE' && (
-          <View style={styles.legend}>
-            {Object.values(RoomCategoryData)
-              .filter((i) => i.showInLegend)
-              .map((i) => {
-                return (
-                  <View
-                    key={i.displayName}
-                    style={{
-                      backgroundColor: 'transparent',
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      paddingVertical: 2,
-                    }}
-                  >
+    <>
+      <ReactNativeZoomableView
+        zoomEnabled={isZoomEnabled}
+        maxZoom={2}
+        minZoom={1}
+        zoomStep={0.25}
+        initialZoom={1}
+        bindToBorders={true}
+        style={styles.container}
+      >
+        <View style={styles.dings}>
+          {displayMode.id === 'MAP_MODE' && (
+            <View style={styles.legend}>
+              {Object.values(RoomCategoryData)
+                .filter((i) => i.showInLegend)
+                .map((i) => {
+                  return (
                     <View
+                      key={i.displayName}
                       style={{
-                        ...styles.legendColorCircle,
-                        backgroundColor: i.color,
+                        backgroundColor: 'transparent',
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        paddingVertical: 2,
                       }}
-                    />
-                    <Text style={{ color: 'white', fontWeight: '500' }}>
-                      {i.displayName}
-                    </Text>
-                  </View>
-                );
-              })}
-          </View>
-        )}
+                    >
+                      <View
+                        style={{
+                          ...styles.legendColorCircle,
+                          backgroundColor: i.color,
+                        }}
+                      />
+                      <Text style={{ color: 'white', fontWeight: '500' }}>
+                        {i.displayName}
+                      </Text>
+                    </View>
+                  );
+                })}
+            </View>
+          )}
 
-        <FloorplanBase
-          width="100%"
-          height="100%"
-          fill="white"
-          style={styles.floorPlanComponent}
-        />
-
-        {state !== 'SUCCESS' && (
-          <Rooms.Heaven.Component
+          <FloorplanBase
             width="100%"
             height="100%"
             fill="white"
             style={styles.floorPlanComponent}
           />
-        )}
 
-        {state === 'SUCCESS' &&
-          Object.values(Rooms).map((i) => {
-            const scheduleInfo = roomSchedules[i.name];
+          {state !== 'SUCCESS' && (
+            <Rooms.Heaven.Component
+              width="100%"
+              height="100%"
+              fill="white"
+              style={styles.floorPlanComponent}
+            />
+          )}
 
-            const isUnavailable =
-              scheduleInfo?.busyTimes?.some((j) => {
-                const isUnavailable =
-                  selectedDate.isAfter(dayjs(j.start)) &&
-                  selectedDate.isBefore(dayjs(j.end));
+          {state === 'SUCCESS' &&
+            Object.values(Rooms).map((i) => {
+              const scheduleInfo = roomSchedules[i.name];
 
-                return isUnavailable;
-              }) ?? true;
+              const isUnavailable =
+                scheduleInfo?.busyTimes?.some((j) => {
+                  const isUnavailable =
+                    selectedDate.isAfter(dayjs(j.start)) &&
+                    selectedDate.isBefore(dayjs(j.end));
 
-            const isAvailable = !isUnavailable;
+                  return isUnavailable;
+                }) ?? true;
 
-            const color = (() => {
-              const roomCategory = RoomCategoryData[rooms[i.name].category];
+              const isAvailable = !isUnavailable;
 
-              if (displayMode.id === 'MAP_MODE') return roomCategory?.color;
+              const color = (() => {
+                const roomCategory = RoomCategoryData[rooms[i.name].category];
 
-              if (displayMode.id === 'BOOKING_MODE') {
-                if (scheduleInfo?.bookable === 'BOOKABLE' && isAvailable)
-                  return RoomBookableData.BOOKABLE.color;
+                if (displayMode.id === 'MAP_MODE') return roomCategory?.color;
 
-                if (scheduleInfo?.bookable === 'BOOKABLE' && isUnavailable)
-                  return RoomBookableData.UNAVAILABLE.color;
+                if (displayMode.id === 'BOOKING_MODE') {
+                  if (scheduleInfo?.bookable === 'BOOKABLE' && isAvailable)
+                    return RoomBookableData.BOOKABLE.color;
 
-                return RoomCategoryData.DEFAULT.color;
-              }
-              // this should never happen so we make it black to stand out
-              return 'black';
-            })();
+                  if (scheduleInfo?.bookable === 'BOOKABLE' && isUnavailable)
+                    return RoomBookableData.UNAVAILABLE.color;
 
-            return (
-              <i.Component
-                key={i.name}
-                width="100%"
-                height="100%"
-                style={styles.floorPlanComponent}
-                fill={color}
-                onPress={() => {
-                  if (!(scheduleInfo?.bookable === 'BOOKABLE' && isAvailable))
-                    return;
+                  return RoomCategoryData.DEFAULT.color;
+                }
+                // this should never happen so we make it black to stand out
+                return 'black';
+              })();
 
-                  handleRoomClick(scheduleInfo);
-                }}
-              />
-            );
-          })}
-      </View>
-      {state === 'ERROR' && (
-        <View style={styles.staticOverlay}>
-          <ErrorTriangle fill="#FF160A" width="45%" height="45%" />
+              return (
+                <i.Component
+                  key={i.name}
+                  width="100%"
+                  height="100%"
+                  style={styles.floorPlanComponent}
+                  fill={color}
+                  onPress={() => {
+                    if (!(scheduleInfo?.bookable === 'BOOKABLE' && isAvailable))
+                      return;
+
+                    handleRoomClick(scheduleInfo);
+                  }}
+                />
+              );
+            })}
         </View>
-      )}
-    </ReactNativeZoomableView>
+        {state === 'ERROR' && (
+          <View style={styles.staticOverlay}>
+            <ErrorTriangle fill="#FF160A" width="45%" height="45%" />
+          </View>
+        )}
+      </ReactNativeZoomableView>
+      {/* <Pressable
+        style={{
+          position: 'absolute',
+          alignItems: 'center',
+          justifyContent: 'center',
+
+          width: 64,
+          height: 64,
+
+          right: 0,
+          bottom: 0,
+        }}
+        onPress={goToNextFloor}
+        accessibilityHint="Go to next floor"
+      >
+        <Layers fill="white" width="25" height="25" />
+      </Pressable> */}
+    </>
   );
 }
 
@@ -266,6 +288,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#222',
+
+    transform: [{ scale: 10 }]
   },
   title: {
     fontSize: 20,

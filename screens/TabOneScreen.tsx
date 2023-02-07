@@ -84,20 +84,6 @@ export default function TabOneScreen({
           opacity: state === 'SUCCESS' && about.isCodeMember ? 1 : 0,
         }}
       >
-        <Text style={styles.timeDisplay}>
-          {selectedDate.format('MMM D, H:mma')}
-        </Text>
-        <Slider
-          style={{ width: '100%', height: 40 }}
-          minimumValue={0}
-          maximumValue={1}
-          step={1 / 12 / 4}
-          minimumTrackTintColor="#ff6961"
-          maximumTrackTintColor="white"
-          onValueChange={(numberBetween0and1) =>
-            setSelectedDate(startDate.add(numberBetween0and1 * 12, 'hours'))
-          }
-        />
         <Pressable
           accessibilityLabel="Switch to next display mode"
           style={{
@@ -105,21 +91,37 @@ export default function TabOneScreen({
             alignItems: 'center',
             justifyContent: 'center',
             width: '100%',
-            paddingBottom: 16,
             backgroundColor: 'transparent',
           }}
           onPress={switchDisplayMode}
         >
           <Text
-            style={{ ...styles.timeDisplay, textDecorationLine: 'underline' }}
+            style={{ ...styles.timeDisplay, textDecorationLine: 'underline', fontSize: 20, paddingBottom: 6 }}
           >
             {displayMode.displayName}
           </Text>
           <FontAwesome
             name="arrows-v"
-            style={{ marginLeft: 5, color: '#ccc', fontSize: 15 }}
+            style={{ marginLeft: 5, color: '#ccc', fontSize: 18 }}
           />
         </Pressable>
+        <>
+          <Slider
+            style={{ width: '100%', height: 40, opacity: displayMode.id === "BOOKING_MODE" ? 1 : 0 }}
+            disabled={displayMode.id !== "BOOKING_MODE"}
+            minimumValue={0}
+            maximumValue={1}
+            step={1 / 12 / 4}
+            minimumTrackTintColor="#ff6961"
+            maximumTrackTintColor="white"
+            onValueChange={(numberBetween0and1) =>
+              setSelectedDate(startDate.add(numberBetween0and1 * 12, 'hours'))
+            }
+          />
+          <Text style={[styles.timeDisplay, { opacity: displayMode.id === "BOOKING_MODE" ? 1 : 0 }]}>
+            {selectedDate.format('MMM D, H:mma')}
+          </Text>
+        </>
       </LinearGradient>
 
       <Floorplan

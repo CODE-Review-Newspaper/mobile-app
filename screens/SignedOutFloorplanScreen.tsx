@@ -18,7 +18,6 @@ export default function SignedOutFloorplanScreen() {
   const { about, signIn } = useContext(UserContext);
 
   const {
-    setSelectedRoom,
     startDate,
     selectedDate,
     setSelectedDate,
@@ -27,10 +26,6 @@ export default function SignedOutFloorplanScreen() {
     hasData,
     hasError,
   } = useContext(CalendarContext);
-
-  const state = (() => {
-    return 'SUCCESS';
-  })();
 
   const DisplayMode = {
     MAP_MODE: {
@@ -85,7 +80,7 @@ export default function SignedOutFloorplanScreen() {
           colors={['rgba(0, 0, 0, 0.8)', 'transparent']}
           style={{
             ...styles.toolBar,
-            opacity: state === 'SUCCESS' && about.isCodeMember ? 1 : 0,
+            opacity: 0,
           }}
         >
           <Text style={styles.timeDisplay}>
