@@ -3,7 +3,6 @@
  * https://reactnavigation.org/docs/getting-started
  *
  */
-import { useEffect, ComponentProps } from 'react';
 import { FontAwesome } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {
@@ -14,6 +13,7 @@ import {
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import dayjs from 'dayjs';
 import { maybeCompleteAuthSession } from 'expo-web-browser';
+import { ComponentProps, useEffect } from 'react';
 import { useState } from 'react';
 import { ColorSchemeName, Pressable } from 'react-native';
 import { useInterval } from 'usehooks-ts';
@@ -138,7 +138,7 @@ function RootNavigator() {
     signIn,
     signOut,
     about: {
-      isCodeMember: user?.hd === "code.berlin"
+      isCodeMember: user?.hd === 'code.berlin',
     },
   };
   const calendarContextValue: CalendarContextType = {
@@ -291,7 +291,7 @@ function BottomTabNavigator() {
           tabBarIcon: ({ color }) => <TabBarIcon name="gear" color={color} />,
           headerRight: () => (
             <Pressable
-              onPress={() => { }}
+              onPress={() => {}}
               style={({ pressed }) => ({
                 opacity: pressed ? 0.5 : 1,
               })}

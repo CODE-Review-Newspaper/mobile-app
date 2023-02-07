@@ -8,8 +8,8 @@ export interface UserContextType {
   signIn: () => unknown;
   signOut: () => unknown;
   about: {
-    isCodeMember: boolean
-  },
+    isCodeMember: boolean;
+  };
 }
 // @ts-ignore
 const UserContext = createContext<UserContextType>();

@@ -8,18 +8,18 @@ import LinearGradient from 'react-native-linear-gradient';
 
 import ErrorTriangle from '../assets/images/errorTriangle.svg';
 import Floorplan from '../assets/images/floorplan/base.svg';
+import GoogleIcon from '../assets/images/googleIcon.svg';
 import Rooms from '../components/Rooms';
 import { Text, View } from '../components/Themed';
 import CalendarContext from '../contexts/calendar.context';
 import UserContext from '../contexts/user.context';
 import { RoomBookableData, RoomCategoryData, rooms } from '../data/rooms.data';
 import { RootTabScreenProps } from '../types';
-import GoogleIcon from '../assets/images/googleIcon.svg';
 
 export default function TabOneScreen({
   navigation,
 }: RootTabScreenProps<'TabOne'>) {
-  const { about, signIn } = useContext(UserContext)
+  const { about, signIn } = useContext(UserContext);
 
   const {
     setSelectedRoom,
@@ -44,52 +44,53 @@ export default function TabOneScreen({
     MAP_MODE: {
       id: 'MAP_MODE',
       displayName: 'Map mode',
-      next: 'BOOK_MODE' as const,
+      next: 'BOOKING_MODE' as const,
     },
-    BOOK_MODE: {
-      id: 'BOOK_MODE',
-      displayName: 'Book mode',
+    BOOKING_MODE: {
+      id: 'BOOKING_MODE',
+      displayName: 'Booking mode',
       next: 'MAP_MODE' as const,
     },
   };
   const [displayMode, setDisplayMode] = useState<
     (typeof DisplayMode)[keyof typeof DisplayMode]
-  >(about.isCodeMember ? DisplayMode.BOOK_MODE : DisplayMode.MAP_MODE);
+  >(about.isCodeMember ? DisplayMode.BOOKING_MODE : DisplayMode.MAP_MODE);
 
   function switchDisplayMode() {
     setDisplayMode(DisplayMode[displayMode.next]);
   }
 
   if (!about.isCodeMember) {
-    return <>
-      <View
-        style={{
-          position: 'absolute',
-          width: '100%',
-          height: 150,
-          backgroundColor: 'transparent',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <Pressable
-          onPress={signIn}
-          style={({ pressed }) =>
-            pressed ? [styles.button, styles.buttonPressed] : styles.button
-          }
-          accessibilityLabel="Sign in with @code.berlin"
+    return (
+      <>
+        <View
+          style={{
+            position: 'absolute',
+            width: '100%',
+            height: 150,
+            backgroundColor: 'transparent',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
         >
-          <GoogleIcon
-            width="16"
-            height="16"
-            fill="white"
-            style={{ marginBottom: 1 }}
-          />
-          <Text style={styles.buttonText}>Sign in with @code.berlin</Text>
-        </Pressable>
-      </View>
-
-    </>
+          <Pressable
+            onPress={signIn}
+            style={({ pressed }) =>
+              pressed ? [styles.button, styles.buttonPressed] : styles.button
+            }
+            accessibilityLabel="Sign in with @code.berlin"
+          >
+            <GoogleIcon
+              width="16"
+              height="16"
+              fill="white"
+              style={{ marginBottom: 1 }}
+            />
+            <Text style={styles.buttonText}>Sign in with @code.berlin</Text>
+          </Pressable>
+        </View>
+      </>
+    );
   }
 
   return (
@@ -253,7 +254,7 @@ export default function TabOneScreen({
 
                 if (displayMode.id === 'MAP_MODE') return roomCategory?.color;
 
-                if (displayMode.id === 'BOOK_MODE') {
+                if (displayMode.id === 'BOOKING_MODE') {
                   if (scheduleInfo?.bookable === 'BOOKABLE' && isAvailable)
                     return RoomBookableData.BOOKABLE.color;
 

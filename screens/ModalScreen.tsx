@@ -152,7 +152,9 @@ export default function ModalScreen({
 
         <Pressable
           style={({ pressed }) =>
-            pressed ? [styles.button, styles.buttonPressed] : styles.button
+            pressed
+              ? [styles.button, styles.buttonPressed, { marginTop: 24 }]
+              : [styles.button, { marginTop: 24 }]
           }
           accessibilityLabel="Book room"
           onPress={() => submit()}

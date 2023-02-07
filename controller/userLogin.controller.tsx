@@ -1,13 +1,13 @@
 import * as AuthSession from 'expo-auth-session';
 import * as Google from 'expo-auth-session/providers/google';
 import * as WebBrowser from 'expo-web-browser';
-import { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   TokenError,
   TokenResponse,
   TokenResponseConfig,
 } from 'expo-auth-session';
+import { useEffect, useState } from 'react';
 
 import { User } from '../types/dings.types';
 import { fetchData } from './wrapper';
@@ -32,10 +32,9 @@ export default function userLoginController() {
 
   const signIn = async () => {
     if (!(await isLoggedIn())) {
-
       const res = await promptAsync();
 
-      if (res.type === "success") setIsSignedIn(true);
+      if (res.type === 'success') setIsSignedIn(true);
     }
   };
 
