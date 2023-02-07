@@ -5,13 +5,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   TokenError,
   TokenResponse,
-  TokenResponseConfig,
 } from 'expo-auth-session';
 import { useEffect, useState } from 'react';
 import { Platform } from 'react-native';
 
 import { User } from '../types/dings.types';
 import { fetchData } from './wrapper';
+import Config from "react-native-config"
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -24,12 +24,9 @@ export default function userLoginController() {
   const [isLoadingAuthState, setIsLoadingAuthState] = useState(true);
 
   const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
-    clientId:
-      '614417646190-dbl1mao4r8bcjmam2cmcgtfo4c35ho1h.apps.googleusercontent.com',
-    iosClientId:
-      '614417646190-vcu5a3ini5nnr0elfaqt8fprs358mp2i.apps.googleusercontent.com',
-    androidClientId:
-      '614417646190-hhupm8k97a22rvv2gfdcoqi1gus8qunq.apps.googleusercontent.com',
+    clientId: Config.CLIENT_ID,
+    iosClientId: Config.IOS_CLIENT_ID,
+    androidClientId: Config.ANDROID_CLIENT_ID,
   });
 
   const signIn = async () => {
@@ -49,9 +46,7 @@ export default function userLoginController() {
       if (authState != null) {
         await AuthSession.revokeAsync(
           { token: authState.accessToken },
-          {
-            revocationEndpoint: 'https://oauth2.googleapis.com/revoke',
-          }
+          Google.discovery
         );
       }
     }
@@ -102,9 +97,9 @@ export default function userLoginController() {
 
   function getClientId() {
     if (Platform.OS === 'ios') {
-      return '614417646190-vcu5a3ini5nnr0elfaqt8fprs358mp2i.apps.googleusercontent.com';
+      return Config.IOS_CLIENT_ID;
     } else if (Platform.OS === 'android') {
-      return '614417646190-hhupm8k97a22rvv2gfdcoqi1gus8qunq.apps.googleusercontent.com';
+      return Config.ANDROID_CLIENT_ID;
     } else {
       console.log('Invalid platform - not handled');
     }
@@ -126,9 +121,7 @@ export default function userLoginController() {
             clientId: clientId!,
             refreshToken: authState.refreshToken,
           },
-          {
-            tokenEndpoint: 'https://www.googleapis.com/oauth2/v4/token',
-          }
+          Google.discovery
         );
 
         if (tokenResult.accessToken === undefined) {
