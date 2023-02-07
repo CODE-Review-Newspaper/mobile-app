@@ -27,15 +27,12 @@ export default function userLoginController() {
     clientId: Config.CLIENT_ID,
     iosClientId: Config.IOS_CLIENT_ID,
     androidClientId: Config.ANDROID_CLIENT_ID,
+    scopes: ['https://www.googleapis.com/auth/calendar'],
   });
 
   const signIn = async () => {
     if (!(await isLoggedIn())) {
       const res = await promptAsync();
-
-      if (res.type === 'success') {
-        setIsSignedIn(true);
-      }
     }
   };
 
@@ -67,7 +64,6 @@ export default function userLoginController() {
       fetchUserInfo();
     }
     setIsLoadingAuthState(false);
-
     return loggedIn;
   }
 
@@ -82,7 +78,7 @@ export default function userLoginController() {
         })
       );
     }
-  
+
     return authFromJson != null ? authFromJson : null;
   }
 
@@ -154,7 +150,7 @@ export default function userLoginController() {
 
   useEffect(() => {
     if (response?.type === 'success') {
-      setAuthState(response.authentication).then(() => fetchUserInfo());
+      setAuthState(response.authentication).then(() => fetchUserInfo()).then(() => setIsSignedIn(true));
     }
   }, [response]);
 
@@ -173,6 +169,7 @@ export default function userLoginController() {
   }
   useEffect(() => {
     isLoggedIn();
+    console.log("test")
   }, []);
 
   return {
