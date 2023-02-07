@@ -120,6 +120,17 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
 
                 <View style={styles.dings}>
 
+                    {displayMode.id === "MAP_MODE" && <View style={styles.legend}>
+
+                        {Object.values(RoomCategoryData).filter(i => i.showInLegend).map(i => {
+
+                            return <View key={i.displayName} style={{ backgroundColor: "transparent", flexDirection: "row", alignItems: "center", paddingVertical: 2 }}>
+                                <View style={{ ...styles.legendColorCircle, backgroundColor: i.color }} />
+                                <Text style={{ color: "white", fontWeight: "500" }}>{i.displayName}</Text>
+                            </View>
+                        })}
+                    </View>}
+
                     <Floorplan
                         width="100%"
                         height="100%"
@@ -137,7 +148,6 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
                     {state === "SUCCESS" && Object.values(Rooms).map(i => {
 
                         const scheduleInfo = roomSchedules[i.name]
-
 
                         // @ts-ignore
                         const isUnavailable = scheduleInfo?.busyTimes?.some(i => {
@@ -186,7 +196,6 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
                             }
                         />
                     })}
-
                 </View>
                 {state === "ERROR" && <View style={styles.staticOverlay}>
                     <ErrorTriangle fill="#FF160A" width="45%" height="45%" />
@@ -243,6 +252,23 @@ const styles = StyleSheet.create({
         height: "80%",
         transform: [{ rotate: "-90deg" }],
         backgroundColor: "transparent",
+    },
+    legend: {
+        position: "absolute",
+
+        backgroundColor: "transparent",
+
+        transform: [{ rotate: "90deg" }],
+
+        left: -4,
+        top: 6,
+    },
+    legendColorCircle: {
+        width: 16,
+        height: 16,
+        marginRight: 8,
+
+        borderRadius: 8,
     },
     sache: {
         color: "#222",

@@ -125,63 +125,63 @@ export const rooms: Record<string, Room> = {
         id: 'c_188a3b98kiajagpgl4of58hbhq7lk@resource.calendar.google.com',
         displayName: "Spock",
         factoryRoomNumber: "4.11.3",
-        category: "PROJECT_LAB",
+        category: "PROJECT_ROOM",
     },
     "Spongebob": {
         bookable: "APPLICATION_REQUIRED",
         id: null,
         displayName: "Spongebob",
         factoryRoomNumber: "4.1.6",
-        category: "PROJECT_LAB",
+        category: "PROJECT_ROOM",
     },
     "Patrick": {
         bookable: "APPLICATION_REQUIRED",
         id: null,
         displayName: "Patrick",
         factoryRoomNumber: "4.1.5",
-        category: "PROJECT_LAB",
+        category: "PROJECT_ROOM",
     },
     "MrKrabs": {
         bookable: "APPLICATION_REQUIRED",
         id: null,
         displayName: "Mr. Krabs",
         factoryRoomNumber: "4.1.3",
-        category: "PROJECT_LAB",
+        category: "PROJECT_ROOM",
     },
     "Plankton": {
         bookable: "APPLICATION_REQUIRED",
         id: null,
         displayName: "Plankton",
         factoryRoomNumber: "4.1.2",
-        category: "PROJECT_LAB",
+        category: "PROJECT_ROOM",
     },
     "Squidward": {
         bookable: "APPLICATION_REQUIRED",
         id: null,
         displayName: "Squidward",
         factoryRoomNumber: "4.1.4",
-        category: "PROJECT_LAB",
+        category: "PROJECT_ROOM",
     },
     "Peace": {
         bookable: "APPLICATION_REQUIRED",
         id: null,
         displayName: "Peace",
         factoryRoomNumber: "4.8.5",
-        category: "PROJECT_LAB",
+        category: "PROJECT_ROOM",
     },
     "Roomy": {
         bookable: "APPLICATION_REQUIRED",
         id: null,
         displayName: "Roomy",
         factoryRoomNumber: "4.8.3",
-        category: "PROJECT_LAB",
+        category: "PROJECT_ROOM",
     },
     'Void': {
         bookable: "APPLICATION_REQUIRED",
         id: 'c_188d0sd2j8pnei5ai0f0ijl0p3bmg4gbcdnm8p9ec9in4r39do@resource.calendar.google.com',
         displayName: "Void",
         factoryRoomNumber: "4.3.2",
-        category: "PROJECT_LAB",
+        category: "PROJECT_ROOM",
     },
     'EightBit': {
         bookable: "BOOKABLE",
@@ -267,49 +267,66 @@ export const rooms: Record<string, Room> = {
         factoryRoomNumber: null,
         category: "WORKSPACES",
     },
+    "Library": {
+        bookable: "UNBOOKABLE",
+        id: null,
+        displayName: "Library",
+        factoryRoomNumber: null,
+        category: "LIBRARY",
+    },
 }
 
 export const RoomCategoryData = {
 
-    TEAM_HQ: {
-        color: "#BEFBCF",
-        displayName: "Team room",
-    },
-    LEARNING_UNITS: {
-        color: "#988C8B",
-        displayName: "Learning unit room",
-    },
-    WORKSPACES: {
-        color: "transparent",
-        displayName: "Workspace ",
-    },
-    MEETING_ROOM: {
-        color: "#D9D9D9",
-        displayName: "Meeting booth",
+    LIBRARY: {
+        color: "blue",
+        displayName: "Library shelf",
+        showInLegend: true,
     },
     PROJECT_ROOM: {
         color: "#FAFFBB",
         displayName: "Project room",
-    },
-    PROJECT_LAB: {
-        color: "#FAFFBB",
-        displayName: "Project lab",
-    },
-    SILENT_SPACE: {
-        color: "transparent",
-        displayName: "Silent space",
-    },
-    STUDIO: {
-        color: "#F5BFF8",
-        displayName: "Music Studio",
+        showInLegend: true,
     },
     OFFICE_BOOTH: {
         color: "#f2b01d",
         displayName: "Office booth",
+        showInLegend: true,
+    },
+    TEAM_HQ: {
+        color: "#BEFBCF",
+        displayName: "Team HQ",
+        showInLegend: true,
+    },
+    MEETING_ROOM: {
+        color: "#D9D9D9",
+        displayName: "Meeting room",
+        showInLegend: true,
+    },
+    LEARNING_UNITS: {
+        color: "#988C8B",
+        displayName: "For learning units",
+        showInLegend: true,
+    },
+    STUDIO: {
+        color: "#F5BFF8",
+        displayName: "Music studio",
+        showInLegend: true,
+    },
+    SILENT_SPACE: {
+        color: "transparent",
+        displayName: "Silent space",
+        showInLegend: false,
+    },
+    WORKSPACES: {
+        color: "transparent",
+        displayName: "Workspace",
+        showInLegend: false,
     },
     DEFAULT: {
         color: "#D9D9D9",
         displayName: "Normal room",
+        showInLegend: false,
     },
 }
 

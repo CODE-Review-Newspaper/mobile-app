@@ -8,6 +8,7 @@ import Spock from "../assets/images/floorplan/Spock.svg";
 import Jungle from "../assets/images/floorplan/Jungle.svg";
 import Warp from "../assets/images/floorplan/Warp.svg";
 import Echo from "../assets/images/floorplan/Echo.svg";
+import Library from "../assets/images/floorplan/Library.svg";
 import Peace from "../assets/images/floorplan/Peace.svg";
 import Roomy from "../assets/images/floorplan/Roomy.svg";
 import Morty from "../assets/images/floorplan/Morty.svg";
@@ -28,6 +29,10 @@ import Squidward from "../assets/images/floorplan/Squidward.svg";
 import MrKrabs from "../assets/images/floorplan/MrKrabs.svg";
 import Plankton from "../assets/images/floorplan/Plankton.svg";
 import Ada from "../assets/images/floorplan/Ada.svg";
+import Hat from "../assets/images/floorplan/Hat.svg";
+import Hi from "../assets/images/floorplan/Hi.svg";
+import Clap from "../assets/images/floorplan/Clap.svg";
+import Kick from "../assets/images/floorplan/Kick.svg";
 import Heaven from "../assets/images/floorplan/Heaven.svg";
 
 const Rooms = {
@@ -70,6 +75,10 @@ const Rooms = {
     Echo: {
         name: "Echo",
         Component: Echo,
+    },
+    Library: {
+        name: "Library",
+        Component: Library,
     },
     Peace: {
         name: "Peace",
@@ -150,6 +159,22 @@ const Rooms = {
     Ada: {
         name: "Ada",
         Component: Ada,
+    },
+    Hat: {
+        name: "Hat",
+        Component: Hat,
+    },
+    Hi: {
+        name: "Hi",
+        Component: Hi,
+    },
+    Clap: {
+        name: "Clap",
+        Component: Clap,
+    },
+    Kick: {
+        name: "Kick",
+        Component: Kick,
     },
     Heaven: {
         name: "Heaven",

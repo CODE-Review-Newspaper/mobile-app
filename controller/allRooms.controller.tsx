@@ -10,7 +10,7 @@ export interface Room {
     factoryRoomNumber: string | null
     bookable: "BOOKABLE" | "UNBOOKABLE" | "APPLICATION_REQUIRED" | "TEAM_ONLY"
     busyTimes?: BusyRooms[]
-    category: "LEARNING_UNITS" | "PROJECT_ROOM" | "MEETING_ROOM" | "TEAM_HQ" | "PROJECT_LAB" | "SILENT_SPACE" | "STUDIO" | "OFFICE_BOOTH" | "WORKSPACES"
+    category: "LEARNING_UNITS" | "PROJECT_ROOM" | "MEETING_ROOM" | "TEAM_HQ" | "PROJECT_LAB" | "SILENT_SPACE" | "STUDIO" | "OFFICE_BOOTH" | "WORKSPACES" | "LIBRARY"
 }
 export default function allRoomsController() {
     const { checkRoomAvailability } = bookRoomsController()
