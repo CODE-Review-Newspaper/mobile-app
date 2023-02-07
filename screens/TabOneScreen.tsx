@@ -76,32 +76,6 @@ export default function TabOneScreen({
           </Text>
         </View>
       )}
-      {!about.isCodeMember && (
-        <View
-          style={{
-            ...styles.statusTopBar,
-            position: 'absolute',
-            zIndex: 4,
-            elevation: 4,
-          }}
-        >
-          <Pressable
-            onPress={signIn}
-            style={({ pressed }) =>
-              pressed ? [styles.button, styles.buttonPressed] : styles.button
-            }
-            accessibilityLabel="Sign in with @code.berlin"
-          >
-            <GoogleIcon
-              width="16"
-              height="16"
-              fill="white"
-              style={{ marginBottom: 1 }}
-            />
-            <Text style={styles.buttonText}>Sign in with @code.berlin</Text>
-          </Pressable>
-        </View>
-      )}
       <LinearGradient
         colors={['rgba(0, 0, 0, 0.8)', 'transparent']}
         style={{
@@ -154,16 +128,8 @@ export default function TabOneScreen({
         zoomStep={0.25}
         initialZoom={1}
         bindToBorders={true}
-        // onZoomAfter={this.logOutZoomState}
         style={styles.container}
       >
-        {/* <View style={styles.header}>
-
-        <Text style={styles.title}>Tab One</Text>
-        <Logo style={styles.logo} height="100" />
-      </View> */}
-        {/* <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" /> */}
-
         <View style={styles.dings}>
           {displayMode.id === 'MAP_MODE' && (
             <View style={styles.legend}>
@@ -215,7 +181,6 @@ export default function TabOneScreen({
             Object.values(Rooms).map((i) => {
               const scheduleInfo = roomSchedules[i.name];
 
-              // @ts-ignore
               const isUnavailable =
                 scheduleInfo?.busyTimes?.some((i) => {
                   const isUnavailable =
@@ -252,7 +217,6 @@ export default function TabOneScreen({
                   height="100%"
                   style={styles.floorPlanComponent}
                   fill={color}
-                  // @ts-ignore
                   onPress={() => {
                     if (!(scheduleInfo?.bookable === 'BOOKABLE' && isAvailable))
                       return;
@@ -268,7 +232,6 @@ export default function TabOneScreen({
         {state === 'ERROR' && (
           <View style={styles.staticOverlay}>
             <ErrorTriangle fill="#FF160A" width="45%" height="45%" />
-            {/* <Text style={{ color: "#FF160A", fontWeight: "900", fontSize: 25 }}>An error occured.</Text> */}
           </View>
         )}
       </ReactNativeZoomableView>

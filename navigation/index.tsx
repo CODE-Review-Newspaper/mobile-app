@@ -32,6 +32,7 @@ import LoginScreen from '../screens/LoginScreen';
 import ModalScreen from '../screens/ModalScreen';
 import NotFoundScreen from '../screens/NotFoundScreen';
 import SettingsScreen from '../screens/SettingsScreen';
+import SignedOutFloorplanScreen from '../screens/SignedOutFloorplanScreen';
 import TabOneScreen from '../screens/TabOneScreen';
 import {
   RootStackParamList,
@@ -125,7 +126,7 @@ function RootNavigator() {
   }
 
   useEffect(() => {
-    loadRoomSchedules();
+    if (isSignedIn && !isLoadingAuthState) loadRoomSchedules();
   }, [isSignedIn, isLoadingAuthState]);
 
   const REFETCH_ROOMS_INTERVAL_SECONDS = 30;
@@ -173,14 +174,22 @@ function RootNavigator() {
                 />
               );
 
-            if (!isSignedIn)
-              return (
-                <Stack.Screen
-                  name="Root"
-                  component={LoginScreen}
-                  options={{ headerShown: false }}
-                />
-              );
+            // if (!isSignedIn)
+            //   return (
+            //     <Stack.Screen
+            //       name="Root"
+            //       component={LoginScreen}
+            //       options={{ headerShown: false }}
+            //     />
+            //   );
+
+            if (!isSignedIn) {
+              return <Stack.Screen
+                name="Root"
+                component={SignedOutFloorplanScreen}
+                options={{ headerShown: false }}
+              />
+            }
 
             return (
               <>
@@ -294,7 +303,7 @@ function BottomTabNavigator() {
           tabBarIcon: ({ color }) => <TabBarIcon name="gear" color={color} />,
           headerRight: () => (
             <Pressable
-              onPress={() => {}}
+              onPress={() => { }}
               style={({ pressed }) => ({
                 opacity: pressed ? 0.5 : 1,
               })}
