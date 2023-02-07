@@ -12,9 +12,6 @@ WebBrowser.maybeCompleteAuthSession()
 export default function userLoginController() {
     const [user, setUser] = React.useState<User | null>(null)
 
-    const [isSignedIn, setIsSignedIn] = React.useState(false)
-    const [isLoadingAuthState, setIsLoadingAuthState] = React.useState(true)
-
     const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
         clientId: "614417646190-dbl1mao4r8bcjmam2cmcgtfo4c35ho1h.apps.googleusercontent.com",
         iosClientId: "614417646190-vcu5a3ini5nnr0elfaqt8fprs358mp2i.apps.googleusercontent.com",
@@ -28,7 +25,6 @@ export default function userLoginController() {
 
             await promptAsync()
         }
-        setIsSignedIn(true)
     }
 
     const signOut = async () => {
@@ -37,25 +33,21 @@ export default function userLoginController() {
 
             if (authState != null) {
                 await AuthSession.revokeAsync({ token: authState.accessToken }, Google.discovery)
+                console.log("revoked")
             }
         }
-        await setAuthState(null)
 
+        await setAuthState(null)
         setUser(null)
-        setIsSignedIn(false)
     }
 
-    async function isLoggedIn(shouldFetchUserInfo = true) {
+    async function isLoggedIn(fetchUser = true) {
         const authState = await getAuthState();
 
-        const loggedIn = (authState != null && await autoRenewAuth())!;
-
-        setIsSignedIn(loggedIn)
-
-        if (loggedIn && shouldFetchUserInfo) {
+        const loggedIn = authState != null && await autoRenewAuth();
+        if (loggedIn && fetchUser) {
             fetchUserInfo()
         }
-        setIsLoadingAuthState(false)
 
         return loggedIn
     }
@@ -63,12 +55,11 @@ export default function userLoginController() {
     async function getAuthState(): Promise<TokenResponse | null> {
         const jsonValue = await AsyncStorage.getItem('@authState')
         const obj: TokenResponseConfig = JSON.parse(jsonValue!);
-
         return obj != null ? new AuthSession.TokenResponse(obj) : null;
     }
 
     async function setAuthState(authState: TokenResponse | null) {
-        if (authState == null) {
+        if (authState === null) {
             await AsyncStorage.removeItem('@authState')
         } else {
 
@@ -84,11 +75,11 @@ export default function userLoginController() {
             return false
         }
 
-        if ((authState.shouldRefresh())) {
+        if (authState.shouldRefresh()) {
+            console.log("refreshing")
             try {
                 const refresh = await authState.refreshAsync({
                     clientId: "614417646190-dbl1mao4r8bcjmam2cmcgtfo4c35ho1h.apps.googleusercontent.com",
-                    clientSecret: "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"
                 }, Google.discovery);
 
                 if (refresh.accessToken === undefined) {
@@ -99,15 +90,13 @@ export default function userLoginController() {
             } catch (e) {
                 if (e instanceof TokenError) {
                     if (e.code === 'invalid_grant') {
-                        console.error("invalid grant, prompting for new grant")
+                        console.log("invalid grant, prompting for new grant")
 
                         await setAuthState(null)
                         await signIn()
-
-                        return
                     }
                 }
-                console.error("error inside autoRenewAuth:", JSON.stringify(e, null, 2))
+                console.log(JSON.stringify(e, null, 2))
             }
         }
         return true
@@ -132,12 +121,10 @@ export default function userLoginController() {
         isLoggedIn()
     }, [])
 
+    const isSignedIn = user != null
+
     return {
-        user,
-        isSignedIn,
-        isLoadingAuthState,
-        signIn,
-        signOut,
-        getAuthState,
+        user, signIn, isSignedIn, getAuthState, signOut
     }
+
 }

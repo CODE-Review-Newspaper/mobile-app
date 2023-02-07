@@ -44,7 +44,8 @@ export default function bookRoomsController() {
     const { getAuthState } = userLoginController()
 
     async function createEvent(eventBody: CreateEventRequest, roomBusyBody: CheckBusyRoomRequest) {
-
+        const dings = await getAuthState()
+        console.log(dings?.expiresIn)
         const url: url = "https://www.googleapis.com/calendar/v3/calendars/primary/events"
 
         const [errorRooms, roomTimes] = await checkRoomAvailability(roomBusyBody)
