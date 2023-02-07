@@ -1,13 +1,7 @@
 import Slider from '@react-native-community/slider';
-import { StatusBar } from 'expo-status-bar';
+import dayjs from 'dayjs';
 import { useContext, useEffect, useState } from 'react';
-import {
-  Linking,
-  Platform,
-  Pressable,
-  StyleSheet,
-  TextInput,
-} from 'react-native';
+import { Linking, Pressable, StyleSheet, TextInput } from 'react-native';
 
 import { Text, View } from '../components/Themed';
 import CalendarContext from '../contexts/calendar.context';
@@ -42,7 +36,12 @@ export default function ModalScreen({
   const MAX_DURATION_MINS = 60 * 6;
 
   useEffect(() => {
-    setEndDate(selectedDate.add(DEFAULT_DURATION_MINS, 'minutes'));
+    setEndDate(
+      selectedDate.add(
+        Math.min(DEFAULT_DURATION_MINS, maxEventDurationMins),
+        'minutes'
+      )
+    );
   }, []);
 
   const [createdEventData, setCreatedEventData] =
@@ -69,13 +68,13 @@ export default function ModalScreen({
           dateTime: endDate.toDate(),
           timeZone: 'Europe/Berlin',
         },
-        attendees: [{ email: selectedRoom!.id! }],
+        attendees: [{ email: selectedRoom!.email! }],
         summary: meetingTitle,
       },
       {
         items: [
           {
-            id: selectedRoom!.id!,
+            id: selectedRoom!.email!,
           },
         ],
         timeMin: selectedDate.toDate(),
@@ -91,11 +90,26 @@ export default function ModalScreen({
 
     setState('SUCCESS');
 
-    loadRoomSchedules();
-
-    // setTimeout(() => navigation.navigate('TabOne'), 300)
+    // wait before updating state because google api won't immediately return the new event
+    setTimeout(loadRoomSchedules, 1000);
   }
-  // const selectedRoomSchedule = roomSchedules[selectedRoom!.name]
+  const selectedRoomSchedule = roomSchedules[selectedRoom!.id];
+
+  const nextEventsInSelectedRoom = selectedRoomSchedule.busyTimes
+    ?.filter((i) => dayjs(i.start).isAfter(selectedDate))
+    ?.sort((a, b) => (dayjs(a.start).isAfter(dayjs(b.start)) ? 1 : 0));
+
+  const nextEventInSelectedRoom = nextEventsInSelectedRoom?.[0] ?? null;
+
+  const minutesUntilNextEvent =
+    nextEventInSelectedRoom == null
+      ? Infinity
+      : dayjs(nextEventInSelectedRoom!.start).diff(selectedDate, 'minutes');
+
+  const maxEventDurationMins = Math.min(
+    minutesUntilNextEvent,
+    MAX_DURATION_MINS
+  );
 
   return (
     <View style={styles.container}>
@@ -131,7 +145,7 @@ export default function ModalScreen({
             placeholder="Meeting title"
             multiline
             style={styles.titleInput}
-            onChangeText={e => setMeetingTitle(e)}
+            onChangeText={(e) => setMeetingTitle(e)}
           />
         );
       })()}
@@ -146,9 +160,6 @@ export default function ModalScreen({
         {endDate.diff(selectedDate, 'minutes')} minutes
       </Text>
 
-      {/* Use a light status bar on iOS to account for the black space above the modal */}
-      {/* <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} /> */}
-
       <View
         style={{
           width: '100%',
@@ -162,7 +173,7 @@ export default function ModalScreen({
             disabled={state === 'LOADING'}
             style={{ width: '100%', height: 40 }}
             minimumValue={MIN_DURATION_MINS}
-            maximumValue={MAX_DURATION_MINS}
+            maximumValue={maxEventDurationMins}
             value={DEFAULT_DURATION_MINS}
             step={15}
             minimumTrackTintColor="#ff6961"
