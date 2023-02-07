@@ -1,6 +1,5 @@
-import { View } from "../components/Themed";
+import { View } from '../components/Themed';
 
 export default function LoadingScreen() {
-
-    return <View style={{ height: "100%", backgroundColor: "#222" }} />
+  return <View style={{ height: '100%', backgroundColor: '#222' }} />;
 }

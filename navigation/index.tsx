@@ -3,40 +3,53 @@
  * https://reactnavigation.org/docs/getting-started
  *
  */
-import dayjs from "dayjs"
+import * as React from 'react';
 import { FontAwesome } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
+import {
+  DarkTheme,
+  DefaultTheme,
+  NavigationContainer,
+} from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import * as React from 'react';
+import dayjs from 'dayjs';
+import { maybeCompleteAuthSession } from 'expo-web-browser';
+import { useState } from 'react';
 import { ColorSchemeName, Pressable } from 'react-native';
-
-import { useState } from "react"
-import { maybeCompleteAuthSession } from "expo-web-browser"
+import { useInterval } from 'usehooks-ts';
 
 import Colors from '../constants/Colors';
+import CalendarContext, {
+  CalendarContextType,
+} from '../contexts/calendar.context';
+import UserContext, { UserContextType } from '../contexts/user.context';
+import allRoomsController from '../controller/allRooms.controller';
+import bookRoomsController from '../controller/booking.controller';
+import userLoginController from '../controller/userLogin.controller';
 import useColorScheme from '../hooks/useColorScheme';
+import LoadingScreen from '../screens/LoadingScreen';
 import LoginScreen from '../screens/LoginScreen';
 import ModalScreen from '../screens/ModalScreen';
 import NotFoundScreen from '../screens/NotFoundScreen';
-import TabOneScreen from '../screens/TabOneScreen';
 import SettingsScreen from '../screens/SettingsScreen';
-import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
+import TabOneScreen from '../screens/TabOneScreen';
+import {
+  RootStackParamList,
+  RootTabParamList,
+  RootTabScreenProps,
+} from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
-import CalendarContext, { CalendarContextType } from '../contexts/calendar.context';
-import userLoginController from "../controller/userLogin.controller";
-import bookRoomsController from "../controller/booking.controller";
-import allRoomsController, { Room } from "../controller/allRooms.controller";
-import UserContext, { UserContextType } from "../contexts/user.context";
-import LoadingScreen from "../screens/LoadingScreen";
 
-import { useInterval } from 'usehooks-ts'
-
-export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
+export default function Navigation({
+  colorScheme,
+}: {
+  colorScheme: ColorSchemeName;
+}) {
   return (
     <NavigationContainer
       linking={LinkingConfiguration}
-      theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+      theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
+    >
       <RootNavigator />
     </NavigationContainer>
   );
@@ -48,75 +61,83 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
  */
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
-maybeCompleteAuthSession()
+maybeCompleteAuthSession();
 
 function RootNavigator() {
+  const [roomScheduleState, setRoomScheduleState] = useState<{
+    isLoading: boolean;
+    hasData: boolean;
+    hasError: boolean;
+  }>({ isLoading: true, hasData: false, hasError: false });
 
-  const [roomScheduleState, setRoomScheduleState] = useState<{ isLoading: boolean, hasData: boolean, hasError: boolean }>({ isLoading: true, hasData: false, hasError: false })
-
-  const { user, isSignedIn, isLoadingAuthState, signIn, signOut } = userLoginController()
-  const { createEvent } = bookRoomsController()
-  const { getBusyTimeOfRooms } = allRoomsController()
+  const { user, isSignedIn, isLoadingAuthState, signIn, signOut } =
+    userLoginController();
+  const { createEvent } = bookRoomsController();
+  const { getBusyTimeOfRooms } = allRoomsController();
 
   const roundDownToNearestQuarterHour = (date: dayjs.Dayjs) => {
+    const roundedMinutes = Math.floor(date.get('minutes') / 15) * 15;
 
-    const roundedMinutes = Math.floor(date.get("minutes") / 15) * 15;
+    return date.set('minutes', roundedMinutes);
+  };
 
-    return date.set("minutes", roundedMinutes)
-  }
-
-  const [selectedRoom, setSelectedRoom] = useState<Room | null>(null)
-  const [startDate, setStartDate] = useState<dayjs.Dayjs>(roundDownToNearestQuarterHour(dayjs()))
-  const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs>(startDate)
-  const [endDate, setEndDate] = useState<dayjs.Dayjs>(selectedDate.add(6, "hours"))
-  const [roomSchedules, setRoomSchedules] = useState<any>({})
+  const [selectedRoom, setSelectedRoom] =
+    useState<CalendarContextType['selectedRoom']>(null);
+  const [startDate, setStartDate] = useState<CalendarContextType['startDate']>(
+    roundDownToNearestQuarterHour(dayjs())
+  );
+  const [selectedDate, setSelectedDate] =
+    useState<CalendarContextType['selectedDate']>(startDate);
+  const [endDate, setEndDate] = useState<CalendarContextType['endDate']>(
+    selectedDate.add(6, 'hours')
+  );
+  const [roomSchedules, setRoomSchedules] = useState<
+    CalendarContextType['roomSchedules']
+  >({});
 
   async function loadRoomSchedules() {
-
-    setRoomScheduleState(prev => ({
+    setRoomScheduleState((prev) => ({
       ...prev,
       isLoading: true,
-    }))
+    }));
 
-    const [scheduleError, scheduleData] = await getBusyTimeOfRooms()
+    const [scheduleError, scheduleData] = await getBusyTimeOfRooms();
 
     if (scheduleError != null) {
+      console.error('error loading room schedules:', scheduleError);
 
-      console.error("error loading room schedules:", scheduleError)
-
-      setRoomScheduleState(prev => ({
+      setRoomScheduleState((prev) => ({
         ...prev,
         isLoading: false,
         hasError: true,
-      }))
-      return
+      }));
+      return;
     }
-    setRoomScheduleState(prev => ({
+    setRoomScheduleState((prev) => ({
       ...prev,
       isLoading: false,
       hasError: false,
       hasData: true,
-    }))
-    setRoomSchedules(scheduleData)
+    }));
+    setRoomSchedules(scheduleData);
 
-    console.info("loaded room schedules")
+    console.info('loaded room schedules');
   }
 
   React.useEffect(() => {
+    loadRoomSchedules();
+  }, []);
 
-    loadRoomSchedules()
-  }, [])
+  const REFETCH_ROOMS_INTERVAL_SECONDS = 30;
 
-  const REFETCH_ROOMS_INTERVAL_SECONDS = 30
-
-  useInterval(loadRoomSchedules, REFETCH_ROOMS_INTERVAL_SECONDS * 1000)
+  useInterval(loadRoomSchedules, REFETCH_ROOMS_INTERVAL_SECONDS * 1000);
 
   const userContextValue: UserContextType = {
     user,
     isSignedIn,
     signIn,
     signOut,
-  }
+  };
   const calendarContextValue: CalendarContextType = {
     selectedRoom,
     setSelectedRoom,
@@ -130,47 +151,52 @@ function RootNavigator() {
     createEvent,
     loadRoomSchedules,
     ...roomScheduleState,
-  }
+  };
 
   return (
     <UserContext.Provider value={userContextValue}>
       <CalendarContext.Provider value={calendarContextValue}>
         <Stack.Navigator>
           {(() => {
-
-            if (isLoadingAuthState) return <Stack.Screen
-              name="Root"
-              component={LoadingScreen}
-              options={{ headerShown: false }}
-            />
-
-            if (!isSignedIn) return <Stack.Screen
-              name="Root"
-              component={LoginScreen}
-              options={{ headerShown: false }}
-            />
-
-            return <>
-              <Stack.Screen
-                name="Root"
-                component={BottomTabNavigator}
-                options={{ headerShown: false }}
-              />
-              <Stack.Screen
-                name="NotFound"
-                component={NotFoundScreen}
-                options={{ title: 'Oops!' }}
-              />
-              <Stack.Group
-                screenOptions={{ presentation: 'modal' }}
-              >
+            if (isLoadingAuthState)
+              return (
                 <Stack.Screen
-                  name="Modal"
-                  component={ModalScreen}
+                  name="Root"
+                  component={LoadingScreen}
                   options={{ headerShown: false }}
                 />
-              </Stack.Group>
-            </>
+              );
+
+            if (!isSignedIn)
+              return (
+                <Stack.Screen
+                  name="Root"
+                  component={LoginScreen}
+                  options={{ headerShown: false }}
+                />
+              );
+
+            return (
+              <>
+                <Stack.Screen
+                  name="Root"
+                  component={BottomTabNavigator}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="NotFound"
+                  component={NotFoundScreen}
+                  options={{ title: 'Oops!' }}
+                />
+                <Stack.Group screenOptions={{ presentation: 'modal' }}>
+                  <Stack.Screen
+                    name="Modal"
+                    component={ModalScreen}
+                    options={{ headerShown: false }}
+                  />
+                </Stack.Group>
+              </>
+            );
           })()}
           {/* {isSignedIn ?
             <>
@@ -199,7 +225,7 @@ function RootNavigator() {
               component={LoginScreen}
               options={{ headerShown: false }}
             />} */}
-        </Stack.Navigator >
+        </Stack.Navigator>
       </CalendarContext.Provider>
     </UserContext.Provider>
   );
@@ -219,29 +245,32 @@ function BottomTabNavigator() {
       initialRouteName="TabOne"
       screenOptions={{
         tabBarStyle: {
-          backgroundColor: "#111",
-          borderTopColor: "#444",
+          backgroundColor: '#111',
+          borderTopColor: '#444',
         },
       }}
-      sceneContainerStyle={{ backgroundColor: "#222" }}
+      sceneContainerStyle={{ backgroundColor: '#222' }}
     >
       <BottomTab.Screen
         name="TabOne"
         component={TabOneScreen}
         options={({ navigation }: RootTabScreenProps<'TabOne'>) => ({
           title: 'Floorplan',
-          tabBarActiveTintColor: "#FF6961",
+          tabBarActiveTintColor: '#FF6961',
           // tabBarInactiveTintColor: "#efefef",
           // tabBarActiveBackgroundColor: "blue",
           // tabBarInActiveBackgroundColor: "green",
           headerShown: false,
-          tabBarIcon: ({ color }) => <TabBarIcon name="map-marker" color={color} />,
+          tabBarIcon: ({ color }) => (
+            <TabBarIcon name="map-marker" color={color} />
+          ),
           headerRight: () => (
             <Pressable
               onPress={() => navigation.navigate('Modal')}
               style={({ pressed }) => ({
                 opacity: pressed ? 0.5 : 1,
-              })}>
+              })}
+            >
               <FontAwesome
                 name="info-circle"
                 size={25}
@@ -282,14 +311,15 @@ function BottomTabNavigator() {
         options={{
           headerShown: false,
           title: 'Settings',
-          tabBarActiveTintColor: "#FF6961",
+          tabBarActiveTintColor: '#FF6961',
           tabBarIcon: ({ color }) => <TabBarIcon name="gear" color={color} />,
           headerRight: () => (
             <Pressable
-              onPress={() => { }}
+              onPress={() => {}}
               style={({ pressed }) => ({
                 opacity: pressed ? 0.5 : 1,
-              })}>
+              })}
+            >
               <FontAwesome
                 name="info-circle"
                 size={25}
@@ -300,7 +330,7 @@ function BottomTabNavigator() {
           ),
         }}
       />
-    </BottomTab.Navigator >
+    </BottomTab.Navigator>
   );
 }
 
