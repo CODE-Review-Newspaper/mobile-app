@@ -32,9 +32,11 @@ export default function userLoginController() {
 
   const signIn = async () => {
     if (!(await isLoggedIn())) {
-      await promptAsync();
+
+      const res = await promptAsync();
+
+      if (res.type === "success") setIsSignedIn(true);
     }
-    setIsSignedIn(true);
   };
 
   const signOut = async () => {

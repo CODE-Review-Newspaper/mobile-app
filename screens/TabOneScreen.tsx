@@ -2,22 +2,25 @@ import ReactNativeZoomableView from '@dudigital/react-native-zoomable-view/src/R
 import { FontAwesome } from '@expo/vector-icons';
 import Slider from '@react-native-community/slider';
 import dayjs from 'dayjs';
-import { useContext, useEffect, useState } from 'react';
-import { Pressable, StyleSheet, Switch } from 'react-native';
+import { useContext, useState } from 'react';
+import { Pressable, StyleSheet } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 import ErrorTriangle from '../assets/images/errorTriangle.svg';
 import Floorplan from '../assets/images/floorplan/base.svg';
-import SkeletonLoader from '../assets/images/test.svg';
 import Rooms from '../components/Rooms';
 import { Text, View } from '../components/Themed';
 import CalendarContext from '../contexts/calendar.context';
+import UserContext from '../contexts/user.context';
 import { RoomBookableData, RoomCategoryData, rooms } from '../data/rooms.data';
 import { RootTabScreenProps } from '../types';
+import GoogleIcon from '../assets/images/googleIcon.svg';
 
 export default function TabOneScreen({
   navigation,
 }: RootTabScreenProps<'TabOne'>) {
+  const { about, signIn } = useContext(UserContext)
+
   const {
     setSelectedRoom,
     startDate,
@@ -51,10 +54,42 @@ export default function TabOneScreen({
   };
   const [displayMode, setDisplayMode] = useState<
     (typeof DisplayMode)[keyof typeof DisplayMode]
-  >(DisplayMode.BOOK_MODE);
+  >(about.isCodeMember ? DisplayMode.BOOK_MODE : DisplayMode.MAP_MODE);
 
   function switchDisplayMode() {
     setDisplayMode(DisplayMode[displayMode.next]);
+  }
+
+  if (!about.isCodeMember) {
+    return <>
+      <View
+        style={{
+          position: 'absolute',
+          width: '100%',
+          height: 150,
+          backgroundColor: 'transparent',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Pressable
+          onPress={signIn}
+          style={({ pressed }) =>
+            pressed ? [styles.button, styles.buttonPressed] : styles.button
+          }
+          accessibilityLabel="Sign in with @code.berlin"
+        >
+          <GoogleIcon
+            width="16"
+            height="16"
+            fill="white"
+            style={{ marginBottom: 1 }}
+          />
+          <Text style={styles.buttonText}>Sign in with @code.berlin</Text>
+        </Pressable>
+      </View>
+
+    </>
   }
 
   return (
@@ -284,22 +319,27 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '700',
   },
-  buttonText: {
-    color: 'white',
-    fontWeight: '900',
-    fontSize: 16,
-  },
   button: {
-    paddingHorizontal: 32,
-    height: 48,
-    backgroundColor: '#FF6961',
+    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
 
-    shadowColor: '#000',
-    shadowOffset: { width: 4, height: 4 },
-    shadowOpacity: 1,
-    shadowRadius: 0,
+    height: 48,
+    paddingHorizontal: 32,
+
+    backgroundColor: '#FF6961',
+  },
+  buttonPressed: {
+    transform: [{ scale: 0.95 }],
+
+    backgroundColor: '#fe746a',
+  },
+  buttonText: {
+    paddingLeft: 10,
+
+    color: 'white',
+    fontWeight: '900',
+    fontSize: 16,
   },
   dings: {
     position: 'relative',

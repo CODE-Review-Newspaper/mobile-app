@@ -212,22 +212,24 @@ const styles = StyleSheet.create({
     height: 1,
     width: '66%',
   },
+  button: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+
+    height: 48,
+    paddingHorizontal: 32,
+
+    backgroundColor: '#FF6961',
+  },
   buttonPressed: {
     transform: [{ scale: 0.95 }],
 
     backgroundColor: '#fe746a',
   },
-  button: {
-    height: 48,
-    backgroundColor: '#FF6961',
-    alignItems: 'center',
-    justifyContent: 'center',
-
-    marginTop: 24,
-
-    width: '100%',
-  },
   buttonText: {
+    paddingLeft: 10,
+
     color: 'white',
     fontWeight: '900',
     fontSize: 16,

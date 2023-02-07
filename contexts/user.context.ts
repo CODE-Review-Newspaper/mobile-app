@@ -7,6 +7,9 @@ export interface UserContextType {
   isSignedIn: boolean;
   signIn: () => unknown;
   signOut: () => unknown;
+  about: {
+    isCodeMember: boolean
+  },
 }
 // @ts-ignore
 const UserContext = createContext<UserContextType>();

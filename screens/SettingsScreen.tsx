@@ -7,7 +7,7 @@ import UserContext from '../contexts/user.context';
 export default function SettingsScreen() {
   const { signOut } = useContext(UserContext);
 
-  const { user, isSignedIn } = useContext(UserContext);
+  const { user, about } = useContext(UserContext);
 
   return (
     <View style={styles.container}>
@@ -18,7 +18,7 @@ export default function SettingsScreen() {
         </Text>
       </Text>
       <Text style={styles.text}>
-        {user?.hd === 'code.berlin' ? 'Student' : 'External'}
+        {about.isCodeMember ? 'Student' : 'External'}
       </Text>
       <View
         style={styles.separator}

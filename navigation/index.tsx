@@ -137,6 +137,9 @@ function RootNavigator() {
     isSignedIn,
     signIn,
     signOut,
+    about: {
+      isCodeMember: user?.hd === "code.berlin"
+    },
   };
   const calendarContextValue: CalendarContextType = {
     selectedRoom,
@@ -198,33 +201,6 @@ function RootNavigator() {
               </>
             );
           })()}
-          {/* {isSignedIn ?
-            <>
-              <Stack.Screen
-                name="Root"
-                component={BottomTabNavigator}
-                options={{ headerShown: false }}
-              />
-              <Stack.Screen
-                name="NotFound"
-                component={NotFoundScreen}
-                options={{ title: 'Oops!' }}
-              />
-              <Stack.Group
-                screenOptions={{ presentation: 'modal' }}
-              >
-                <Stack.Screen
-                  name="Modal"
-                  component={ModalScreen}
-                  options={{ headerShown: false }}
-                />
-              </Stack.Group>
-            </>
-            : <Stack.Screen
-              name="Root"
-              component={LoginScreen}
-              options={{ headerShown: false }}
-            />} */}
         </Stack.Navigator>
       </CalendarContext.Provider>
     </UserContext.Provider>

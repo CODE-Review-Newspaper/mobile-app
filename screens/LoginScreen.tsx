@@ -42,15 +42,6 @@ export default function LoginScreen() {
 }
 
 const styles = StyleSheet.create({
-  buttonPressed: {
-    // left: 4,
-    // top: 4,
-    // shadowOffset: { width: 0, height: 0 },
-
-    transform: [{ scale: 0.95 }],
-
-    backgroundColor: '#fe746a',
-  },
   sache: {
     marginTop: '0%',
 
@@ -63,24 +54,25 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   button: {
-    paddingHorizontal: 32,
-    height: 48,
-    backgroundColor: '#FF6961',
+    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
 
-    flexDirection: 'row',
+    height: 48,
+    paddingHorizontal: 32,
 
-    // shadowColor: '#000',
-    // shadowOffset: { width: 4, height: 4 },
-    // shadowOpacity: 1,
-    // shadowRadius: 0,
+    backgroundColor: '#FF6961',
+  },
+  buttonPressed: {
+    transform: [{ scale: 0.95 }],
+
+    backgroundColor: '#fe746a',
   },
   buttonText: {
+    paddingLeft: 10,
+
     color: 'white',
     fontWeight: '900',
     fontSize: 16,
-
-    paddingLeft: 10,
   },
 });
