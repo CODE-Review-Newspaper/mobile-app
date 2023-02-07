@@ -1,7 +1,7 @@
 import * as AuthSession from 'expo-auth-session';
 import * as Google from 'expo-auth-session/providers/google';
 import * as WebBrowser from 'expo-web-browser';
-import * as React from 'react';
+import { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   TokenError,
@@ -15,10 +15,10 @@ import { fetchData } from './wrapper';
 WebBrowser.maybeCompleteAuthSession();
 
 export default function userLoginController() {
-  const [user, setUser] = React.useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(null);
 
-  const [isSignedIn, setIsSignedIn] = React.useState(false);
-  const [isLoadingAuthState, setIsLoadingAuthState] = React.useState(true);
+  const [isSignedIn, setIsSignedIn] = useState(false);
+  const [isLoadingAuthState, setIsLoadingAuthState] = useState(true);
 
   const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
     clientId:
@@ -128,7 +128,7 @@ export default function userLoginController() {
     return true;
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (response?.type === 'success') {
       setAuthState(response.authentication).then(() => fetchUserInfo());
     }
@@ -147,7 +147,7 @@ export default function userLoginController() {
 
     setUser(userInfo);
   }
-  React.useEffect(() => {
+  useEffect(() => {
     isLoggedIn();
   }, []);
 

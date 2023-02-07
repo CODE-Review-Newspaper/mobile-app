@@ -3,7 +3,7 @@
  * https://reactnavigation.org/docs/getting-started
  *
  */
-import * as React from 'react';
+import { useEffect, ComponentProps } from 'react';
 import { FontAwesome } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {
@@ -124,7 +124,7 @@ function RootNavigator() {
     console.info('loaded room schedules');
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     loadRoomSchedules();
   }, []);
 
@@ -315,7 +315,7 @@ function BottomTabNavigator() {
           tabBarIcon: ({ color }) => <TabBarIcon name="gear" color={color} />,
           headerRight: () => (
             <Pressable
-              onPress={() => {}}
+              onPress={() => { }}
               style={({ pressed }) => ({
                 opacity: pressed ? 0.5 : 1,
               })}
@@ -338,7 +338,7 @@ function BottomTabNavigator() {
  * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
  */
 function TabBarIcon(props: {
-  name: React.ComponentProps<typeof FontAwesome>['name'];
+  name: ComponentProps<typeof FontAwesome>['name'];
   color: string;
 }) {
   return <FontAwesome size={30} style={{ marginBottom: -3 }} {...props} />;
