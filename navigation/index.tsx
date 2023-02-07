@@ -184,11 +184,13 @@ function RootNavigator() {
             //   );
 
             if (!isSignedIn) {
-              return <Stack.Screen
-                name="Root"
-                component={SignedOutFloorplanScreen}
-                options={{ headerShown: false }}
-              />
+              return (
+                <Stack.Screen
+                  name="Root"
+                  component={SignedOutFloorplanScreen}
+                  options={{ headerShown: false }}
+                />
+              );
             }
 
             return (
@@ -303,7 +305,7 @@ function BottomTabNavigator() {
           tabBarIcon: ({ color }) => <TabBarIcon name="gear" color={color} />,
           headerRight: () => (
             <Pressable
-              onPress={() => { }}
+              onPress={() => {}}
               style={({ pressed }) => ({
                 opacity: pressed ? 0.5 : 1,
               })}

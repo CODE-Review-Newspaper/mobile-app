@@ -8,6 +8,7 @@ import {
   TokenResponseConfig,
 } from 'expo-auth-session';
 import { useEffect, useState } from 'react';
+import { Platform } from 'react-native';
 
 import { User } from '../types/dings.types';
 import { fetchData } from './wrapper';
@@ -16,6 +17,8 @@ WebBrowser.maybeCompleteAuthSession();
 
 export default function userLoginController() {
   const [user, setUser] = useState<User | null>(null);
+
+  const [requireRefresh, setRequireRefresh] = useState(false);
 
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [isLoadingAuthState, setIsLoadingAuthState] = useState(true);
@@ -27,14 +30,15 @@ export default function userLoginController() {
       '614417646190-vcu5a3ini5nnr0elfaqt8fprs358mp2i.apps.googleusercontent.com',
     androidClientId:
       '614417646190-hhupm8k97a22rvv2gfdcoqi1gus8qunq.apps.googleusercontent.com',
-    scopes: ['https://www.googleapis.com/auth/calendar'],
   });
 
   const signIn = async () => {
     if (!(await isLoggedIn())) {
       const res = await promptAsync();
 
-      if (res.type === 'success') setIsSignedIn(true);
+      if (res.type === 'success') {
+        setIsSignedIn(true);
+      }
     }
   };
 
@@ -45,7 +49,9 @@ export default function userLoginController() {
       if (authState != null) {
         await AuthSession.revokeAsync(
           { token: authState.accessToken },
-          Google.discovery
+          {
+            revocationEndpoint: 'https://oauth2.googleapis.com/revoke',
+          }
         );
       }
     }
@@ -72,42 +78,67 @@ export default function userLoginController() {
 
   async function getAuthState(): Promise<TokenResponse | null> {
     const jsonValue = await AsyncStorage.getItem('@authState');
-    const obj: TokenResponseConfig = JSON.parse(jsonValue!);
-
-    return obj != null ? new AuthSession.TokenResponse(obj) : null;
+    const authFromJson: TokenResponse = JSON.parse(jsonValue!);
+    if (authFromJson != null) {
+      setRequireRefresh(
+        !AuthSession.TokenResponse.isTokenFresh({
+          expiresIn: authFromJson.expiresIn,
+          issuedAt: authFromJson.issuedAt,
+        })
+      );
+    }
+  
+    return authFromJson != null ? authFromJson : null;
   }
 
   async function setAuthState(authState: TokenResponse | null) {
     if (authState == null) {
       await AsyncStorage.removeItem('@authState');
     } else {
-      const jsonValue = JSON.stringify(authState.getRequestConfig());
+      const jsonValue = JSON.stringify(authState);
       await AsyncStorage.setItem('@authState', jsonValue);
     }
   }
 
+  function getClientId() {
+    if (Platform.OS === 'ios') {
+      return '614417646190-vcu5a3ini5nnr0elfaqt8fprs358mp2i.apps.googleusercontent.com';
+    } else if (Platform.OS === 'android') {
+      return '614417646190-hhupm8k97a22rvv2gfdcoqi1gus8qunq.apps.googleusercontent.com';
+    } else {
+      console.log('Invalid platform - not handled');
+    }
+  }
+
   async function autoRenewAuth() {
+    const clientId = getClientId();
+
     const authState = await getAuthState();
 
     if (authState === null) {
       return false;
     }
 
-    if (authState.shouldRefresh()) {
+    if (requireRefresh) {
       try {
-        const refresh = await authState.refreshAsync(
+        const tokenResult = await AuthSession.refreshAsync(
           {
-            clientId:
-              '614417646190-dbl1mao4r8bcjmam2cmcgtfo4c35ho1h.apps.googleusercontent.com',
+            clientId: clientId!,
+            refreshToken: authState.refreshToken,
           },
-          Google.discovery
+          {
+            tokenEndpoint: 'https://www.googleapis.com/oauth2/v4/token',
+          }
         );
 
-        if (refresh.accessToken === undefined) {
+        if (tokenResult.accessToken === undefined) {
           return false;
         }
 
-        await setAuthState(refresh);
+        tokenResult.refreshToken = authState.refreshToken;
+
+        await setAuthState(tokenResult);
+        setRequireRefresh(false);
       } catch (e) {
         if (e instanceof TokenError) {
           if (e.code === 'invalid_grant') {
