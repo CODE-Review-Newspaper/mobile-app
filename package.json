@@ -8,7 +8,8 @@
     "web": "expo start --web",
     "test": "jest --watchAll",
     "clean": "rm -rf .expo && rm -rf android && rm -rf ios",
-    "format": "npx prettier --write ."
+    "format": "npx prettier --write .",
+    "precommit": "npm run format"
   },
   "jest": {
     "preset": "jest-expo"
