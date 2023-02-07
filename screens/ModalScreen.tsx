@@ -34,6 +34,7 @@ export default function ModalScreen({
     setEndDate,
     createEvent,
     loadRoomSchedules,
+    roomSchedules,
   } = useContext(CalendarContext);
 
   const DEFAULT_DURATION_MINS = 60;
@@ -94,17 +95,46 @@ export default function ModalScreen({
 
     // setTimeout(() => navigation.navigate('TabOne'), 300)
   }
+  // const selectedRoomSchedule = roomSchedules[selectedRoom!.name]
 
   return (
     <View style={styles.container}>
-      <TextInput
-        defaultValue={'Working session in ' + selectedRoom!.displayName}
-        placeholder="Meeting title"
-        multiline
-        style={styles.titleInput}
-        // @ts-ignore
-        onChange={(e) => setMeetingTitle(e.target.value)}
-      />
+      {(() => {
+        if (state === 'LOADING')
+          return (
+            <Text style={{ ...styles.titleInput, textDecorationLine: 'none' }}>
+              {meetingTitle}
+            </Text>
+          );
+
+        if (state === 'SUCCESS')
+          return (
+            <Pressable
+              onPress={() => Linking.openURL(createdEventData!.htmlLink)}
+              accessibilityHint="Open event link in google calendar"
+            >
+              <Text
+                style={{
+                  ...styles.titleInput,
+                  color: '#007acc',
+                  textDecorationColor: '#007acc',
+                }}
+              >
+                {createdEventData?.summary ?? 'No event text'}
+              </Text>
+            </Pressable>
+          );
+
+        return (
+          <TextInput
+            defaultValue={'Working session in ' + selectedRoom!.displayName}
+            placeholder="Meeting title"
+            multiline
+            style={styles.titleInput}
+            onChangeText={e => setMeetingTitle(e)}
+          />
+        );
+      })()}
 
       <Text style={styles.text}>{getRoomDescription(selectedRoom!)}</Text>
 
@@ -127,41 +157,37 @@ export default function ModalScreen({
           backgroundColor: 'transparent',
         }}
       >
-        <Slider
-          style={{ width: '100%', height: 40 }}
-          minimumValue={MIN_DURATION_MINS}
-          maximumValue={MAX_DURATION_MINS}
-          value={DEFAULT_DURATION_MINS}
-          step={15}
-          minimumTrackTintColor="#ff6961"
-          maximumTrackTintColor="#efefef"
-          onValueChange={(durationMinutes) =>
-            setEndDate(selectedDate.add(durationMinutes, 'minutes'))
-          }
-        />
-
-        {state === 'SUCCESS' && (
-          <Pressable
-            onPress={() => Linking.openURL(createdEventData!.htmlLink)}
-          >
-            <Text style={{ color: 'blue', textDecorationLine: 'underline' }}>
-              Open event in Google Calendar
-            </Text>
-          </Pressable>
+        {state !== 'SUCCESS' && (
+          <Slider
+            disabled={state === 'LOADING'}
+            style={{ width: '100%', height: 40 }}
+            minimumValue={MIN_DURATION_MINS}
+            maximumValue={MAX_DURATION_MINS}
+            value={DEFAULT_DURATION_MINS}
+            step={15}
+            minimumTrackTintColor="#ff6961"
+            maximumTrackTintColor="#efefef"
+            onValueChange={(durationMinutes) =>
+              setEndDate(selectedDate.add(durationMinutes, 'minutes'))
+            }
+          />
         )}
 
         <Pressable
+          disabled={state === 'LOADING'}
           style={({ pressed }) =>
             pressed
               ? [styles.button, styles.buttonPressed, { marginTop: 24 }]
               : [styles.button, { marginTop: 24 }]
           }
-          accessibilityLabel="Book room"
-          onPress={() => submit()}
+          accessibilityLabel={state === 'SUCCESS' ? 'Close' : 'Book room'}
+          onPress={() =>
+            state === 'SUCCESS' ? navigation.navigate('TabOne') : submit()
+          }
         >
           <Text style={styles.buttonText}>
             {(() => {
-              if (state === 'SUCCESS') return 'Booked room!';
+              if (state === 'SUCCESS') return 'Close';
               if (state === 'ERROR') return 'Failed to book room';
               if (state === 'LOADING') return 'Loading...';
 

@@ -77,7 +77,14 @@ export default function TabOneScreen({
         </View>
       )}
       {!about.isCodeMember && (
-        <View style={{ ...styles.statusTopBar, position: "absolute", zIndex: 4, elevation: 4 }}>
+        <View
+          style={{
+            ...styles.statusTopBar,
+            position: 'absolute',
+            zIndex: 4,
+            elevation: 4,
+          }}
+        >
           <Pressable
             onPress={signIn}
             style={({ pressed }) =>
