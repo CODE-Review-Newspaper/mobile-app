@@ -1,11 +1,60 @@
 import { Room } from '../controller/allRooms.controller';
 
-export const rooms: Record<string, Room> = {
-  floor: {
-    id: "Floor",
+export const rooms = {
+
+  Cinema: {
+    id: 'Cinema',
+    bookable: 'UNBOOKABLE',
+    email: null,
+    displayName: 'Cinema',
+    factoryRoomNumber: '5.?',
+    category: 'FACTORY_INACCESSIBLE',
+  },
+  Bar: {
+    id: 'Bar',
+    bookable: 'UNBOOKABLE',
+    email: null,
+    displayName: "Bar",
+    factoryRoomNumber: '5.?',
+    category: 'FACTORY_INACCESSIBLE',
+  },
+  Dings: {
+    id: 'Dings',
+    bookable: 'UNBOOKABLE',
+    email: null,
+    displayName: "?",
+    factoryRoomNumber: '5.?',
+    category: 'FACTORY_INACCESSIBLE',
+  },
+  Dangs: {
+    id: 'Dangs',
+    bookable: 'UNBOOKABLE',
+    email: null,
+    displayName: "?",
+    factoryRoomNumber: '5.?',
+    category: 'FACTORY_INACCESSIBLE',
+  },
+  Dongs: {
+    id: 'Dongs',
+    bookable: 'UNBOOKABLE',
+    email: null,
+    displayName: "?",
+    factoryRoomNumber: '5.?',
+    category: 'FACTORY_INACCESSIBLE',
+  },
+  fifthFloor: {
+    id: "fifthFloor",
     bookable: "UNBOOKABLE",
     email: null,
-    displayName: "Floor",
+    displayName: "5th Floor",
+    factoryRoomNumber: "5",
+    category: "FLOOR",
+  },
+  fourthFloor: {
+    id: "fourthFloor",
+    bookable: "UNBOOKABLE",
+    email: null,
+    displayName: "4th Floor",
     factoryRoomNumber: "4",
     category: "FLOOR",
   },
@@ -322,23 +371,47 @@ export const rooms: Record<string, Room> = {
     factoryRoomNumber: null,
     category: 'WORKSPACES',
   },
-  Restrooms1: {
-    id: 'Restrooms1',
+  FourthFloorRestrooms1: {
+    id: 'FourthFloorRestrooms1',
     bookable: 'UNBOOKABLE',
     email: null,
     displayName: 'Restrooms',
     factoryRoomNumber: null,
     category: 'RESTROOMS',
   },
-  Restrooms2: {
-    id: 'Restrooms2',
+  FourthFloorRestrooms2: {
+    id: 'FourthFloorRestrooms2',
     bookable: 'UNBOOKABLE',
     email: null,
     displayName: 'Restrooms',
     factoryRoomNumber: null,
     category: 'RESTROOMS',
   },
-};
+  FifthFloorRestrooms1: {
+    id: 'FifthFloorRestrooms1',
+    bookable: 'UNBOOKABLE',
+    email: null,
+    displayName: 'Restrooms',
+    factoryRoomNumber: null,
+    category: 'RESTROOMS',
+  },
+  FifthFloorRestrooms2: {
+    id: 'FifthFloorRestrooms2',
+    bookable: 'UNBOOKABLE',
+    email: null,
+    displayName: 'Restrooms',
+    factoryRoomNumber: null,
+    category: 'RESTROOMS',
+  },
+  FifthFloorRestrooms3: {
+    id: 'FifthFloorRestrooms3',
+    bookable: 'UNBOOKABLE',
+    email: null,
+    displayName: 'Restrooms',
+    factoryRoomNumber: null,
+    category: 'RESTROOMS',
+  },
+} satisfies Record<string, Room>;
 
 export const RoomCategoryData = {
   PROJECT_ROOM: {
@@ -399,6 +472,12 @@ export const RoomCategoryData = {
     mapModeColor: "#FEF8F8",
     bookingModeColor: "#D9D9D9",
     displayName: "Restrooms",
+    showInLegend: false,
+  },
+  FACTORY_INACCESSIBLE: {
+    mapModeColor: "#D9D9D9",
+    bookingModeColor: "#D9D9D9",
+    displayName: "Not accessible to CODE members",
     showInLegend: false,
   },
 };

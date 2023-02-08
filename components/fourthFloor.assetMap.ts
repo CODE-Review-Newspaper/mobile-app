@@ -1,4 +1,4 @@
-import floor from "../assets/images/floorplan/floor.svg";
+import fourthFloor_2 from "../assets/images/floorplan/fourthFloor_2.svg";
 import Zuse from "../assets/images/floorplan/Zuse.svg";
 import EightBit from "../assets/images/floorplan/EightBit.svg";
 import Rock from "../assets/images/floorplan/Rock.svg";
@@ -6,9 +6,9 @@ import Paper from "../assets/images/floorplan/Paper.svg";
 import Scissors from "../assets/images/floorplan/Scissors.svg";
 import Lizard from "../assets/images/floorplan/Lizard.svg";
 import Spock from "../assets/images/floorplan/Spock.svg";
-import Restrooms2 from "../assets/images/floorplan/Restrooms2.svg";
+import FourthFloorRestrooms2 from "../assets/images/floorplan/FourthFloorRestrooms2.svg";
 import Jungle from "../assets/images/floorplan/Jungle.svg";
-import Restrooms1 from "../assets/images/floorplan/Restrooms1.svg";
+import FourthFloorRestrooms1 from "../assets/images/floorplan/FourthFloorRestrooms1.svg";
 import Warp from "../assets/images/floorplan/Warp.svg";
 import Echo from "../assets/images/floorplan/Echo.svg";
 import Peace from "../assets/images/floorplan/Peace.svg";
@@ -36,10 +36,10 @@ import Hi from "../assets/images/floorplan/Hi.svg";
 import Clap from "../assets/images/floorplan/Clap.svg";
 import Kick from "../assets/images/floorplan/Kick.svg";
 
-const Rooms = {
-    floor: {
-        id: "floor",
-        Component: floor,
+const AssetMap = {
+    fourthFloor: {
+        id: "fourthFloor",
+        Component: fourthFloor_2,
     },
     Zuse: {
         id: "Zuse",
@@ -69,17 +69,17 @@ const Rooms = {
         id: "Spock",
         Component: Spock,
     },
-    Restrooms2: {
-        id: "Restrooms2",
-        Component: Restrooms2,
+    FourthFloorRestrooms2: {
+        id: "FourthFloorRestrooms2",
+        Component: FourthFloorRestrooms2,
     },
     Jungle: {
         id: "Jungle",
         Component: Jungle,
     },
-    Restrooms1: {
-        id: "Restrooms1",
-        Component: Restrooms1,
+    FourthFloorRestrooms1: {
+        id: "FourthFloorRestrooms1",
+        Component: FourthFloorRestrooms1,
     },
     Warp: {
         id: "Warp",
@@ -186,4 +186,4 @@ const Rooms = {
         Component: Kick,
     },
 };
-export default Rooms
+export default AssetMap

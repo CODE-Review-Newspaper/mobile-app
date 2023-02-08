@@ -4,15 +4,16 @@ import { Pressable, StyleSheet } from 'react-native';
 
 import Layers from '../../assets/icons/layers.svg';
 import ErrorTriangle from '../../assets/images/errorTriangle.svg';
-import FloorplanBase from '../../assets/images/floorplan/base.svg';
 import { Room } from '../../controller/allRooms.controller';
 import {
   RoomBookableData,
   RoomCategoryData,
   rooms,
 } from '../../data/rooms.data';
-import Rooms from '../Rooms';
+import FourthFloorAssets from '../fourthFloor.assetMap';
+import FifthFloorAssets from '../fifthFloor.assetMap';
 import { Text, View } from '../Themed';
+import { useState } from 'react';
 
 export const DisplayMode = {
   MAP_MODE: {
@@ -62,7 +63,12 @@ export default function Floorplan({
     return 'ERROR';
   })();
 
-  function goToNextFloor() { }
+  const [floor, setFloor] = useState<4 | 5>(4)
+
+  function goToNextFloor() {
+    setFloor(prev => prev === 4 ? 5 : 4)
+  }
+  const Assets = floor === 4 ? FourthFloorAssets : FifthFloorAssets
 
   return (
     <>
@@ -93,7 +99,7 @@ export default function Floorplan({
           )} */}
 
           {state === 'SUCCESS' &&
-            Object.values(Rooms).map((i) => {
+            Object.values(Assets).map((i) => {
               const scheduleInfo = roomSchedules[i.id];
 
               const isUnavailable =
@@ -178,7 +184,7 @@ export default function Floorplan({
               );
             })}
         </View>)}
-      {/* <Pressable
+      <Pressable
         style={{
           position: 'absolute',
           alignItems: 'center',
@@ -194,7 +200,7 @@ export default function Floorplan({
         accessibilityHint="Go to next floor"
       >
         <Layers fill="white" width="25" height="25" />
-      </Pressable> */}
+      </Pressable>
     </>
   );
 }
