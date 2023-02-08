@@ -62,7 +62,7 @@ export default function Floorplan({
     return 'ERROR';
   })();
 
-  function goToNextFloor() { }
+  function goToNextFloor() {}
 
   return (
     <>
@@ -175,7 +175,8 @@ export default function Floorplan({
                 </View>
               );
             })}
-        </View>)}
+        </View>
+      )}
       {/* <Pressable
         style={{
           position: 'absolute',
