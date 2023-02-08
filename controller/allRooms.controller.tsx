@@ -1,18 +1,9 @@
 import dayjs from 'dayjs';
 
-import { RoomBookableData, RoomCategoryData, rooms } from '../data/rooms.data';
-import { BusyRooms, CheckBusyRoomRequest } from '../types/dings.types';
+import { BookableRoomEntity, rooms } from '../data/rooms.data';
+import { CheckBusyRoomRequest } from '../types/dings.types';
 import bookRoomsController from './booking.controller';
 
-export interface Room {
-  id: string;
-  email: string | null;
-  displayName: string;
-  factoryRoomNumber: string | null;
-  bookable: keyof typeof RoomBookableData;
-  category: keyof typeof RoomCategoryData;
-  busyTimes?: BusyRooms[];
-}
 export default function allRoomsController() {
   const { checkRoomAvailability } = bookRoomsController();
 
@@ -20,13 +11,18 @@ export default function allRoomsController() {
     const newRooms = Object.fromEntries(
       await Promise.all(
         Object.entries(rooms).map(async ([key, room]) => {
-          if (!(room.bookable === 'BOOKABLE' && room.email != null))
+          if (
+            !(
+              room.type === 'ROOM' &&
+              ['BOOKABLE', 'APPLICATION_REQUIRED'].includes(room.bookable)
+            )
+          )
             return [key, room] as const;
 
           const newBody: CheckBusyRoomRequest = {
             items: [
               {
-                id: room.email,
+                id: (room as BookableRoomEntity).email,
               },
             ],
             timeMin: dayjs().startOf('day').toDate(),

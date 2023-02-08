@@ -8,7 +8,7 @@ import Floorplan from '../components/Floorplan';
 import { Text, View } from '../components/Themed';
 import CalendarContext from '../contexts/calendar.context';
 import UserContext from '../contexts/user.context';
-import { Room } from '../controller/allRooms.controller';
+import { RoomEntity } from '../data/rooms.data';
 import { RootTabScreenProps } from '../types';
 
 export default function TabOneScreen({
@@ -55,7 +55,7 @@ export default function TabOneScreen({
     setDisplayMode(DisplayMode[displayMode.next]);
   }
 
-  function handleRoomClick(room: Room) {
+  function handleRoomClick(room: RoomEntity) {
     setSelectedRoom(room);
 
     navigation.navigate('Modal');

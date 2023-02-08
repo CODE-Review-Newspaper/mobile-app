@@ -1,61 +1,117 @@
-import { Room } from '../controller/allRooms.controller';
+import { BusyRooms } from '../types/dings.types';
+
+export interface BaseMapEntity {
+  id: string // used in figma
+  parentId: string | null // id
+}
+export interface FloorEntity extends BaseMapEntity {
+  type: "FLOOR"
+  displayName: string
+  factoryNumber: string | null
+}
+export interface AreaEntity extends BaseMapEntity {
+  type: "AREA"
+  displayName: string
+  factoryNumber: string | null
+}
+export interface BookableRoomEntity extends BaseMapEntity {
+  type: "ROOM"
+  displayName: string
+  factoryNumber: string | null
+
+  category: keyof typeof RoomCategoryData
+  bookable: 'BOOKABLE' | "APPLICATION_REQUIRED"
+  email: string
+  busyTimes?: BusyRooms[];
+}
+export interface UnbookableRoomEntity extends BaseMapEntity {
+  type: "ROOM"
+  displayName: string
+  factoryNumber: string | null
+
+  category: keyof typeof RoomCategoryData
+  bookable: "UNAVAILABLE" | "TEAM_ONLY" | "UNBOOKABLE" | "APPLICATION_REQUIRED"
+}
+export type RoomEntity = BookableRoomEntity | UnbookableRoomEntity
+
+export interface LabelEntity extends BaseMapEntity {
+  type: "LABEL"
+}
+export interface IconEntity extends BaseMapEntity {
+  type: "ICON"
+
+  category: "NAVIGATION" | "DECORATION"
+}
+export type MapEntity = FloorEntity | AreaEntity | RoomEntity | LabelEntity | IconEntity
 
 export const rooms = {
 
   Cinema: {
     id: 'Cinema',
+    parentId: "fifthFloor",
+    type: "ROOM",
+
     bookable: 'UNBOOKABLE',
-    email: null,
     displayName: 'Cinema',
-    factoryRoomNumber: '5.?',
-    category: 'FACTORY_INACCESSIBLE',
+    factoryNumber: '5.?',
+    category: "FACTORY_INACCESSIBLE",
   },
   Bar: {
     id: 'Bar',
+    parentId: "fifthFloor",
+    type: "ROOM",
+
     bookable: 'UNBOOKABLE',
-    email: null,
     displayName: "Bar",
-    factoryRoomNumber: '5.?',
+    factoryNumber: '5.?',
     category: 'FACTORY_INACCESSIBLE',
   },
   Dings: {
     id: 'Dings',
+    parentId: "fifthFloor",
+    type: "ROOM",
+
     bookable: 'UNBOOKABLE',
-    email: null,
     displayName: "?",
-    factoryRoomNumber: '5.?',
+    factoryNumber: '5.?',
     category: 'FACTORY_INACCESSIBLE',
   },
   Dangs: {
     id: 'Dangs',
+    parentId: "fifthFloor",
+    type: "ROOM",
+
     bookable: 'UNBOOKABLE',
-    email: null,
     displayName: "?",
-    factoryRoomNumber: '5.?',
+    factoryNumber: '5.?',
     category: 'FACTORY_INACCESSIBLE',
   },
   Dongs: {
     id: 'Dongs',
+    parentId: "fifthFloor",
+    type: "ROOM",
+
     bookable: 'UNBOOKABLE',
-    email: null,
     displayName: "?",
-    factoryRoomNumber: '5.?',
+    factoryNumber: '5.?',
     category: 'FACTORY_INACCESSIBLE',
   },
   fifthFloor: {
     id: "fifthFloor",
-    bookable: "UNBOOKABLE",
-    email: null,
+    parentId: null,
+    type: "FLOOR",
+
     displayName: "5th Floor",
-    factoryRoomNumber: "5",
+    factoryNumber: "5",
     category: "FLOOR",
   },
   fourthFloor: {
     id: "fourthFloor",
-    bookable: "UNBOOKABLE",
-    email: null,
+    parentId: null,
+    type: "FLOOR",
+
     displayName: "4th Floor",
-    factoryRoomNumber: "4",
+    factoryNumber: "4",
     category: "FLOOR",
   },
   R2: {
@@ -63,8 +119,11 @@ export const rooms = {
     bookable: 'BOOKABLE',
     email: 'c_1889sg0kntgi2hllj05ckqp121enm@resource.calendar.google.com',
     displayName: 'R2',
-    factoryRoomNumber: '4.3.1',
+    factoryNumber: '4.3.1',
     category: 'MEETING_ROOM',
+
+    parentId: "fourthFloor",
+    type: "ROOM",
   },
   D2: {
     id: 'D2',
@@ -72,8 +131,11 @@ export const rooms = {
     email:
       'code.berlin_1883j5g4liq5ihuehfm64pgo3o66g@resource.calendar.google.com',
     displayName: 'D2',
-    factoryRoomNumber: '4.2.2',
+    factoryNumber: '4.2.2',
     category: 'MEETING_ROOM',
+
+    parentId: "fourthFloor",
+    type: "ROOM",
   },
   Echo: {
     id: 'Echo',
@@ -81,8 +143,11 @@ export const rooms = {
     email:
       'code.berlin_188b923imhgm0g6vmhocej0lfi15e6gb74sjachk6cr32dpl68@resource.calendar.google.com',
     displayName: 'Echo',
-    factoryRoomNumber: '4.11.12',
+    factoryNumber: '4.11.12',
     category: 'MEETING_ROOM',
+
+    parentId: "fourthFloor",
+    type: "ROOM",
   },
   Zuse: {
     id: 'Zuse',
@@ -90,8 +155,11 @@ export const rooms = {
     email:
       'code.berlin_1888rqjtdkh70i80n4v45e7km81ua6gb68pjae1k74qjcdhk68@resource.calendar.google.com',
     displayName: 'Zuse',
-    factoryRoomNumber: '4.11.10',
+    factoryNumber: '4.11.10',
     category: 'MEETING_ROOM',
+
+    parentId: "fourthFloor",
+    type: "ROOM",
   },
   Warp: {
     id: 'Warp',
@@ -99,8 +167,11 @@ export const rooms = {
     email:
       'code.berlin_188f2u4uqje8uh9sh50ell5nlacva6gb6op34d9l6sq34chk6g@resource.calendar.google.com',
     displayName: 'Warp',
-    factoryRoomNumber: '4.11.11',
+    factoryNumber: '4.11.11',
     category: 'MEETING_ROOM',
+
+    parentId: "fourthFloor",
+    type: "ROOM",
   },
   Ada: {
     id: 'Ada',
@@ -108,57 +179,75 @@ export const rooms = {
     email:
       'code.berlin_188ff8i403g5ajughddn43j69rl166gb6oo38e9g74s3gchp60@resource.calendar.google.com',
     displayName: 'Ada',
-    factoryRoomNumber: '4.11.9',
+    factoryNumber: '4.11.9',
     category: 'MEETING_ROOM',
+
+    parentId: "fourthFloor",
+    type: "ROOM",
   },
   Rick: {
     id: 'Rick',
     bookable: 'BOOKABLE',
     email: 'code.berlin_3736373335323835363837@resource.calendar.google.com',
     displayName: 'Rick',
-    factoryRoomNumber: '4.8.2',
+    factoryNumber: '4.8.2',
     category: 'MEETING_ROOM',
+
+    parentId: "fourthFloor",
+    type: "ROOM",
   },
   Morty: {
     id: 'Morty',
     bookable: 'BOOKABLE',
     email: 'code.berlin_31333137303136343636@resource.calendar.google.com',
     displayName: 'Morty',
-    factoryRoomNumber: '4.8.1',
+    factoryNumber: '4.8.1',
     category: 'MEETING_ROOM',
+
+    parentId: "fourthFloor",
+    type: "ROOM",
   },
-  BikiniBottom: {
-    id: 'BikiniBottom',
-    bookable: 'UNBOOKABLE',
-    email: null,
-    displayName: 'Bikini Bottom',
-    factoryRoomNumber: '4.1',
-    category: 'WORKSPACES',
-  },
-  HallyMcHallface: {
-    id: 'HallyMcHallface',
-    bookable: 'UNBOOKABLE',
-    email: null,
-    displayName: 'Hally McHallface',
-    factoryRoomNumber: '4.8.4',
-    category: 'WORKSPACES',
-  },
+  // BikiniBottom: {
+  //   id: 'BikiniBottom',
+  //   bookable: 'UNBOOKABLE',
+
+  //   displayName: 'Bikini Bottom',
+  //   factoryNumber: '4.1',
+  //   category: 'WORKSPACES',
+
+  //   parentId: "fourthFloor",
+  //   type: "ROOM",
+  // },
+  // HallyMcHallface: {
+  //   id: 'HallyMcHallface',
+  //   bookable: 'UNBOOKABLE',
+
+  //   displayName: 'Hally McHallface',
+  //   factoryNumber: '4.8.4',
+  //   category: 'WORKSPACES',
+  // },
   Jungle: {
     id: 'Jungle',
     bookable: 'BOOKABLE',
     email:
       'code.berlin_188b81q8a620qia5jnkdohp7bu0ug6g96ss32d1i6cq3ae0@resource.calendar.google.com',
     displayName: 'Jungle',
-    factoryRoomNumber: '4.6 / 4.7',
+    factoryNumber: '4.6 / 4.7',
     category: 'LEARNING_UNITS',
+
+    parentId: "fourthFloor",
+    type: "ROOM",
   },
   Scissors: {
     id: 'Scissors',
     bookable: 'BOOKABLE',
     email: 'code.berlin_3934313230373536353639@resource.calendar.google.com',
     displayName: 'Scissors',
-    factoryRoomNumber: '4.11.4',
+    factoryNumber: '4.11.4',
     category: 'LEARNING_UNITS',
+
+    parentId: "fourthFloor",
+    type: "ROOM",
   },
   Lizard: {
     id: 'Lizard',
@@ -166,104 +255,143 @@ export const rooms = {
     email:
       'code.berlin_1885dv1guu8e4gsdmna2vusmqgqh2@resource.calendar.google.com',
     displayName: 'Lizard',
-    factoryRoomNumber: '4.11.2',
+    factoryNumber: '4.11.2',
     category: 'LEARNING_UNITS',
+
+    parentId: "fourthFloor",
+    type: "ROOM",
   },
   Heaven: {
     id: 'Heaven',
     bookable: 'BOOKABLE',
     email: 'c_188cdiodrmjlkjgih2c5386g4mf2q@resource.calendar.google.com',
     displayName: 'Heaven',
-    factoryRoomNumber: '5.7',
+    factoryNumber: '5.7',
     category: 'LEARNING_UNITS',
+
+    parentId: "fifthFloor",
+    type: "ROOM",
   },
   Paper: {
     id: 'Paper',
     bookable: 'BOOKABLE',
     email: 'code.berlin_3635313131353437333332@resource.calendar.google.com',
     displayName: 'Paper',
-    factoryRoomNumber: '4.11.7',
+    factoryNumber: '4.11.7',
     category: 'LEARNING_UNITS',
+
+    parentId: "fourthFloor",
+    type: "ROOM",
   },
   Rock: {
     id: 'Rock',
     bookable: 'BOOKABLE',
     email: 'c_1886i0393ltc8gqgmach00hf1odhg@resource.calendar.google.com',
     displayName: 'Rock',
-    factoryRoomNumber: '4.11.6',
+    factoryNumber: '4.11.6',
     category: 'LEARNING_UNITS',
+
+    parentId: "fourthFloor",
+    type: "ROOM",
   },
   Space: {
     id: 'Space',
     bookable: 'UNBOOKABLE',
-    email: null,
+
     displayName: 'Space',
-    factoryRoomNumber: '4.2.1',
+    factoryNumber: '4.2.1',
     category: 'SILENT_SPACE',
+
+    parentId: "fourthFloor",
+    type: "ROOM",
   },
   Spock: {
     id: 'Spock',
     bookable: 'APPLICATION_REQUIRED',
     email: 'c_188a3b98kiajagpgl4of58hbhq7lk@resource.calendar.google.com',
     displayName: 'Spock',
-    factoryRoomNumber: '4.11.3',
+    factoryNumber: '4.11.3',
     category: 'PROJECT_ROOM',
+
+    parentId: "fourthFloor",
+    type: "ROOM",
   },
   Spongebob: {
     id: 'Spongebob',
     bookable: 'APPLICATION_REQUIRED',
-    email: null,
+
     displayName: 'Spongebob',
-    factoryRoomNumber: '4.1.6',
+    factoryNumber: '4.1.6',
     category: 'PROJECT_ROOM',
+
+    parentId: "fourthFloor",
+    type: "ROOM",
   },
   Patrick: {
     id: 'Patrick',
     bookable: 'APPLICATION_REQUIRED',
-    email: null,
+
     displayName: 'Patrick',
-    factoryRoomNumber: '4.1.5',
+    factoryNumber: '4.1.5',
     category: 'PROJECT_ROOM',
+
+    parentId: "fourthFloor",
+    type: "ROOM",
   },
   MrKrabs: {
     id: 'MrKrabs',
     bookable: 'APPLICATION_REQUIRED',
-    email: null,
+
     displayName: 'Mr. Krabs',
-    factoryRoomNumber: '4.1.3',
+    factoryNumber: '4.1.3',
     category: 'PROJECT_ROOM',
+
+    parentId: "fourthFloor",
+    type: "ROOM",
   },
   Plankton: {
     id: 'Plankton',
     bookable: 'APPLICATION_REQUIRED',
-    email: null,
+
     displayName: 'Plankton',
-    factoryRoomNumber: '4.1.2',
+    factoryNumber: '4.1.2',
     category: 'PROJECT_ROOM',
+
+    parentId: "fourthFloor",
+    type: "ROOM",
   },
   Squidward: {
     id: 'Squidward',
     bookable: 'APPLICATION_REQUIRED',
-    email: null,
+
     displayName: 'Squidward',
-    factoryRoomNumber: '4.1.4',
+    factoryNumber: '4.1.4',
     category: 'PROJECT_ROOM',
+
+    parentId: "fourthFloor",
+    type: "ROOM",
   },
   Peace: {
     id: 'Peace',
     bookable: 'APPLICATION_REQUIRED',
-    email: null,
+
     displayName: 'Peace',
-    factoryRoomNumber: '4.8.5',
+    factoryNumber: '4.8.5',
     category: 'PROJECT_ROOM',
+
+    parentId: "fourthFloor",
+    type: "ROOM",
   },
   Roomy: {
     id: 'Roomy',
     bookable: 'APPLICATION_REQUIRED',
-    email: null,
+
     displayName: 'Roomy',
-    factoryRoomNumber: '4.8.3',
+    factoryNumber: '4.8.3',
     category: 'PROJECT_ROOM',
+
+    parentId: "fourthFloor",
+    type: "ROOM",
   },
   Void: {
     id: 'Void',
@@ -271,8 +399,11 @@ export const rooms = {
     email:
       'c_188d0sd2j8pnei5ai0f0ijl0p3bmg4gbcdnm8p9ec9in4r39do@resource.calendar.google.com',
     displayName: 'Void',
-    factoryRoomNumber: '4.3.2',
+    factoryNumber: '4.3.2',
     category: 'PROJECT_ROOM',
+
+    parentId: "fourthFloor",
+    type: "ROOM",
   },
   EightBit: {
     id: 'EightBit',
@@ -280,138 +411,186 @@ export const rooms = {
     email:
       'code.berlin_188f0qjk7i3s8g6bj3dtntl59ppd46gb68r34c9l64p3achp60@resource.calendar.google.com',
     displayName: '8-Bit',
-    factoryRoomNumber: '4.11.8',
+    factoryNumber: '4.11.8',
     category: 'STUDIO',
+
+    parentId: "fourthFloor",
+    type: "ROOM",
   },
   TeamRoom: {
     id: 'TeamRoom',
     bookable: 'TEAM_ONLY',
-    email: null,
+
     displayName: 'Team Room',
-    factoryRoomNumber: '4.4',
+    factoryNumber: '4.4',
     category: 'TEAM_HQ',
+
+    parentId: "fourthFloor",
+    type: "ROOM",
   },
   Cognito: {
     id: 'Cognito',
     bookable: 'TEAM_ONLY',
-    email: null,
+
     displayName: 'Cognito',
-    factoryRoomNumber: '4.4.2',
+    factoryNumber: '4.4.2',
     category: 'TEAM_HQ',
+
+    parentId: "fourthFloor",
+    type: "ROOM",
   },
   Nymeria: {
     id: 'Nymeria',
     bookable: 'TEAM_ONLY',
-    email: null,
+
     displayName: 'Nymeria',
-    factoryRoomNumber: '4.4.3',
+    factoryNumber: '4.4.3',
     category: 'TEAM_HQ',
+
+    parentId: "fourthFloor",
+    type: "ROOM",
   },
   AFF: {
     id: 'AFF',
     bookable: 'TEAM_ONLY',
-    email: null,
+
     displayName: 'AFF',
-    factoryRoomNumber: '4.4.4',
+    factoryNumber: '4.4.4',
     category: 'TEAM_HQ',
+
+    parentId: "fourthFloor",
+    type: "ROOM",
   },
   Otterspace: {
     id: 'Otterspace',
     bookable: 'TEAM_ONLY',
-    email: null,
+
     displayName: 'Otterspace',
-    factoryRoomNumber: '4.4.5',
+    factoryNumber: '4.4.5',
     category: 'TEAM_HQ',
+
+    parentId: "fourthFloor",
+    type: "ROOM",
   },
   SixMinutes: {
     id: 'SixMinutes',
     bookable: 'TEAM_ONLY',
-    email: null,
+
     displayName: '6 Min',
-    factoryRoomNumber: '4.4.1',
+    factoryNumber: '4.4.1',
     category: 'TEAM_HQ',
+
+    parentId: "fourthFloor",
+    type: "ROOM",
   },
   Kick: {
     id: 'Kick',
     bookable: 'BOOKABLE',
     email: 'c_1887gbat61a14jbcjg0cv85i41t9s@resource.calendar.google.com',
     displayName: 'Kick',
-    factoryRoomNumber: null,
+    factoryNumber: null,
     category: 'OFFICE_BOOTH',
+
+    parentId: "fourthFloor",
+    type: "ROOM",
   },
   Clap: {
     id: 'Clap',
     bookable: 'BOOKABLE',
     email: 'c_1886mt36arccmg6gktcllmauqn0ro@resource.calendar.google.com',
     displayName: 'Clap',
-    factoryRoomNumber: null,
+    factoryNumber: null,
     category: 'OFFICE_BOOTH',
+
+    parentId: "fourthFloor",
+    type: "ROOM",
   },
   Hi: {
     id: 'Hi',
     bookable: 'BOOKABLE',
     email: 'c_1881v5urdsafchk6n2mm25r7r0nji@resource.calendar.google.com',
     displayName: 'Hi',
-    factoryRoomNumber: null,
+    factoryNumber: null,
     category: 'OFFICE_BOOTH',
+
+    parentId: "fourthFloor",
+    type: "ROOM",
   },
   Hat: {
     id: 'Hat',
     bookable: 'BOOKABLE',
     email: 'c_188803ttv3sgkjdtg78o39nkideck@resource.calendar.google.com',
     displayName: 'Hat',
-    factoryRoomNumber: null,
+    factoryNumber: null,
     category: 'OFFICE_BOOTH',
+
+    parentId: "fourthFloor",
+    type: "ROOM",
   },
-  Galaxy: {
-    id: 'Galaxy',
-    bookable: 'UNBOOKABLE',
-    email: null,
-    displayName: 'Galaxy',
-    factoryRoomNumber: null,
-    category: 'WORKSPACES',
-  },
+  // Galaxy: {
+  //   id: 'Galaxy',
+  //   bookable: 'UNBOOKABLE',
+
+  //   displayName: 'Galaxy',
+  //   factoryNumber: null,
+  //   category: 'WORKSPACES',
+  // },
   FourthFloorRestrooms1: {
     id: 'FourthFloorRestrooms1',
     bookable: 'UNBOOKABLE',
-    email: null,
+
     displayName: 'Restrooms',
-    factoryRoomNumber: null,
+    factoryNumber: null,
     category: 'RESTROOMS',
+
+    parentId: "fourthFloor",
+    type: "ROOM",
   },
   FourthFloorRestrooms2: {
     id: 'FourthFloorRestrooms2',
     bookable: 'UNBOOKABLE',
-    email: null,
+
     displayName: 'Restrooms',
-    factoryRoomNumber: null,
+    factoryNumber: null,
     category: 'RESTROOMS',
+
+    parentId: "fourthFloor",
+    type: "ROOM",
   },
   FifthFloorRestrooms1: {
     id: 'FifthFloorRestrooms1',
     bookable: 'UNBOOKABLE',
-    email: null,
+
     displayName: 'Restrooms',
-    factoryRoomNumber: null,
+    factoryNumber: null,
     category: 'RESTROOMS',
+
+    parentId: "fifthFloor",
+    type: "ROOM",
   },
   FifthFloorRestrooms2: {
     id: 'FifthFloorRestrooms2',
     bookable: 'UNBOOKABLE',
-    email: null,
+
     displayName: 'Restrooms',
-    factoryRoomNumber: null,
+    factoryNumber: null,
     category: 'RESTROOMS',
+
+    parentId: "fifthFloor",
+    type: "ROOM",
   },
   FifthFloorRestrooms3: {
     id: 'FifthFloorRestrooms3',
     bookable: 'UNBOOKABLE',
-    email: null,
+
     displayName: 'Restrooms',
-    factoryRoomNumber: null,
+    factoryNumber: null,
     category: 'RESTROOMS',
+
+    parentId: "fifthFloor",
+    type: "ROOM",
   },
-} satisfies Record<string, Room>;
+} satisfies Record<string, MapEntity>;
 
 export const RoomCategoryData = {
   PROJECT_ROOM: {
@@ -480,7 +659,7 @@ export const RoomCategoryData = {
     displayName: "Not accessible to CODE members",
     showInLegend: false,
   },
-};
+} as const;
 
 export const RoomBookableData = {
   BOOKABLE: {
@@ -503,4 +682,4 @@ export const RoomBookableData = {
     color: '#BEFBCF',
     displayName: 'Team only',
   },
-};
+} as const;

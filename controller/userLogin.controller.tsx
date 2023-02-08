@@ -1,11 +1,11 @@
 import * as AuthSession from 'expo-auth-session';
 import * as Google from 'expo-auth-session/providers/google';
+import * as SecureStorage from 'expo-secure-store';
 import * as WebBrowser from 'expo-web-browser';
 import { TokenError, TokenResponse } from 'expo-auth-session';
 import { useEffect, useState } from 'react';
 import { Platform } from 'react-native';
 import Config from 'react-native-config';
-import * as SecureStorage from "expo-secure-store"
 
 import { User } from '../types/dings.types';
 import { fetchData } from './wrapper';

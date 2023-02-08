@@ -5,13 +5,13 @@ import { Linking, Pressable, StyleSheet, TextInput } from 'react-native';
 
 import { Text, View } from '../components/Themed';
 import CalendarContext from '../contexts/calendar.context';
-import { Room } from '../controller/allRooms.controller';
 import { CreateEventResponse } from '../controller/booking.controller';
+import { BookableRoomEntity, RoomEntity } from '../data/rooms.data';
 import { RootTabScreenProps } from '../types';
 
-const getRoomDescription = (room: Room) => {
-  if (room.factoryRoomNumber != null)
-    return `[${room.factoryRoomNumber}] ${room.displayName}`;
+const getRoomDescription = (room: RoomEntity) => {
+  if (room.factoryNumber != null)
+    return `[${room.factoryNumber}] ${room.displayName}`;
 
   if (room.displayName != null) return room.displayName;
 
@@ -68,13 +68,13 @@ export default function ModalScreen({
           dateTime: endDate.toDate(),
           timeZone: 'Europe/Berlin',
         },
-        attendees: [{ email: selectedRoom!.email! }],
+        attendees: [{ email: (selectedRoom as BookableRoomEntity).email! }],
         summary: meetingTitle,
       },
       {
         items: [
           {
-            id: selectedRoom!.email!,
+            id: (selectedRoom as BookableRoomEntity).email!,
           },
         ],
         timeMin: selectedDate.toDate(),
@@ -95,7 +95,9 @@ export default function ModalScreen({
   }
   const selectedRoomSchedule = roomSchedules[selectedRoom!.id];
 
-  const nextEventsInSelectedRoom = selectedRoomSchedule.busyTimes
+  const nextEventsInSelectedRoom = (
+    selectedRoomSchedule as BookableRoomEntity
+  ).busyTimes
     ?.filter((i) => dayjs(i.start).isAfter(selectedDate))
     ?.sort((a, b) => (dayjs(a.start).isAfter(dayjs(b.start)) ? 1 : 0));
 

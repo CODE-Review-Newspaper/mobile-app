@@ -1,8 +1,8 @@
 import dayjs from 'dayjs';
 import { createContext } from 'react';
 
-import { Room } from '../controller/allRooms.controller';
 import { CreateEventResponse } from '../controller/booking.controller';
+import { RoomEntity } from '../data/rooms.data';
 import {
   BusyRooms,
   CheckBusyRoomRequest,
@@ -10,8 +10,8 @@ import {
 } from '../types/dings.types';
 
 export interface CalendarContextType {
-  selectedRoom: Room | null;
-  setSelectedRoom: (room: Room | null) => unknown;
+  selectedRoom: RoomEntity | null;
+  setSelectedRoom: (room: RoomEntity | null) => unknown;
 
   selectedDate: dayjs.Dayjs;
   setSelectedDate: (date: dayjs.Dayjs) => unknown;
@@ -22,7 +22,7 @@ export interface CalendarContextType {
   endDate: dayjs.Dayjs;
   setEndDate: (date: dayjs.Dayjs) => unknown;
 
-  roomSchedules: Record<string, Room>;
+  roomSchedules: Record<string, RoomEntity>;
   createEvent: (
     eventBody: CreateEventRequest,
     roomBusyBody: CheckBusyRoomRequest

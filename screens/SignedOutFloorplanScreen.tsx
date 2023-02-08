@@ -8,11 +8,9 @@ import LinearGradient from 'react-native-linear-gradient';
 
 import GoogleIcon from '../assets/images/googleIcon.svg';
 import Floorplan from '../components/Floorplan';
-import Rooms from '../components/Rooms';
 import { Text, View } from '../components/Themed';
 import CalendarContext from '../contexts/calendar.context';
 import UserContext from '../contexts/user.context';
-import { RoomBookableData, RoomCategoryData, rooms } from '../data/rooms.data';
 
 export default function SignedOutFloorplanScreen() {
   const { about, signIn } = useContext(UserContext);

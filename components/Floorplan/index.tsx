@@ -1,19 +1,19 @@
 import ReactNativeZoomableView from '@dudigital/react-native-zoomable-view/src/ReactNativeZoomableView';
 import dayjs from 'dayjs';
+import { useState } from 'react';
 import { Pressable, StyleSheet } from 'react-native';
 
 import Layers from '../../assets/icons/layers.svg';
 import ErrorTriangle from '../../assets/images/errorTriangle.svg';
-import { Room } from '../../controller/allRooms.controller';
 import {
   RoomBookableData,
   RoomCategoryData,
+  RoomEntity,
   rooms,
 } from '../../data/rooms.data';
-import FourthFloorAssets from '../fourthFloor.assetMap';
 import FifthFloorAssets from '../fifthFloor.assetMap';
+import FourthFloorAssets from '../fourthFloor.assetMap';
 import { Text, View } from '../Themed';
-import { useState } from 'react';
 
 export const DisplayMode = {
   MAP_MODE: {
@@ -38,8 +38,8 @@ export interface FloorplanProps {
 
   selectedDate: dayjs.Dayjs;
 
-  roomSchedules: Record<string, Room>;
-  handleRoomClick: (room: Room) => any;
+  roomSchedules: Record<string, RoomEntity>;
+  handleRoomClick: (room: RoomEntity) => any;
 }
 
 export default function Floorplan({
@@ -63,12 +63,19 @@ export default function Floorplan({
     return 'ERROR';
   })();
 
-  const [floor, setFloor] = useState<4 | 5>(4)
+  const selectableFloors = [rooms.fourthFloor, rooms.fifthFloor];
+
+  const [activeFloorIdx, setActiveFloorIdx] = useState<number>(0);
+
+  const floor = selectableFloors[activeFloorIdx];
 
   function goToNextFloor() {
-    setFloor(prev => prev === 4 ? 5 : 4)
+    setActiveFloorIdx((prev) =>
+      prev < selectableFloors.length - 1 ? prev + 1 : 0
+    );
   }
-  const Assets = floor === 4 ? FourthFloorAssets : FifthFloorAssets
+  const Assets =
+    floor.id === 'fourthFloor' ? FourthFloorAssets : FifthFloorAssets;
 
   return (
     <>
@@ -100,10 +107,10 @@ export default function Floorplan({
 
           {state === 'SUCCESS' &&
             Object.values(Assets).map((i) => {
-              const scheduleInfo = roomSchedules[i.id];
+              const selectedRoomSchedule = roomSchedules[i.id];
 
               const isUnavailable =
-                scheduleInfo?.busyTimes?.some((j) => {
+                selectedRoomSchedule?.busyTimes?.some((j) => {
                   const isUnavailable =
                     selectedDate.isAfter(dayjs(j.start)) &&
                     selectedDate.isBefore(dayjs(j.end));
@@ -114,20 +121,27 @@ export default function Floorplan({
               const isAvailable = !isUnavailable;
 
               const color = (() => {
-                if (!(i.id in rooms)) return "black"
+                if (!(i.id in rooms)) return 'black';
 
                 const roomCategory = RoomCategoryData[rooms[i.id].category];
 
-                if (displayMode.id === 'MAP_MODE') return roomCategory.mapModeColor;
+                if (displayMode.id === 'MAP_MODE')
+                  return roomCategory.mapModeColor;
 
                 if (displayMode.id === 'BOOKING_MODE') {
-                  if (scheduleInfo?.bookable === 'BOOKABLE' && isAvailable)
+                  if (
+                    selectedRoomSchedule?.bookable === 'BOOKABLE' &&
+                    isAvailable
+                  )
                     return RoomBookableData.BOOKABLE.color;
 
-                  if (scheduleInfo?.bookable === 'BOOKABLE' && isUnavailable)
+                  if (
+                    selectedRoomSchedule?.bookable === 'BOOKABLE' &&
+                    isUnavailable
+                  )
                     return RoomBookableData.UNAVAILABLE.color;
 
-                  return roomCategory.bookingModeColor
+                  return roomCategory.bookingModeColor;
                 }
                 // this should never happen so we make it black to stand out
                 return 'black';
@@ -141,10 +155,15 @@ export default function Floorplan({
                   style={styles.floorPlanComponent}
                   fill={color}
                   onPress={() => {
-                    if (!(scheduleInfo?.bookable === 'BOOKABLE' && isAvailable))
+                    if (
+                      !(
+                        selectedRoomSchedule?.bookable === 'BOOKABLE' &&
+                        isAvailable
+                      )
+                    )
                       return;
 
-                    handleRoomClick(scheduleInfo);
+                    handleRoomClick(selectedRoomSchedule);
                   }}
                 />
               );
@@ -183,8 +202,9 @@ export default function Floorplan({
                 </View>
               );
             })}
-        </View>)}
-      {/* <Pressable
+        </View>
+      )}
+      <Pressable
         style={{
           position: 'absolute',
           alignItems: 'center',
@@ -199,7 +219,9 @@ export default function Floorplan({
         onPress={goToNextFloor}
         accessibilityHint="Go to next floor"
       >
-        <Text style={{ color: "white", fontSize: 10, paddingBottom: 6 }}>{floor}th Floor</Text>
+        <Text style={{ color: 'white', fontSize: 10, paddingBottom: 6 }}>
+          {floor.displayName}
+        </Text>
         <Layers fill="white" width="25" height="25" />
       </Pressable>
     </>
@@ -253,8 +275,8 @@ const styles = StyleSheet.create({
   floorPlanContainer: {
     position: 'relative',
 
-    width: "110%",
-    height: "999%",
+    width: '110%',
+    height: '999%',
 
     left: 135,
     bottom: 150,
