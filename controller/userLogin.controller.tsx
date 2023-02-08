@@ -1,7 +1,6 @@
 import * as AuthSession from 'expo-auth-session';
 import * as Google from 'expo-auth-session/providers/google';
 import * as WebBrowser from 'expo-web-browser';
-// import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TokenError, TokenResponse } from 'expo-auth-session';
 import { useEffect, useState } from 'react';
 import { Platform } from 'react-native';
@@ -68,7 +67,6 @@ export default function userLoginController() {
     return loggedIn;
   }
 
-  // TODO: Check if we need async or secure storage
   async function getAuthState(): Promise<TokenResponse | null> {
     const jsonValue = await SecureStorage.getItemAsync('authState');
 
