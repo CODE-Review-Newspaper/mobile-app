@@ -199,6 +199,7 @@ export default function Floorplan({
         onPress={goToNextFloor}
         accessibilityHint="Go to next floor"
       >
+        <Text style={{ color: "white", fontSize: 10, paddingBottom: 6 }}>{floor}th Floor</Text>
         <Layers fill="white" width="25" height="25" />
       </Pressable>
     </>
