@@ -97,7 +97,12 @@ export default function TabOneScreen({
           onPress={switchDisplayMode}
         >
           <Text
-            style={{ ...styles.timeDisplay, textDecorationLine: 'underline', fontSize: 20, paddingBottom: 6 }}
+            style={{
+              ...styles.timeDisplay,
+              textDecorationLine: 'underline',
+              fontSize: 20,
+              paddingBottom: 6,
+            }}
           >
             {displayMode.displayName}
           </Text>
@@ -108,8 +113,12 @@ export default function TabOneScreen({
         </Pressable>
         <>
           <Slider
-            style={{ width: '100%', height: 40, opacity: displayMode.id === "BOOKING_MODE" ? 1 : 0 }}
-            disabled={displayMode.id !== "BOOKING_MODE"}
+            style={{
+              width: '100%',
+              height: 40,
+              opacity: displayMode.id === 'BOOKING_MODE' ? 1 : 0,
+            }}
+            disabled={displayMode.id !== 'BOOKING_MODE'}
             minimumValue={0}
             maximumValue={1}
             step={1 / 12 / 4}
@@ -119,7 +128,12 @@ export default function TabOneScreen({
               setSelectedDate(startDate.add(numberBetween0and1 * 12, 'hours'))
             }
           />
-          <Text style={[styles.timeDisplay, { opacity: displayMode.id === "BOOKING_MODE" ? 1 : 0 }]}>
+          <Text
+            style={[
+              styles.timeDisplay,
+              { opacity: displayMode.id === 'BOOKING_MODE' ? 1 : 0 },
+            ]}
+          >
             {selectedDate.format('MMM D, H:mma')}
           </Text>
         </>

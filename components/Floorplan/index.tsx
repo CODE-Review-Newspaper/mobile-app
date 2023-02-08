@@ -184,7 +184,7 @@ export default function Floorplan({
               );
             })}
         </View>)}
-      <Pressable
+      {/* <Pressable
         style={{
           position: 'absolute',
           alignItems: 'center',

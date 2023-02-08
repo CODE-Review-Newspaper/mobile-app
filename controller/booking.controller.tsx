@@ -87,12 +87,7 @@ export default function bookRoomsController() {
   async function checkRoomAvailability(body: CheckBusyRoomRequest) {
     const url: url = 'https://www.googleapis.com/calendar/v3/freeBusy';
 
-    const [error, response] = await fetchData(
-      url,
-      await getAuthState(),
-      true,
-      body
-    );
+    const [error, response] = await fetchData(url, await getAuthState(), true, body);
 
     if (error != null) {
       console.error('error inside checkRoomAvailability:', error);
@@ -106,7 +101,10 @@ export default function bookRoomsController() {
     const roomCalendar = content?.calendars?.[email];
 
     if (roomCalendar == null) {
-      return ['Failed to find calendar for room.', null] as const;
+      return [
+        `Failed to find calendar for room: \n${JSON.stringify(content)}`,
+        null,
+      ] as const;
     }
     const roomBusyTimes: BusyRooms[] = roomCalendar.busy;
 
