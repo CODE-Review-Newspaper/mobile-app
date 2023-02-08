@@ -75,26 +75,26 @@ export default function Floorplan({
         bindToBorders={true}
         style={styles.container}
       >
-        <View style={styles.dings}>
-          <FloorplanBase
+        <View style={styles.floorPlanContainer}>
+          {/* <FloorplanBase
             width="100%"
             height="100%"
             fill="white"
             style={styles.floorPlanComponent}
-          />
+          /> */}
 
-          {state !== 'SUCCESS' && (
+          {/* {state !== 'SUCCESS' && (
             <Rooms.Heaven.Component
               width="100%"
               height="100%"
               fill="white"
               style={styles.floorPlanComponent}
             />
-          )}
+          )} */}
 
           {state === 'SUCCESS' &&
             Object.values(Rooms).map((i) => {
-              const scheduleInfo = roomSchedules[i.name];
+              const scheduleInfo = roomSchedules[i.id];
 
               const isUnavailable =
                 scheduleInfo?.busyTimes?.some((j) => {
@@ -108,9 +108,11 @@ export default function Floorplan({
               const isAvailable = !isUnavailable;
 
               const color = (() => {
-                const roomCategory = RoomCategoryData[rooms[i.name].category];
+                if (!(i.id in rooms)) return "black"
 
-                if (displayMode.id === 'MAP_MODE') return roomCategory?.color;
+                const roomCategory = RoomCategoryData[rooms[i.id].category];
+
+                if (displayMode.id === 'MAP_MODE') return roomCategory.mapModeColor;
 
                 if (displayMode.id === 'BOOKING_MODE') {
                   if (scheduleInfo?.bookable === 'BOOKABLE' && isAvailable)
@@ -119,7 +121,7 @@ export default function Floorplan({
                   if (scheduleInfo?.bookable === 'BOOKABLE' && isUnavailable)
                     return RoomBookableData.UNAVAILABLE.color;
 
-                  return RoomCategoryData.DEFAULT.color;
+                  return roomCategory.bookingModeColor
                 }
                 // this should never happen so we make it black to stand out
                 return 'black';
@@ -127,7 +129,7 @@ export default function Floorplan({
 
               return (
                 <i.Component
-                  key={i.name}
+                  key={i.id}
                   width="100%"
                   height="100%"
                   style={styles.floorPlanComponent}
@@ -166,7 +168,7 @@ export default function Floorplan({
                   <View
                     style={{
                       ...styles.legendColorCircle,
-                      backgroundColor: i.color,
+                      backgroundColor: i.mapModeColor,
                     }}
                   />
                   <Text style={{ color: 'white', fontWeight: '500' }}>
@@ -182,8 +184,8 @@ export default function Floorplan({
           alignItems: 'center',
           justifyContent: 'center',
 
-          width: 64,
-          height: 64,
+          width: 80,
+          height: 80,
 
           right: 0,
           bottom: 0,
@@ -241,11 +243,15 @@ const styles = StyleSheet.create({
     fontWeight: '900',
     fontSize: 16,
   },
-  dings: {
+  floorPlanContainer: {
     position: 'relative',
-    width: '120%',
-    height: '80%',
-    transform: [{ rotate: '-90deg' }],
+
+    width: "110%",
+    height: "999%",
+
+    left: 135,
+    bottom: 150,
+
     backgroundColor: 'transparent',
   },
   legend: {

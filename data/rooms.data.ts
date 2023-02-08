@@ -1,6 +1,14 @@
 import { Room } from '../controller/allRooms.controller';
 
 export const rooms: Record<string, Room> = {
+  floor: {
+    id: "Floor",
+    bookable: "UNBOOKABLE",
+    email: null,
+    displayName: "Floor",
+    factoryRoomNumber: "4",
+    category: "FLOOR",
+  },
   R2: {
     id: 'R2',
     bookable: 'BOOKABLE',
@@ -314,65 +322,83 @@ export const rooms: Record<string, Room> = {
     factoryRoomNumber: null,
     category: 'WORKSPACES',
   },
-  Library: {
-    id: 'Library',
+  Restrooms1: {
+    id: 'Restrooms1',
     bookable: 'UNBOOKABLE',
     email: null,
-    displayName: 'Library',
+    displayName: 'Restrooms',
     factoryRoomNumber: null,
-    category: 'LIBRARY',
+    category: 'RESTROOMS',
+  },
+  Restrooms2: {
+    id: 'Restrooms2',
+    bookable: 'UNBOOKABLE',
+    email: null,
+    displayName: 'Restrooms',
+    factoryRoomNumber: null,
+    category: 'RESTROOMS',
   },
 };
 
 export const RoomCategoryData = {
-  LIBRARY: {
-    color: 'blue',
-    displayName: 'Library shelf',
-    showInLegend: true,
-  },
   PROJECT_ROOM: {
-    color: '#FAFFBB',
+    mapModeColor: '#FAFFBB',
+    bookingModeColor: "#D9D9D9",
     displayName: 'Project room',
     showInLegend: true,
   },
   OFFICE_BOOTH: {
-    color: '#f2b01d',
+    mapModeColor: '#f2b01d',
+    bookingModeColor: "#D9D9D9",
     displayName: 'Office booth',
     showInLegend: true,
   },
   TEAM_HQ: {
-    color: '#BEFBCF',
+    mapModeColor: '#BEFBCF',
+    bookingModeColor: "#D9D9D9",
     displayName: 'Team HQ',
     showInLegend: true,
   },
   MEETING_ROOM: {
-    color: '#D9D9D9',
+    mapModeColor: '#D9D9D9',
+    bookingModeColor: "#D9D9D9",
     displayName: 'Meeting room',
     showInLegend: true,
   },
   LEARNING_UNITS: {
-    color: '#988C8B',
+    mapModeColor: '#988C8B',
+    bookingModeColor: "#D9D9D9",
     displayName: 'For learning units',
     showInLegend: true,
   },
   STUDIO: {
-    color: '#F5BFF8',
+    mapModeColor: '#F5BFF8',
+    bookingModeColor: "#D9D9D9",
     displayName: 'Music studio',
     showInLegend: true,
   },
   SILENT_SPACE: {
-    color: 'transparent',
+    mapModeColor: 'transparent',
+    bookingModeColor: "transparent",
     displayName: 'Silent space',
     showInLegend: false,
   },
   WORKSPACES: {
-    color: 'transparent',
+    mapModeColor: 'transparent',
+    bookingModeColor: "transparent",
     displayName: 'Workspace',
     showInLegend: false,
   },
-  DEFAULT: {
-    color: '#D9D9D9',
-    displayName: 'Normal room',
+  FLOOR: {
+    mapModeColor: "white",
+    bookingModeColor: "white",
+    displayName: "Floor area",
+    showInLegend: false,
+  },
+  RESTROOMS: {
+    mapModeColor: "#FEF8F8",
+    bookingModeColor: "#D9D9D9",
+    displayName: "Restrooms",
     showInLegend: false,
   },
 };
@@ -382,13 +408,13 @@ export const RoomBookableData = {
     color: '#2CF261',
     displayName: 'Bookable',
   },
-  UNAVAILABLE: {
-    color: '#FF6961',
-    displayName: 'Booked right now',
-  },
   UNBOOKABLE: {
     color: 'cyan',
     displayName: 'Not bookable',
+  },
+  UNAVAILABLE: {
+    color: '#FF6961',
+    displayName: 'Booked right now',
   },
   APPLICATION_REQUIRED: {
     color: '#FAFFBB',
