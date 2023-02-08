@@ -57,6 +57,7 @@ export default function SignedOutFloorplanScreen() {
               position: 'absolute',
               zIndex: 4,
               elevation: 4,
+              paddingTop: 16,
             }}
           >
             <Pressable

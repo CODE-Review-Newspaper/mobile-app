@@ -92,6 +92,7 @@ export default function TabOneScreen({
             justifyContent: 'center',
             width: '100%',
             backgroundColor: 'transparent',
+            paddingTop: 24,
           }}
           onPress={switchDisplayMode}
         >
