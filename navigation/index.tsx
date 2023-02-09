@@ -130,12 +130,26 @@ function RootNavigator() {
     if (isSignedIn && !isLoadingAuthState) loadRoomSchedules();
   }, [isSignedIn, isLoadingAuthState]);
 
+  const OFFLINE_REFETCH_ROOMS_INTERVAL_SECONDS = 1;
   const REFETCH_ROOMS_INTERVAL_SECONDS = 30;
 
-  useInterval(() => {
-    loadRoomSchedules();
-    setSelectedDate(roundDownToNearestQuarterHour(dayjs()));
-  }, REFETCH_ROOMS_INTERVAL_SECONDS * 1000);
+  useInterval(
+    () => {
+      loadRoomSchedules();
+
+      const newStartDate = roundDownToNearestQuarterHour(dayjs());
+
+      setStartDate(newStartDate);
+
+      // we DON'T want to set endDate here because that would mess up
+      // the event creation screen
+
+      if (selectedDate.isBefore(newStartDate)) setSelectedDate(newStartDate);
+    },
+    roomScheduleState.hasError
+      ? OFFLINE_REFETCH_ROOMS_INTERVAL_SECONDS * 1000
+      : REFETCH_ROOMS_INTERVAL_SECONDS * 1000
+  );
 
   const userContextValue: UserContextType = {
     user,

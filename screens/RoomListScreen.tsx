@@ -121,6 +121,7 @@ export default function RoomListScreen({
         onValueChange={(numberBetween0and1) =>
           setSelectedDate(startDate.add(numberBetween0and1 * 12, 'hours'))
         }
+        value={selectedDate.diff(startDate, 'hours') / 12}
       />
       <Text style={[styles.timeDisplay]}>
         {selectedDate.format('MMM D, H:mma')}
@@ -172,7 +173,7 @@ export default function RoomListScreen({
           </Pressable>
         ))}
       </View>
-      {results.length < 1 && (
+      {results.length < 1 && !(hasError && !hasData) && (
         <Text
           style={{
             backgroundColor: 'transparent',
@@ -185,6 +186,23 @@ export default function RoomListScreen({
           }}
         >
           Found no free rooms.
+        </Text>
+      )}
+      {results.length < 1 && hasError && !hasData && (
+        <Text
+          style={{
+            backgroundColor: 'transparent',
+
+            marginTop: 22,
+
+            fontSize: 16,
+
+            fontWeight: '900',
+
+            color: '#fe746a',
+          }}
+        >
+          You appear to be offline.
         </Text>
       )}
       {results.length > 0 && (

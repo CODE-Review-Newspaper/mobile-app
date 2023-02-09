@@ -95,6 +95,7 @@ export default function SignedOutFloorplanScreen() {
             onValueChange={(numberBetween0and1) =>
               setSelectedDate(startDate.add(numberBetween0and1 * 12, 'hours'))
             }
+            value={selectedDate.diff(startDate, 'hours') / 12}
           />
           <Pressable
             accessibilityLabel="Switch to next display mode"

@@ -8,37 +8,48 @@ export default function allRoomsController() {
   const { checkRoomAvailability } = bookRoomsController();
 
   async function getBusyTimeOfRooms() {
-    const newRooms = Object.fromEntries(
-      await Promise.all(
-        Object.entries(rooms).map(async ([key, room]) => {
-          if (!(room.type === 'ROOM' && ['BOOKABLE'].includes(room.bookable)))
-            return [key, room] as const;
+    let numOk = 0;
+    let numErrors = 0;
 
-          const newBody: CheckBusyRoomRequest = {
-            items: [
-              {
-                id: (room as BookableRoomEntity).email,
-              },
-            ],
-            timeMin: dayjs().startOf('day').toDate(),
-            timeMax: dayjs().endOf('day').add(7, 'days').toDate(),
-          };
-          const [error, busyTimes] = await checkRoomAvailability(newBody);
+    const newRooms = await Promise.all(
+      Object.entries(rooms).map(async ([key, room]) => {
+        if (!(room.type === 'ROOM' && ['BOOKABLE'].includes(room.bookable))) {
+          return [key, room] as const;
+        }
 
-          if (error != null) {
-            console.error('error inside getBusyTimeOfRooms:', error);
+        const newBody: CheckBusyRoomRequest = {
+          items: [
+            {
+              id: (room as BookableRoomEntity).email,
+            },
+          ],
+          timeMin: dayjs().startOf('day').toDate(),
+          timeMax: dayjs().endOf('day').add(7, 'days').toDate(),
+        };
+        const [error, busyTimes] = await checkRoomAvailability(newBody);
 
-            return [key, room] as const;
-          }
-          const newRoom = {
-            ...room,
-            busyTimes,
-          };
-          return [key, newRoom] as const;
-        })
-      )
+        if (error != null) {
+          numErrors++;
+
+          return [key, room] as const;
+        }
+        const newRoom = {
+          ...room,
+          busyTimes,
+        };
+        numOk++;
+
+        return [key, newRoom] as const;
+      })
     );
-    return [null, newRooms] as const;
+    const newRoomsObj = Object.fromEntries(newRooms);
+
+    if (numOk === 0 && numErrors > 0) {
+      console.error('failed to getBusyTimeOfRooms');
+
+      return [new Error(), newRoomsObj];
+    }
+    return [null, newRoomsObj] as const;
   }
   return { getBusyTimeOfRooms };
 }

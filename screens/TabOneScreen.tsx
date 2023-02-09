@@ -1,9 +1,10 @@
 import { FontAwesome } from '@expo/vector-icons';
 import Slider from '@react-native-community/slider';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Pressable, StyleSheet } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
+import ErrorTriangle from '../assets/images/errorTriangle.svg';
 import Floorplan from '../components/Floorplan';
 import { Text, View } from '../components/Themed';
 import CalendarContext from '../contexts/calendar.context';
@@ -35,6 +36,10 @@ export default function TabOneScreen({
     return 'ERROR';
   })();
 
+  useEffect(() => {
+    console.log('selected:', selectedDate.diff(startDate, 'hours') / 12);
+  }, []);
+
   const DisplayMode = {
     MAP_MODE: {
       id: 'MAP_MODE' as const,
@@ -49,7 +54,14 @@ export default function TabOneScreen({
   };
   const [displayMode, setDisplayMode] = useState<
     (typeof DisplayMode)[keyof typeof DisplayMode]
-  >(about.isCodeMember ? DisplayMode.BOOKING_MODE : DisplayMode.MAP_MODE);
+  >(
+    about.isCodeMember && state !== 'ERROR'
+      ? DisplayMode.BOOKING_MODE
+      : DisplayMode.MAP_MODE
+  );
+
+  if (state === 'ERROR' && displayMode.id === 'BOOKING_MODE')
+    setDisplayMode(DisplayMode.MAP_MODE);
 
   function switchDisplayMode() {
     setDisplayMode(DisplayMode[displayMode.next]);
@@ -72,8 +84,9 @@ export default function TabOneScreen({
       )}
       {state === 'ERROR' && (
         <View style={styles.statusTopBar}>
-          <Text style={{ color: '#FF160A', fontWeight: '900', fontSize: 25 }}>
-            An error occured.
+          <Text style={{ color: '#fe746a', fontWeight: '900', fontSize: 25 }}>
+            {/* <ErrorTriangle fill="#fe746a" width="1" height="1" style={{ width: 1, height: 1, marginRight: 16 }} /> */}
+            Offline
           </Text>
         </View>
       )}
@@ -81,7 +94,7 @@ export default function TabOneScreen({
         colors={['rgba(0, 0, 0, 0.8)', 'transparent']}
         style={{
           ...styles.toolBar,
-          opacity: state === 'SUCCESS' && about.isCodeMember ? 1 : 0,
+          opacity: state === 'SUCCESS' ? 1 : 0,
         }}
       >
         <Pressable
@@ -127,6 +140,7 @@ export default function TabOneScreen({
             onValueChange={(numberBetween0and1) =>
               setSelectedDate(startDate.add(numberBetween0and1 * 12, 'hours'))
             }
+            value={selectedDate.diff(startDate, 'hours') / 12}
           />
           <Text
             style={[

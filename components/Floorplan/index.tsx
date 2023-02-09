@@ -77,6 +77,18 @@ export default function Floorplan({
   const Assets =
     floor.id === 'fourthFloor' ? FourthFloorAssets : FifthFloorAssets;
 
+  if (state === 'ERROR' && displayMode.id === 'BOOKING_MODE') {
+    // this should never happen because we redirect from BOOKING_MODE
+    // if network issues occur
+    return (
+      <>
+        <View style={styles.staticOverlay}>
+          <ErrorTriangle fill="#fe746a" width="45%" height="45%" />
+        </View>
+      </>
+    );
+  }
+
   return (
     <>
       <ReactNativeZoomableView
@@ -89,91 +101,69 @@ export default function Floorplan({
         style={styles.container}
       >
         <View style={styles.floorPlanContainer}>
-          {/* <FloorplanBase
-            width="100%"
-            height="100%"
-            fill="white"
-            style={styles.floorPlanComponent}
-          /> */}
+          {Object.values(Assets).map((i) => {
+            const selectedRoomSchedule = roomSchedules[i.id];
 
-          {/* {state !== 'SUCCESS' && (
-            <Rooms.Heaven.Component
-              width="100%"
-              height="100%"
-              fill="white"
-              style={styles.floorPlanComponent}
-            />
-          )} */}
+            const isUnavailable =
+              selectedRoomSchedule?.busyTimes?.some((j) => {
+                const isUnavailable =
+                  selectedDate.isAfter(dayjs(j.start)) &&
+                  selectedDate.isBefore(dayjs(j.end));
 
-          {((!hasError && !isLoading) || hasData) &&
-            Object.values(Assets).map((i) => {
-              const selectedRoomSchedule = roomSchedules[i.id];
+                return isUnavailable;
+              }) ?? true;
 
-              const isUnavailable =
-                selectedRoomSchedule?.busyTimes?.some((j) => {
-                  const isUnavailable =
-                    selectedDate.isAfter(dayjs(j.start)) &&
-                    selectedDate.isBefore(dayjs(j.end));
+            const isAvailable = !isUnavailable;
 
-                  return isUnavailable;
-                }) ?? true;
+            const color = (() => {
+              if (!(i.id in rooms)) return 'black';
 
-              const isAvailable = !isUnavailable;
+              const roomCategory = RoomCategoryData[rooms[i.id].category];
 
-              const color = (() => {
-                if (!(i.id in rooms)) return 'black';
+              if (displayMode.id === 'MAP_MODE')
+                return roomCategory.mapModeColor;
 
-                const roomCategory = RoomCategoryData[rooms[i.id].category];
+              if (displayMode.id === 'BOOKING_MODE') {
+                if (
+                  selectedRoomSchedule?.bookable === 'BOOKABLE' &&
+                  isAvailable
+                )
+                  return RoomBookableData.BOOKABLE.color;
 
-                if (displayMode.id === 'MAP_MODE')
-                  return roomCategory.mapModeColor;
+                if (
+                  selectedRoomSchedule?.bookable === 'BOOKABLE' &&
+                  isUnavailable
+                )
+                  return RoomBookableData.UNAVAILABLE.color;
 
-                if (displayMode.id === 'BOOKING_MODE') {
+                return roomCategory.bookingModeColor;
+              }
+              // this should never happen so we make it black to stand out
+              return 'black';
+            })();
+
+            return (
+              <i.Component
+                key={i.id}
+                width="100%"
+                height="100%"
+                style={styles.floorPlanComponent}
+                fill={color}
+                onPress={() => {
                   if (
-                    selectedRoomSchedule?.bookable === 'BOOKABLE' &&
-                    isAvailable
-                  )
-                    return RoomBookableData.BOOKABLE.color;
-
-                  if (
-                    selectedRoomSchedule?.bookable === 'BOOKABLE' &&
-                    isUnavailable
-                  )
-                    return RoomBookableData.UNAVAILABLE.color;
-
-                  return roomCategory.bookingModeColor;
-                }
-                // this should never happen so we make it black to stand out
-                return 'black';
-              })();
-
-              return (
-                <i.Component
-                  key={i.id}
-                  width="100%"
-                  height="100%"
-                  style={styles.floorPlanComponent}
-                  fill={color}
-                  onPress={() => {
-                    if (
-                      !(
-                        selectedRoomSchedule?.bookable === 'BOOKABLE' &&
-                        isAvailable
-                      )
+                    !(
+                      selectedRoomSchedule?.bookable === 'BOOKABLE' &&
+                      isAvailable
                     )
-                      return;
+                  )
+                    return;
 
-                    handleRoomClick(selectedRoomSchedule);
-                  }}
-                />
-              );
-            })}
+                  handleRoomClick(selectedRoomSchedule);
+                }}
+              />
+            );
+          })}
         </View>
-        {state === 'ERROR' && (
-          <View style={styles.staticOverlay}>
-            <ErrorTriangle fill="#FF160A" width="45%" height="45%" />
-          </View>
-        )}
       </ReactNativeZoomableView>
       {displayMode.id === 'MAP_MODE' && (
         <View style={styles.legend}>
