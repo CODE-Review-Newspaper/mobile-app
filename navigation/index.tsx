@@ -31,6 +31,7 @@ import LoadingScreen from '../screens/LoadingScreen';
 import LoginScreen from '../screens/LoginScreen';
 import ModalScreen from '../screens/ModalScreen';
 import NotFoundScreen from '../screens/NotFoundScreen';
+import RoomListScreen from '../screens/RoomListScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import SignedOutFloorplanScreen from '../screens/SignedOutFloorplanScreen';
 import TabOneScreen from '../screens/TabOneScreen';
@@ -271,20 +272,21 @@ function BottomTabNavigator() {
           ),
         })}
       />
-      {/* <BottomTab.Screen
+      <BottomTab.Screen
         name="TabTwo"
-        component={TabTwoScreen}
+        component={RoomListScreen}
         options={{
           headerShown: false,
-          title: 'Calendar',
-          tabBarActiveTintColor: "#FF6961",
-          tabBarIcon: ({ color }) => <TabBarIcon name="calendar" color={color} />,
+          title: 'Rooms',
+          tabBarActiveTintColor: '#FF6961',
+          tabBarIcon: ({ color }) => <TabBarIcon name="list" color={color} />,
           headerRight: () => (
             <Pressable
-              onPress={() => { }}
+              onPress={() => {}}
               style={({ pressed }) => ({
                 opacity: pressed ? 0.5 : 1,
-              })}>
+              })}
+            >
               <FontAwesome
                 name="info-circle"
                 size={25}
@@ -294,7 +296,7 @@ function BottomTabNavigator() {
             </Pressable>
           ),
         }}
-      /> */}
+      />
       <BottomTab.Screen
         name="Settings"
         component={SettingsScreen}

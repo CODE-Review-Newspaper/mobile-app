@@ -11,12 +11,7 @@ export default function allRoomsController() {
     const newRooms = Object.fromEntries(
       await Promise.all(
         Object.entries(rooms).map(async ([key, room]) => {
-          if (
-            !(
-              room.type === 'ROOM' &&
-              ['BOOKABLE', 'APPLICATION_REQUIRED'].includes(room.bookable)
-            )
-          )
+          if (!(room.type === 'ROOM' && ['BOOKABLE'].includes(room.bookable)))
             return [key, room] as const;
 
           const newBody: CheckBusyRoomRequest = {

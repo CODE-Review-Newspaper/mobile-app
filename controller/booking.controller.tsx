@@ -106,10 +106,7 @@ export default function bookRoomsController() {
     const roomCalendar = content?.calendars?.[email];
 
     if (roomCalendar == null) {
-      return [
-        `Failed to find calendar for room: \n${JSON.stringify(content)}`,
-        null,
-      ] as const;
+      return [`Failed to find calendar for room: "${email}"`, null] as const;
     }
     const roomBusyTimes: BusyRooms[] = roomCalendar.busy;
 
