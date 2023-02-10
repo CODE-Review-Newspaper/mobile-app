@@ -16,13 +16,16 @@ export async function fetchData(
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${authState?.accessToken}`,
+        'accept-encoding': "gzip",
       },
       body: JSON.stringify(data),
     };
   } else {
     request = {
       headers: {
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${authState?.accessToken}`,
+        'accept-encoding': "gzip",
       },
     };
   }
