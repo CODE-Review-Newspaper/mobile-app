@@ -3,7 +3,6 @@ import dayjs from 'dayjs';
 import { useState } from 'react';
 import { Pressable, StyleSheet } from 'react-native';
 
-import Layers from '../../assets/icons/layers.svg';
 import ErrorTriangle from '../../assets/images/errorTriangle.svg';
 import {
   RoomBookableData,
@@ -40,6 +39,8 @@ export interface FloorplanProps {
 
   roomSchedules: Record<string, RoomEntity>;
   handleRoomClick: (room: RoomEntity) => any;
+
+  Assets: Record<string, any>;
 }
 
 export default function Floorplan({
@@ -54,6 +55,7 @@ export default function Floorplan({
 
   roomSchedules,
   handleRoomClick,
+  Assets,
 }: FloorplanProps) {
   const state = (() => {
     if (hasData) return 'SUCCESS';
@@ -62,20 +64,6 @@ export default function Floorplan({
 
     return 'ERROR';
   })();
-
-  const selectableFloors = [rooms.fourthFloor, rooms.fifthFloor];
-
-  const [activeFloorIdx, setActiveFloorIdx] = useState<number>(0);
-
-  const floor = selectableFloors[activeFloorIdx];
-
-  function goToNextFloor() {
-    setActiveFloorIdx((prev) =>
-      prev < selectableFloors.length - 1 ? prev + 1 : 0
-    );
-  }
-  const Assets =
-    floor.id === 'fourthFloor' ? FourthFloorAssets : FifthFloorAssets;
 
   if (state === 'ERROR' && displayMode.id === 'BOOKING_MODE') {
     // this should never happen because we redirect from BOOKING_MODE
@@ -194,26 +182,6 @@ export default function Floorplan({
             })}
         </View>
       )}
-      <Pressable
-        style={{
-          position: 'absolute',
-          alignItems: 'center',
-          justifyContent: 'center',
-
-          width: 80,
-          height: 80,
-
-          right: 0,
-          bottom: 0,
-        }}
-        onPress={goToNextFloor}
-        accessibilityHint="Go to next floor"
-      >
-        <Text style={{ color: 'white', fontSize: 10, paddingBottom: 6 }}>
-          {floor.displayName}
-        </Text>
-        <Layers fill="white" width="25" height="25" />
-      </Pressable>
     </>
   );
 }
@@ -269,7 +237,7 @@ const styles = StyleSheet.create({
     height: '999%',
 
     left: 135,
-    bottom: 150,
+    bottom: 180,
 
     backgroundColor: 'transparent',
   },
@@ -279,7 +247,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
 
     left: 20,
-    bottom: 20,
+    bottom: 90,
   },
   legendColorCircle: {
     width: 16,

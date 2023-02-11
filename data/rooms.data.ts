@@ -434,7 +434,7 @@ export const rooms = {
     // email: 'c_188d0sd2j8pnei5ai0f0ijl0p3bmg4gbcdnm8p9ec9in4r39do@resource.calendar.google.com',
     displayName: 'Void',
     factoryNumber: '4.3.2',
-    category: 'PROJECT_ROOM',
+    category: 'WORKSHOP',
 
     parentId: 'fourthFloor',
     type: 'ROOM',
@@ -666,6 +666,12 @@ export const RoomCategoryData = {
     mapModeColor: '#F5BFF8',
     bookingModeColor: '#D9D9D9',
     displayName: 'Music studio',
+    showInLegend: true,
+  },
+  WORKSHOP: {
+    mapModeColor: '#F5BFF8',
+    bookingModeColor: '#D9D9D9',
+    displayName: 'Workshop',
     showInLegend: true,
   },
   SILENT_SPACE: {

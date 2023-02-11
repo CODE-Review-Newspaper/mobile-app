@@ -1,11 +1,13 @@
 import { FontAwesome } from '@expo/vector-icons';
-import Slider from '@react-native-community/slider';
 import dayjs from 'dayjs';
 import { useContext, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 
 import { Text, View } from '../components/Themed';
+import TimePicker from '../components/TimePicker';
 import CalendarContext from '../contexts/calendar.context';
+import { RoomEntity } from '../data/rooms.data';
 import { RootTabScreenProps } from '../types';
 
 const rangeToStr = (range: { min: number; max: number }) => {
@@ -48,21 +50,76 @@ export default function RoomListScreen({
     setSelectedRoom,
   } = useContext(CalendarContext);
 
-  const ranges = [
-    { min: 1, max: 3 },
-    { min: 4, max: 9 },
-    { min: 10, max: Infinity },
-  ];
+  const RoomView = {
+    MAX_THREE_PEOPLE: {
+      id: 'MAX_THREE_PEOPLE',
+      displayName: 'Small rooms',
+      filter: (i: RoomEntity) =>
+        i.bookable === 'BOOKABLE' &&
+        !['STUDIO', 'WORKSHOP'].includes(i.category) &&
+        i.capacity <= 3,
+      Label: () => (
+        <Text style={{ fontWeight: '900', fontSize: 16 }}>
+          {rangeToStr({ min: 1, max: 3 })}{' '}
+          <FontAwesome name="user" style={{ fontSize: 16, color: 'white' }} />
+        </Text>
+      ),
+    },
+    MAX_NINE_PEOPLE: {
+      id: 'MAX_NINE_PEOPLE',
+      displayName: 'Mid-sized rooms',
+      filter: (i: RoomEntity) =>
+        i.bookable === 'BOOKABLE' &&
+        !['STUDIO', 'WORKSHOP'].includes(i.category) &&
+        i.capacity >= 4 &&
+        i.capacity <= 9,
+      Label: () => (
+        <Text style={{ fontWeight: '900', fontSize: 16 }}>
+          {rangeToStr({ min: 4, max: 9 })}{' '}
+          <FontAwesome name="user" style={{ fontSize: 16, color: 'white' }} />
+        </Text>
+      ),
+    },
+    TEN_OR_MORE_PEOPLE: {
+      id: 'TEN_OR_MORE_PEOPLE',
+      displayName: 'Large rooms',
+      filter: (i: RoomEntity) =>
+        i.bookable === 'BOOKABLE' &&
+        !['STUDIO', 'WORKSHOP'].includes(i.category) &&
+        i.capacity >= 10,
+      Label: () => (
+        <Text style={{ fontWeight: '900', fontSize: 16 }}>
+          {rangeToStr({ min: 10, max: Infinity })}{' '}
+          <FontAwesome name="user" style={{ fontSize: 16, color: 'white' }} />
+        </Text>
+      ),
+    },
+    ALL: {
+      id: 'ALL',
+      displayName: 'All rooms',
+      filter: (i: RoomEntity) =>
+        i.bookable === 'BOOKABLE' &&
+        !['STUDIO', 'WORKSHOP'].includes(i.category),
+      Label: () => <Text style={{ fontWeight: '900', fontSize: 16 }}>ALL</Text>,
+    },
+    SPECIAL_ROOMS: {
+      id: 'SPECIAL_ROOMS',
+      displayName: 'Specialized rooms',
+      filter: (i: RoomEntity) =>
+        i.bookable === 'BOOKABLE' &&
+        ['STUDIO', 'WORKSHOP'].includes(i.category),
+      Label: () => (
+        <Text style={{ fontWeight: '900', fontSize: 16 }}>
+          <FontAwesome name="star" style={{ fontSize: 16, color: 'white' }} />
+        </Text>
+      ),
+    },
+  };
 
-  const [selectedRange, setSelectedRange] = useState(ranges[2]);
+  const [selectedView, setSelectedView] = useState(RoomView.ALL);
 
   const results = Object.values(roomSchedules)
-    .filter(
-      (i) =>
-        i.bookable === 'BOOKABLE' &&
-        i.capacity >= selectedRange.min &&
-        i.capacity <= selectedRange.max
-    )
+    .filter(selectedView.filter)
     .map((room) => {
       const isUnavailable =
         room?.busyTimes?.some((j) => {
@@ -84,7 +141,10 @@ export default function RoomListScreen({
       const minutesUntilNextEvent =
         nextEventInSelectedRoom == null
           ? Infinity
-          : dayjs(nextEventInSelectedRoom!.start).diff(selectedDate, 'minutes');
+          : dayjs(nextEventInSelectedRoom!.start).diff(
+              selectedDate,
+              'minutes'
+            ) + 1;
 
       return {
         room,
@@ -96,169 +156,189 @@ export default function RoomListScreen({
   results.sort((a, b) => a?.minutesUntilNextEvent - b?.minutesUntilNextEvent);
 
   return (
-    <ScrollView
-      style={{
-        flexDirection: 'column',
-        paddingHorizontal: 16,
-
-        backgroundColor: '#111',
-
-        height: '100%',
-
-        paddingTop: 64,
-      }}
-    >
-      <Slider
+    <>
+      <ScrollView
         style={{
-          width: '100%',
-          height: 40,
-        }}
-        minimumValue={0}
-        maximumValue={1}
-        step={1 / 12 / 4}
-        minimumTrackTintColor="#ff6961"
-        maximumTrackTintColor="white"
-        onValueChange={(numberBetween0and1) =>
-          setSelectedDate(startDate.add(numberBetween0and1 * 12, 'hours'))
-        }
-        value={selectedDate.diff(startDate, 'hours') / 12}
-      />
-      <Text style={[styles.timeDisplay]}>
-        {selectedDate.format('MMM D, H:mma')}
-      </Text>
+          flexDirection: 'column',
+          paddingHorizontal: 16,
 
-      <View
-        style={{
-          flexDirection: 'row',
-          marginBottom: 16,
-          marginTop: 16,
-          backgroundColor: 'transparent',
+          backgroundColor: '#111',
+
+          height: '100%',
+
+          paddingTop: 32,
         }}
       >
-        {ranges.map((i) => (
-          <Pressable
-            onPress={() => setSelectedRange(i)}
-            style={[
-              {
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'center',
-
-                width: 64,
-                height: 32,
-                paddingHorizontal: 8,
-
-                borderRadius: 999,
-                backgroundColor: '#444',
-                marginRight: 8,
-              },
-              i.min === selectedRange.min
-                ? {
-                    backgroundColor: '#222',
-
-                    borderColor: 'white',
-                    borderWidth: 1,
-                    transform: [{ scale: 1.03 }],
-                  }
-                : {},
-            ]}
-          >
-            <Text style={{ fontWeight: '900', fontSize: 16 }}>
-              {rangeToStr(i)}{' '}
-              <FontAwesome
-                name="user"
-                style={{ fontSize: 16, color: 'white' }}
-              />
-            </Text>
-          </Pressable>
-        ))}
-      </View>
-      {results.length < 1 && !(hasError && !hasData) && (
-        <Text
-          style={{
-            backgroundColor: 'transparent',
-
-            marginTop: 22,
-
-            fontSize: 16,
-
-            fontWeight: '900',
-          }}
-        >
-          Found no free rooms.
-        </Text>
-      )}
-      {results.length < 1 && hasError && !hasData && (
-        <Text
-          style={{
-            backgroundColor: 'transparent',
-
-            marginTop: 22,
-
-            fontSize: 16,
-
-            fontWeight: '900',
-
-            color: '#fe746a',
-          }}
-        >
-          You appear to be offline.
-        </Text>
-      )}
-      {results.length > 0 && (
         <View
           style={{
-            flexDirection: 'column',
-
-            borderRadius: 4,
-
-            overflow: 'hidden',
-
-            backgroundColor: 'white',
-
-            marginBottom: 80,
+            flexDirection: 'row',
+            marginBottom: 16,
+            marginTop: 16,
+            backgroundColor: 'transparent',
           }}
         >
-          {results.map(({ room, minutesUntilNextEvent }) => {
-            return (
-              <Pressable
-                style={{
+          {Object.values(RoomView).map((i) => (
+            <Pressable
+              onPress={() => setSelectedView(i)}
+              style={[
+                {
                   flexDirection: 'row',
                   alignItems: 'center',
-                  justifyContent: 'space-between',
+                  justifyContent: 'center',
 
-                  height: 64,
-                  paddingHorizontal: 24,
+                  width: '100%',
+                  maxWidth: 62,
+                  height: 32,
 
-                  backgroundColor: 'transparent',
-                  borderColor: '#ccc',
-                  borderTopWidth: 1,
-                }}
-                onPress={() => {
-                  setSelectedRoom(room);
+                  borderRadius: 999,
+                  backgroundColor: '#444',
+                  marginRight: 8,
+                },
+                i.id === selectedView.id
+                  ? {
+                      backgroundColor: '#222',
 
-                  navigation.navigate('Modal');
-                }}
-              >
-                <View
+                      borderColor: 'white',
+                      borderWidth: 1,
+                      transform: [{ scale: 1.03 }],
+                    }
+                  : {},
+              ]}
+            >
+              <i.Label />
+            </Pressable>
+          ))}
+        </View>
+        <Text style={[styles.timeDisplay, { marginBottom: 8, marginLeft: 12 }]}>
+          {selectedView.displayName} ({results.length})
+        </Text>
+        {results.length < 1 && !(hasError && !hasData) && (
+          <Text
+            style={{
+              backgroundColor: 'transparent',
+
+              marginTop: 22,
+
+              fontSize: 16,
+
+              fontWeight: '900',
+            }}
+          >
+            Found no free rooms.
+          </Text>
+        )}
+        {results.length < 1 && hasError && !hasData && (
+          <Text
+            style={{
+              backgroundColor: 'transparent',
+
+              marginTop: 22,
+
+              fontSize: 16,
+
+              fontWeight: '900',
+
+              color: '#fe746a',
+            }}
+          >
+            You appear to be offline.
+          </Text>
+        )}
+        {results.length > 0 && (
+          <View
+            style={{
+              flexDirection: 'column',
+
+              borderRadius: 4,
+
+              overflow: 'hidden',
+
+              backgroundColor: 'white',
+
+              marginBottom: 80,
+            }}
+          >
+            {results.map(({ room, minutesUntilNextEvent }) => {
+              return (
+                <Pressable
                   style={{
-                    flexDirection: 'column',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+
+                    height: 64,
+                    paddingHorizontal: 24,
+
                     backgroundColor: 'transparent',
+                    borderColor: '#ccc',
+                    borderTopWidth: 1,
+                  }}
+                  onPress={() => {
+                    setSelectedRoom(room);
+
+                    navigation.navigate('Modal');
                   }}
                 >
-                  <Text
-                    style={{ color: '#222', fontWeight: '900', fontSize: 16 }}
+                  <View
+                    style={{
+                      flexDirection: 'column',
+                      backgroundColor: 'transparent',
+                    }}
                   >
-                    {room.displayName} ({room.capacity})
-                  </Text>
-                </View>
-                <MinutesUntilNextEventDesc mins={minutesUntilNextEvent} />
-              </Pressable>
-            );
-          })}
-        </View>
-      )}
-    </ScrollView>
+                    <Text
+                      style={{ color: '#222', fontWeight: '900', fontSize: 16 }}
+                    >
+                      {room.displayName} ({room.capacity})
+                    </Text>
+                  </View>
+                  <MinutesUntilNextEventDesc mins={minutesUntilNextEvent} />
+                </Pressable>
+              );
+            })}
+          </View>
+        )}
+      </ScrollView>
+
+      <LinearGradient
+        colors={['transparent', 'rgba(0, 0, 0, 0.3)']}
+        style={{
+          position: 'absolute',
+          zIndex: 3,
+          elevation: 3,
+
+          width: '100%',
+          height: 84,
+
+          left: 0,
+          bottom: 0,
+        }}
+      >
+        <TimePicker
+          style={{
+            position: 'absolute',
+
+            width: '100%',
+
+            left: 0,
+            bottom: 0,
+
+            backgroundColor: 'transparent',
+          }}
+          title={
+            selectedDate.format('MMM D, H:mma') +
+            ` (in ${selectedDate.diff(dayjs(), 'minutes')} mins)`
+          }
+          value={selectedDate.diff(startDate, 'hours') / 12}
+          onValueChange={(numberBetween0and1) =>
+            setSelectedDate(startDate.add(numberBetween0and1 * 12, 'hours'))
+          }
+          goToPrevDay={() => null}
+          goToNextDay={() => null}
+          hasGoToPrevDay={false}
+          hasGoToNextDay={false}
+        />
+      </LinearGradient>
+    </>
   );
 }
 

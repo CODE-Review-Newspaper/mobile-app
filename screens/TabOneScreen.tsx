@@ -1,15 +1,19 @@
 import { FontAwesome } from '@expo/vector-icons';
-import Slider from '@react-native-community/slider';
+import dayjs from 'dayjs';
 import { useContext, useEffect, useState } from 'react';
 import { Pressable, StyleSheet } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
-import ErrorTriangle from '../assets/images/errorTriangle.svg';
+import Layers from '../assets/icons/layers.svg';
+import FifthFloorAssets from '../components/fifthFloor.assetMap';
 import Floorplan from '../components/Floorplan';
+import FourthFloorAssets from '../components/fourthFloor.assetMap';
+import overlayElementsStyles from '../components/overlayUI/overlayElements.styles';
 import { Text, View } from '../components/Themed';
+import TimePicker from '../components/TimePicker';
 import CalendarContext from '../contexts/calendar.context';
 import UserContext from '../contexts/user.context';
-import { RoomEntity } from '../data/rooms.data';
+import { RoomEntity, rooms } from '../data/rooms.data';
 import { RootTabScreenProps } from '../types';
 
 export default function TabOneScreen({
@@ -72,6 +76,20 @@ export default function TabOneScreen({
 
     navigation.navigate('Modal');
   }
+  const selectableFloors = [rooms.fourthFloor, rooms.fifthFloor];
+
+  const [activeFloorIdx, setActiveFloorIdx] = useState<number>(0);
+
+  const floor = selectableFloors[activeFloorIdx];
+
+  const Assets =
+    floor.id === 'fourthFloor' ? FourthFloorAssets : FifthFloorAssets;
+
+  function goToNextFloor() {
+    setActiveFloorIdx((prev) =>
+      prev < selectableFloors.length - 1 ? prev + 1 : 0
+    );
+  }
 
   return (
     <>
@@ -91,66 +109,45 @@ export default function TabOneScreen({
         </View>
       )}
       <LinearGradient
-        colors={['rgba(0, 0, 0, 0.8)', 'transparent']}
+        colors={['transparent', 'transparent']}
         style={{
           ...styles.toolBar,
           opacity: state === 'SUCCESS' ? 1 : 0,
+          flexDirection: 'row',
         }}
       >
         <Pressable
           accessibilityLabel="Switch to next display mode"
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: '100%',
-            backgroundColor: 'transparent',
-            paddingTop: 24,
-          }}
+          style={overlayElementsStyles.bigOverlayElement}
           onPress={switchDisplayMode}
         >
           <Text
             style={{
-              ...styles.timeDisplay,
+              ...overlayElementsStyles.bigOverlayText,
               textDecorationLine: 'underline',
-              fontSize: 20,
-              paddingBottom: 6,
             }}
           >
             {displayMode.displayName}
           </Text>
           <FontAwesome
             name="arrows-v"
-            style={{ marginLeft: 5, color: '#ccc', fontSize: 18 }}
+            style={[overlayElementsStyles.bigOverlayText, { marginLeft: 10 }]}
           />
         </Pressable>
-        <>
-          <Slider
-            style={{
-              width: '100%',
-              height: 40,
-              opacity: displayMode.id === 'BOOKING_MODE' ? 1 : 0,
-            }}
-            disabled={displayMode.id !== 'BOOKING_MODE'}
-            minimumValue={0}
-            maximumValue={1}
-            step={1 / 12 / 4}
-            minimumTrackTintColor="#ff6961"
-            maximumTrackTintColor="white"
-            onValueChange={(numberBetween0and1) =>
-              setSelectedDate(startDate.add(numberBetween0and1 * 12, 'hours'))
-            }
-            value={selectedDate.diff(startDate, 'hours') / 12}
-          />
-          <Text
-            style={[
-              styles.timeDisplay,
-              { opacity: displayMode.id === 'BOOKING_MODE' ? 1 : 0 },
-            ]}
-          >
-            {selectedDate.format('MMM D, H:mma')}
-          </Text>
-        </>
+
+        <Pressable
+          accessibilityHint="Go to next floor"
+          style={[
+            overlayElementsStyles.bigOverlaySquare,
+            { position: 'absolute', right: 16 },
+          ]}
+          onPress={goToNextFloor}
+        >
+          {/* <Text style={{ color: 'white', fontSize: 10, paddingBottom: 6 }}>
+          {floor.displayName}
+        </Text> */}
+          <Layers fill="white" width="20" height="20" />
+        </Pressable>
       </LinearGradient>
 
       <Floorplan
@@ -162,7 +159,47 @@ export default function TabOneScreen({
         selectedDate={selectedDate}
         roomSchedules={roomSchedules}
         handleRoomClick={handleRoomClick}
+        Assets={Assets}
       />
+      <LinearGradient
+        colors={['transparent', 'rgba(0, 0, 0, 0.3)']}
+        style={{
+          position: 'absolute',
+          zIndex: 3,
+          elevation: 3,
+
+          width: '100%',
+          height: 84,
+
+          left: 0,
+          bottom: 0,
+        }}
+      >
+        <TimePicker
+          style={{
+            position: 'absolute',
+
+            width: '100%',
+
+            left: 0,
+            bottom: 0,
+
+            backgroundColor: 'transparent',
+          }}
+          title={
+            selectedDate.format('MMM D, H:mma') +
+            ` (in ${selectedDate.diff(dayjs(), 'minutes')} mins)`
+          }
+          value={selectedDate.diff(startDate, 'hours') / 12}
+          onValueChange={(numberBetween0and1) =>
+            setSelectedDate(startDate.add(numberBetween0and1 * 12, 'hours'))
+          }
+          goToPrevDay={() => null}
+          goToNextDay={() => null}
+          hasGoToPrevDay={false}
+          hasGoToNextDay={false}
+        />
+      </LinearGradient>
     </>
   );
 }
@@ -177,17 +214,22 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   toolBar: {
-    width: '100%',
-    padding: 16,
-    paddingTop: 32,
+    marginTop: 32,
+
+    flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
+
+    width: '100%',
+    height: 66,
+
+    left: 0,
+    top: 0,
+
+    backgroundColor: 'transparent',
+
     zIndex: 3,
     elevation: 3,
-  },
-  timeDisplay: {
-    color: '#ccc',
-    fontSize: 16,
-    fontWeight: '700',
   },
   button: {
     flexDirection: 'row',

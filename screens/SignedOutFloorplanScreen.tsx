@@ -7,10 +7,13 @@ import { Pressable, StyleSheet } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 import GoogleIcon from '../assets/images/googleIcon.svg';
+import FifthFloorAssets from '../components/fifthFloor.assetMap';
 import Floorplan from '../components/Floorplan';
+import FourthFloorAssets from '../components/fourthFloor.assetMap';
 import { Text, View } from '../components/Themed';
 import CalendarContext from '../contexts/calendar.context';
 import UserContext from '../contexts/user.context';
+import { rooms } from '../data/rooms.data';
 
 export default function SignedOutFloorplanScreen() {
   const { about, signIn } = useContext(UserContext);
@@ -43,6 +46,20 @@ export default function SignedOutFloorplanScreen() {
 
   function switchDisplayMode() {
     setDisplayMode(DisplayMode[displayMode.next]);
+  }
+  const selectableFloors = [rooms.fourthFloor, rooms.fifthFloor];
+
+  const [activeFloorIdx, setActiveFloorIdx] = useState<number>(0);
+
+  const floor = selectableFloors[activeFloorIdx];
+
+  const Assets =
+    floor.id === 'fourthFloor' ? FourthFloorAssets : FifthFloorAssets;
+
+  function goToNextFloor() {
+    setActiveFloorIdx((prev) =>
+      prev < selectableFloors.length - 1 ? prev + 1 : 0
+    );
   }
 
   return (
@@ -130,6 +147,7 @@ export default function SignedOutFloorplanScreen() {
           selectedDate={selectedDate}
           roomSchedules={roomSchedules}
           handleRoomClick={() => null}
+          Assets={Assets}
         />
       </View>
     </>

@@ -247,7 +247,7 @@ function BottomTabNavigator() {
 
   return (
     <BottomTab.Navigator
-      initialRouteName="TabOne"
+      initialRouteName="TabTwo"
       screenOptions={{
         tabBarStyle: {
           backgroundColor: '#111',
