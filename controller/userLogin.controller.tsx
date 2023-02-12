@@ -7,8 +7,9 @@ import { useEffect, useState } from 'react';
 import { Platform } from 'react-native';
 import Config from 'react-native-config';
 
-import { User } from '../types/dings.types';
+import { User, url } from '../types/dings.types';
 import { fetchData } from './wrapper';
+import dayjs from 'dayjs';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -170,6 +171,21 @@ export default function userLoginController() {
     setUser(userInfo);
   }
 
+  async function fetchUserEvents() {
+    const today = dayjs()
+    console.log((today.toISOString()))
+    const sevenDaysFromNow = dayjs().add(2, "days")
+    console.log(sevenDaysFromNow)
+    const url: url = `https://www.googleapis.com/calendar/v3/calendars/primary/events?timeMin=${today.toISOString()}&timeMax=${sevenDaysFromNow.toISOString()}`
+    const [error, eventsData] = await fetchData(url, await getAuthState())
+
+    if (error != null)
+      console.log("Could not get events from User: ", error, eventsData)
+    // TODO: Fix the json
+    console.log(JSON.stringify(eventsData))
+    return eventsData
+  }
+
   useEffect(() => {
     isLoggedIn();
   }, []);
@@ -181,5 +197,6 @@ export default function userLoginController() {
     signIn,
     signOut,
     getAuthState,
+    fetchUserEvents
   };
 }

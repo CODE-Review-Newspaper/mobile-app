@@ -3,9 +3,11 @@ import { Pressable, StyleSheet } from 'react-native';
 
 import { Text, View } from '../components/Themed';
 import UserContext from '../contexts/user.context';
+import userLoginController from '../controller/userLogin.controller';
 
 export default function SettingsScreen() {
   const { signOut } = useContext(UserContext);
+  const { fetchUserEvents } = userLoginController()
 
   const { user, about } = useContext(UserContext);
 
@@ -34,6 +36,17 @@ export default function SettingsScreen() {
         accessibilityLabel="Sign out"
       >
         <Text style={styles.buttonText}>Sign out</Text>
+      </Pressable>
+      <Pressable
+        onPress={(async ()=> {
+          await fetchUserEvents()
+        })}
+        style={({ pressed }) =>
+          pressed ? [styles.button, styles.buttonPressed] : styles.button
+        }
+        accessibilityLabel="dings"
+      >
+        <Text style={styles.buttonText}>dings</Text>
       </Pressable>
     </View>
   );
