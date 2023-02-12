@@ -4,6 +4,7 @@ import { useContext, useEffect, useState } from 'react';
 import { Pressable, StyleSheet } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
+import ArrowUpArrowDown from '../assets/icons/arrowUpArrowDown.svg';
 import Layers from '../assets/icons/layers.svg';
 import FifthFloorAssets from '../components/fifthFloor.assetMap';
 import Floorplan from '../components/Floorplan';
@@ -128,11 +129,13 @@ export default function TabOneScreen({
             }}
           >
             {displayMode.displayName}
+            {'   '}
           </Text>
-          <FontAwesome
+          {/* <FontAwesome
             name="arrows-v"
             style={[overlayElementsStyles.bigOverlayText, { marginLeft: 10 }]}
-          />
+          /> */}
+          <ArrowUpArrowDown fill="white" width="20" height="20" />
         </Pressable>
 
         <Pressable
@@ -169,7 +172,7 @@ export default function TabOneScreen({
           elevation: 3,
 
           width: '100%',
-          height: 84,
+          height: 16 * 6,
 
           left: 0,
           bottom: 0,
@@ -214,7 +217,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   toolBar: {
-    marginTop: 32,
+    marginTop: 50,
 
     flexDirection: 'row',
     alignItems: 'center',

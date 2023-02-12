@@ -181,6 +181,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
 
+    width: '100%',
     height: 48,
     paddingHorizontal: 32,
 
@@ -259,11 +260,15 @@ const styles = StyleSheet.create({
   },
   statusTopBar: {
     position: 'absolute',
-    width: '100%',
-    height: 150,
-    backgroundColor: 'transparent',
     alignItems: 'center',
     justifyContent: 'center',
+
+    width: '100%',
+    paddingHorizontal: 16,
+
+    top: 43,
+
+    backgroundColor: 'transparent',
   },
 });
 

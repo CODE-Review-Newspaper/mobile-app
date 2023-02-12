@@ -105,9 +105,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
 
     width: '100%',
-    height: 32,
+    height: 16 * 2,
 
-    bottom: 4,
+    bottom: 8,
 
     backgroundColor: 'transparent',
   },
@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
 
     width: '100%',
-    height: 48,
+    height: 16 * 3,
     paddingHorizontal: 16,
 
     bottom: 0,
