@@ -187,7 +187,11 @@ export default function TabOneScreen({
           }}
           title={
             selectedDate.format('MMM D, H:mma') +
-            ` (in ${selectedDate.diff(dayjs(), 'minutes')} mins)`
+            (selectedDate.diff(dayjs(), 'minutes') >= 0
+              ? ` (in ${selectedDate.diff(dayjs(), 'minutes')} mins)`
+              : ` (${Math.abs(
+                  selectedDate.diff(dayjs(), 'minutes')
+                )} mins ago)`)
           }
           value={selectedDate.diff(startDate, 'hours') / 12}
           onValueChange={(numberBetween0and1) =>

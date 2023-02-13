@@ -71,6 +71,7 @@ export default function RoomListScreen({
       displayName: 'Small rooms',
       filter: (i) =>
         i.room.bookable === 'BOOKABLE' &&
+        i.isAvailable &&
         !['STUDIO', 'WORKSHOP'].includes(i.room.category) &&
         i.room.capacity <= 3,
     },
@@ -79,6 +80,7 @@ export default function RoomListScreen({
       displayName: 'Mid-sized rooms',
       filter: (i) =>
         i.room.bookable === 'BOOKABLE' &&
+        i.isAvailable &&
         !['STUDIO', 'WORKSHOP'].includes(i.room.category) &&
         i.room.capacity >= 4 &&
         i.room.capacity <= 9,
@@ -88,6 +90,7 @@ export default function RoomListScreen({
       displayName: 'Large rooms',
       filter: (i) =>
         i.room.bookable === 'BOOKABLE' &&
+        i.isAvailable &&
         !['STUDIO', 'WORKSHOP'].includes(i.room.category) &&
         i.room.capacity >= 10,
     },
@@ -96,13 +99,16 @@ export default function RoomListScreen({
       displayName: 'All rooms',
       filter: (i) =>
         i.room.bookable === 'BOOKABLE' &&
+        i.isAvailable &&
         !['STUDIO', 'WORKSHOP'].includes(i.room.category),
     },
     MUSIC_STUDIO: {
       id: 'MUSIC_STUDIO',
       displayName: 'Music studio',
       filter: (i) =>
-        i.room.bookable === 'BOOKABLE' && ['STUDIO'].includes(i.room.category),
+        i.room.bookable === 'BOOKABLE' &&
+        i.isAvailable &&
+        ['STUDIO'].includes(i.room.category),
     },
   };
   const RoomView: Record<string, RoomView> = {
@@ -430,7 +436,11 @@ export default function RoomListScreen({
           }}
           title={
             selectedDate.format('MMM D, H:mma') +
-            ` (in ${selectedDate.diff(dayjs(), 'minutes')} mins)`
+            (selectedDate.diff(dayjs(), 'minutes') >= 0
+              ? ` (in ${selectedDate.diff(dayjs(), 'minutes')} mins)`
+              : ` (${Math.abs(
+                  selectedDate.diff(dayjs(), 'minutes')
+                )} mins ago)`)
           }
           value={selectedDate.diff(startDate, 'hours') / 12}
           onValueChange={(numberBetween0and1) =>
