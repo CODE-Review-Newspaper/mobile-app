@@ -18,9 +18,13 @@ export interface CalendarContextType {
   endDate: dayjs.Dayjs;
   setEndDate: (date: dayjs.Dayjs) => unknown;
 
-  roomSchedules: Record<string, RoomEntity>;
   createEvent: ReturnType<typeof bookRoomsController>['createEvent'];
+
+  roomSchedules: Record<string, RoomEntity>;
   loadRoomSchedules: () => Promise<any>;
+
+  userSchedule: GoogleEventResponse[];
+  loadUserSchedule: () => Promise<any>;
 
   isLoading: boolean;
   hasData: boolean;

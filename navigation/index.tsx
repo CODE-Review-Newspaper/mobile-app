@@ -77,8 +77,14 @@ function RootNavigator() {
     hasError: boolean;
   }>({ isLoading: true, hasData: false, hasError: false });
 
-  const { user, isSignedIn, isLoadingAuthState, signIn, signOut } =
-    userLoginController();
+  const {
+    user,
+    isSignedIn,
+    isLoadingAuthState,
+    signIn,
+    signOut,
+    fetchUserEvents,
+  } = userLoginController();
   const { createEvent } = bookRoomsController();
   const { getBusyTimeOfRooms } = allRoomsController();
 
@@ -101,6 +107,23 @@ function RootNavigator() {
   const [roomSchedules, setRoomSchedules] = useState<
     CalendarContextType['roomSchedules']
   >({});
+
+  const [userSchedule, setUserSchedule] = useState<
+    CalendarContextType['userSchedule']
+  >([]);
+
+  async function loadUserSchedule() {
+    const [scheduleError, scheduleData] = await fetchUserEvents();
+
+    if (scheduleError != null) {
+      console.error('error loading user schedule:', scheduleError);
+
+      return;
+    }
+    setUserSchedule(scheduleData.items);
+
+    console.info('loaded user schedule');
+  }
 
   async function loadRoomSchedules() {
     setRoomScheduleState((prev) => ({
@@ -174,6 +197,8 @@ function RootNavigator() {
     roomSchedules,
     createEvent,
     loadRoomSchedules,
+    userSchedule,
+    loadUserSchedule,
     ...roomScheduleState,
   };
 

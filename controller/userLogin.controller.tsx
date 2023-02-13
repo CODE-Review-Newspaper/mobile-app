@@ -195,13 +195,16 @@ export default function userLoginController() {
 
     const [error, eventsData] = await fetchData(url, await getAuthState());
 
-    if (error != null)
+    if (error != null) {
       console.error('Could not get events from User: ', error, eventsData);
+
+      return [new Error(), null] as const;
+    }
 
     const userEvents =
       await getJsonFromGoogleChunkResponse<GoogleEventsResponse>(eventsData!);
 
-    return userEvents;
+    return [null, userEvents] as const;
   }
 
   useEffect(() => {
