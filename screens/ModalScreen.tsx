@@ -5,8 +5,13 @@ import { Linking, Pressable, StyleSheet, TextInput } from 'react-native';
 
 import { Text, View } from '../components/Themed';
 import CalendarContext from '../contexts/calendar.context';
-import { CreateEventResponse } from '../controller/booking.controller';
 import { BookableRoomEntity, RoomEntity } from '../data/rooms.data';
+import {
+  DEFAULT_MEETING_DURATION_MINS,
+  MAX_MEETING_DURATION_MINS,
+  MIN_MEETING_DURATION_MINS,
+} from '../data/time.data';
+import { GoogleEventResponse } from '../googleClient/google.types';
 import { RootTabScreenProps } from '../types';
 
 const getRoomDescription = (room: RoomEntity) => {
@@ -31,21 +36,17 @@ export default function ModalScreen({
     roomSchedules,
   } = useContext(CalendarContext);
 
-  const DEFAULT_DURATION_MINS = 60;
-  const MIN_DURATION_MINS = 15;
-  const MAX_DURATION_MINS = 60 * 6;
-
   useEffect(() => {
     setEndDate(
       selectedDate.add(
-        Math.min(DEFAULT_DURATION_MINS, maxEventDurationMins),
+        Math.min(DEFAULT_MEETING_DURATION_MINS, maxEventDurationMins),
         'minutes'
       )
     );
   }, []);
 
   const [createdEventData, setCreatedEventData] =
-    useState<CreateEventResponse | null>(null);
+    useState<GoogleEventResponse | null>(null);
 
   const [meetingTitle, setMeetingTitle] = useState(
     'Working session in ' + selectedRoom!.displayName
@@ -110,7 +111,7 @@ export default function ModalScreen({
 
   const maxEventDurationMins = Math.min(
     minutesUntilNextEvent,
-    MAX_DURATION_MINS
+    MAX_MEETING_DURATION_MINS
   );
 
   return (
@@ -174,9 +175,9 @@ export default function ModalScreen({
           <Slider
             disabled={state === 'LOADING'}
             style={{ width: '100%', height: 40 }}
-            minimumValue={MIN_DURATION_MINS}
+            minimumValue={MIN_MEETING_DURATION_MINS}
             maximumValue={maxEventDurationMins}
-            value={DEFAULT_DURATION_MINS}
+            value={DEFAULT_MEETING_DURATION_MINS}
             step={15}
             minimumTrackTintColor="#ff6961"
             maximumTrackTintColor="#efefef"

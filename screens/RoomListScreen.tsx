@@ -9,6 +9,8 @@ import { Text, View } from '../components/Themed';
 import TimePicker from '../components/TimePicker';
 import CalendarContext from '../contexts/calendar.context';
 import { RoomEntity } from '../data/rooms.data';
+import { MAX_TIMEPICKER_RANGE_HOURS } from '../data/time.data';
+import { DEFAULT_ROOM_VIEW, RoomView } from '../data/views.data';
 import { RootTabScreenProps } from '../types';
 
 export interface RoomViewEntity {
@@ -22,7 +24,7 @@ export interface RoomViewFilter {
 
   filter: (room: RoomViewEntity) => boolean;
 }
-export interface RoomView {
+export interface RoomViewType {
   id: string;
   label: JSX.Element;
 
@@ -65,109 +67,7 @@ export default function RoomListScreen({
     setSelectedRoom,
   } = useContext(CalendarContext);
 
-  const RoomFilter: Record<string, RoomViewFilter> = {
-    MAX_THREE_PEOPLE: {
-      id: 'MAX_THREE_PEOPLE',
-      displayName: 'Small rooms',
-      filter: (i) =>
-        i.room.bookable === 'BOOKABLE' &&
-        i.isAvailable &&
-        !['STUDIO', 'WORKSHOP'].includes(i.room.category) &&
-        i.room.capacity <= 3,
-    },
-    MAX_NINE_PEOPLE: {
-      id: 'MAX_NINE_PEOPLE',
-      displayName: 'Mid-sized rooms',
-      filter: (i) =>
-        i.room.bookable === 'BOOKABLE' &&
-        i.isAvailable &&
-        !['STUDIO', 'WORKSHOP'].includes(i.room.category) &&
-        i.room.capacity >= 4 &&
-        i.room.capacity <= 9,
-    },
-    TEN_OR_MORE_PEOPLE: {
-      id: 'TEN_OR_MORE_PEOPLE',
-      displayName: 'Large rooms',
-      filter: (i) =>
-        i.room.bookable === 'BOOKABLE' &&
-        i.isAvailable &&
-        !['STUDIO', 'WORKSHOP'].includes(i.room.category) &&
-        i.room.capacity >= 10,
-    },
-    ALL: {
-      id: 'ALL',
-      displayName: 'All rooms',
-      filter: (i) =>
-        i.room.bookable === 'BOOKABLE' &&
-        i.isAvailable &&
-        !['STUDIO', 'WORKSHOP'].includes(i.room.category),
-    },
-    MUSIC_STUDIO: {
-      id: 'MUSIC_STUDIO',
-      displayName: 'Music studio',
-      filter: (i) =>
-        i.room.bookable === 'BOOKABLE' &&
-        i.isAvailable &&
-        ['STUDIO'].includes(i.room.category),
-    },
-  };
-  const RoomView: Record<string, RoomView> = {
-    MAX_THREE_PEOPLE: {
-      id: 'MAX_THREE_PEOPLE',
-      label: (
-        <Text style={styles.chipText}>
-          {'1-3 '}
-          <FontAwesome name="user" style={{ fontSize: 16, color: 'white' }} />
-        </Text>
-      ),
-      filters: [RoomFilter.MAX_THREE_PEOPLE],
-      sort: (a, b) => a?.minutesUntilNextEvent - b?.minutesUntilNextEvent,
-    },
-    MAX_NINE_PEOPLE: {
-      id: 'MAX_NINE_PEOPLE',
-      label: (
-        <Text style={styles.chipText}>
-          {'4-9 '}
-          <FontAwesome name="user" style={{ fontSize: 16, color: 'white' }} />
-        </Text>
-      ),
-      filters: [RoomFilter.MAX_NINE_PEOPLE],
-      sort: (a, b) => a?.minutesUntilNextEvent - b?.minutesUntilNextEvent,
-    },
-    TEN_OR_MORE_PEOPLE: {
-      id: 'TEN_OR_MORE_PEOPLE',
-      label: (
-        <Text style={styles.chipText}>
-          {'10+ '}
-          <FontAwesome name="user" style={{ fontSize: 16, color: 'white' }} />
-        </Text>
-      ),
-      filters: [RoomFilter.TEN_OR_MORE_PEOPLE],
-      sort: (a, b) => a?.minutesUntilNextEvent - b?.minutesUntilNextEvent,
-    },
-    ALL: {
-      id: 'ALL',
-      label: <Text style={styles.chipText}>{'ALL'}</Text>,
-      filters: [
-        RoomFilter.MAX_THREE_PEOPLE,
-        RoomFilter.MAX_NINE_PEOPLE,
-        RoomFilter.TEN_OR_MORE_PEOPLE,
-      ],
-      sort: (a, b) => a?.minutesUntilNextEvent - b?.minutesUntilNextEvent,
-    },
-    SPECIAL_ROOMS: {
-      id: 'SPECIAL_ROOMS',
-      label: (
-        <Text style={styles.chipText}>
-          <FontAwesome name="star" style={{ fontSize: 16, color: 'white' }} />
-        </Text>
-      ),
-      filters: [RoomFilter.MUSIC_STUDIO],
-      sort: (a, b) => a?.minutesUntilNextEvent - b?.minutesUntilNextEvent,
-    },
-  };
-
-  const [selectedView, setSelectedView] = useState(RoomView.ALL);
+  const [selectedView, setSelectedView] = useState(DEFAULT_ROOM_VIEW);
 
   const sachen = selectedView.filters.map((i) => {
     const results = Object.values(roomSchedules)
@@ -445,9 +345,16 @@ export default function RoomListScreen({
                   selectedDate.diff(dayjs(), 'minutes')
                 )} mins ago)`)
           }
-          value={selectedDate.diff(startDate, 'hours') / 12}
+          value={
+            selectedDate.diff(startDate, 'hours') / MAX_TIMEPICKER_RANGE_HOURS
+          }
           onValueChange={(numberBetween0and1) =>
-            setSelectedDate(startDate.add(numberBetween0and1 * 12, 'hours'))
+            setSelectedDate(
+              startDate.add(
+                numberBetween0and1 * MAX_TIMEPICKER_RANGE_HOURS,
+                'hours'
+              )
+            )
           }
           goToPrevDay={() => null}
           goToNextDay={() => null}
@@ -467,10 +374,5 @@ const styles = StyleSheet.create({
 
     height: 16 * 3,
     paddingTop: 20,
-  },
-  chipText: {
-    color: 'white',
-    fontWeight: '900',
-    fontSize: 16,
   },
 });

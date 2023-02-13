@@ -26,6 +26,11 @@ import UserContext, { UserContextType } from '../contexts/user.context';
 import allRoomsController from '../controller/allRooms.controller';
 import bookRoomsController from '../controller/booking.controller';
 import userLoginController from '../controller/userLogin.controller';
+import {
+  DEFAULT_MEETING_DURATION_MINS,
+  ROOM_SCHEDULES_REFETCHING_INTERVAL_SECONDS_DEFAULT,
+  ROOM_SCHEDULES_REFETCHING_INTERVAL_SECONDS_OFFLINE,
+} from '../data/time.data';
 import useColorScheme from '../hooks/useColorScheme';
 import LoadingScreen from '../screens/LoadingScreen';
 import LoginScreen from '../screens/LoginScreen';
@@ -91,7 +96,7 @@ function RootNavigator() {
   const [selectedDate, setSelectedDate] =
     useState<CalendarContextType['selectedDate']>(startDate);
   const [endDate, setEndDate] = useState<CalendarContextType['endDate']>(
-    selectedDate.add(6, 'hours')
+    selectedDate.add(DEFAULT_MEETING_DURATION_MINS, 'minutes')
   );
   const [roomSchedules, setRoomSchedules] = useState<
     CalendarContextType['roomSchedules']
@@ -130,9 +135,6 @@ function RootNavigator() {
     if (isSignedIn && !isLoadingAuthState) loadRoomSchedules();
   }, [isSignedIn, isLoadingAuthState]);
 
-  const OFFLINE_REFETCH_ROOMS_INTERVAL_SECONDS = 1;
-  const REFETCH_ROOMS_INTERVAL_SECONDS = 30;
-
   useInterval(
     () => {
       loadRoomSchedules();
@@ -147,8 +149,8 @@ function RootNavigator() {
       if (selectedDate.isBefore(newStartDate)) setSelectedDate(newStartDate);
     },
     roomScheduleState.hasError
-      ? OFFLINE_REFETCH_ROOMS_INTERVAL_SECONDS * 1000
-      : REFETCH_ROOMS_INTERVAL_SECONDS * 1000
+      ? ROOM_SCHEDULES_REFETCHING_INTERVAL_SECONDS_OFFLINE * 1000
+      : ROOM_SCHEDULES_REFETCHING_INTERVAL_SECONDS_DEFAULT * 1000
   );
 
   const userContextValue: UserContextType = {

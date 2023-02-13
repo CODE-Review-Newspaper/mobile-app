@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import { Platform } from 'react-native';
 import Config from 'react-native-config';
 
+import { USER_SCHEDULE_FETCH_TIME_DAYS } from '../data/time.data';
 import { GoogleEventsResponse, GoogleUser } from '../googleClient/google.types';
 import { fetchData } from './wrapper';
 
@@ -188,7 +189,7 @@ export default function userLoginController() {
   async function fetchUserEvents() {
     const fromDate = dayjs();
 
-    const untilDate = dayjs().add(7, 'days');
+    const untilDate = dayjs().add(USER_SCHEDULE_FETCH_TIME_DAYS, 'days');
 
     const url = `https://www.googleapis.com/calendar/v3/calendars/primary/events?timeMin=${fromDate.toISOString()}&timeMax=${untilDate.toISOString()}`;
 

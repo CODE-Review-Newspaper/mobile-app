@@ -15,6 +15,12 @@ import TimePicker from '../components/TimePicker';
 import CalendarContext from '../contexts/calendar.context';
 import UserContext from '../contexts/user.context';
 import { RoomEntity, rooms } from '../data/rooms.data';
+import { MAX_TIMEPICKER_RANGE_HOURS } from '../data/time.data';
+import {
+  DEFAULT_SIGNED_IN_MAP_MODE,
+  DEFAULT_SIGNED_OUT_MAP_MODE,
+  MapMode,
+} from '../data/views.data';
 import { RootTabScreenProps } from '../types';
 
 export default function TabOneScreen({
@@ -41,31 +47,19 @@ export default function TabOneScreen({
     return 'ERROR';
   })();
 
-  const DisplayMode = {
-    MAP_MODE: {
-      id: 'MAP_MODE' as const,
-      displayName: 'Map mode',
-      next: 'BOOKING_MODE' as const,
-    },
-    BOOKING_MODE: {
-      id: 'BOOKING_MODE' as const,
-      displayName: 'Booking mode',
-      next: 'MAP_MODE' as const,
-    },
-  };
   const [displayMode, setDisplayMode] = useState<
-    (typeof DisplayMode)[keyof typeof DisplayMode]
+    (typeof MapMode)[keyof typeof MapMode]
   >(
     about.isCodeMember && state !== 'ERROR'
-      ? DisplayMode.BOOKING_MODE
-      : DisplayMode.MAP_MODE
+      ? DEFAULT_SIGNED_IN_MAP_MODE
+      : DEFAULT_SIGNED_OUT_MAP_MODE
   );
 
   if (state === 'ERROR' && displayMode.id === 'BOOKING_MODE')
-    setDisplayMode(DisplayMode.MAP_MODE);
+    setDisplayMode(DEFAULT_SIGNED_OUT_MAP_MODE);
 
-  function switchDisplayMode() {
-    setDisplayMode(DisplayMode[displayMode.next]);
+  function switchMapMode() {
+    setDisplayMode(MapMode[displayMode.next]);
   }
 
   function handleRoomClick(room: RoomEntity) {
@@ -116,7 +110,7 @@ export default function TabOneScreen({
         <Pressable
           accessibilityLabel="Switch to next display mode"
           style={overlayElementsStyles.bigOverlayElement}
-          onPress={switchDisplayMode}
+          onPress={switchMapMode}
         >
           <Text
             style={{
@@ -193,9 +187,16 @@ export default function TabOneScreen({
                   selectedDate.diff(dayjs(), 'minutes')
                 )} mins ago)`)
           }
-          value={selectedDate.diff(startDate, 'hours') / 12}
+          value={
+            selectedDate.diff(startDate, 'hours') / MAX_TIMEPICKER_RANGE_HOURS
+          }
           onValueChange={(numberBetween0and1) =>
-            setSelectedDate(startDate.add(numberBetween0and1 * 12, 'hours'))
+            setSelectedDate(
+              startDate.add(
+                numberBetween0and1 * MAX_TIMEPICKER_RANGE_HOURS,
+                'hours'
+              )
+            )
           }
           goToPrevDay={() => null}
           goToNextDay={() => null}

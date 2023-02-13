@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 
 import { BookableRoomEntity, rooms } from '../data/rooms.data';
+import { ROOM_SCHEDULES_FETCH_TIME_DAYS } from '../data/time.data';
 import { GetGoogleResourceSchedulesRequest } from '../googleClient/google.types';
 import bookRoomsController from './booking.controller';
 
@@ -24,7 +25,10 @@ export default function allRoomsController() {
             },
           ],
           timeMin: dayjs().startOf('day').toDate(),
-          timeMax: dayjs().endOf('day').add(7, 'days').toDate(),
+          timeMax: dayjs()
+            .endOf('day')
+            .add(ROOM_SCHEDULES_FETCH_TIME_DAYS, 'days')
+            .toDate(),
         };
         const [error, busyTimes] = await checkRoomAvailability(newBody);
 
