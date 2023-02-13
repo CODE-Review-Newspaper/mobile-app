@@ -710,21 +710,31 @@ export const RoomBookableData = {
   BOOKABLE: {
     color: '#2CF261',
     displayName: 'Bookable',
+    showInLegend: true,
   },
   UNBOOKABLE: {
     color: 'cyan',
     displayName: 'Not bookable',
+    showInLegend: false,
   },
   UNAVAILABLE: {
     color: '#FF6961',
     displayName: 'Booked right now',
+    showInLegend: true,
   },
   APPLICATION_REQUIRED: {
     color: '#FAFFBB',
     displayName: 'Application required',
+    showInLegend: false,
   },
   TEAM_ONLY: {
     color: '#BEFBCF',
     displayName: 'Team only',
+    showInLegend: false,
+  },
+  BOOKED_BY_YOU: {
+    color: '#9f6aaf',
+    displayName: 'You have this room',
+    showInLegend: false,
   },
 } as const;

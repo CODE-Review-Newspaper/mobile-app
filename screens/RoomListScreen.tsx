@@ -247,6 +247,9 @@ export default function RoomListScreen({
   //   .filter((i) => i.isAvailable);
   // results.sort((a, b) => a?.minutesUntilNextEvent - b?.minutesUntilNextEvent);
 
+  const hasResults =
+    sachen.map((i) => i[1]).filter((i) => i.length > 0).length > 0;
+
   return (
     <>
       <ScrollView
@@ -315,38 +318,6 @@ export default function RoomListScreen({
               <Text style={[styles.timeDisplay, { marginLeft: 12 }]}>
                 {filter.displayName} ({results.length})
               </Text>
-              {results.length < 1 && !(hasError && !hasData) && (
-                <Text
-                  style={{
-                    backgroundColor: 'transparent',
-
-                    marginTop: 22,
-
-                    fontSize: 16,
-
-                    fontWeight: '900',
-                  }}
-                >
-                  Found no free rooms.
-                </Text>
-              )}
-              {results.length < 1 && hasError && !hasData && (
-                <Text
-                  style={{
-                    backgroundColor: 'transparent',
-
-                    marginTop: 22,
-
-                    fontSize: 16,
-
-                    fontWeight: '900',
-
-                    color: '#fe746a',
-                  }}
-                >
-                  You appear to be offline.
-                </Text>
-              )}
               {results.length > 0 && (
                 <View
                   style={{
@@ -406,6 +377,38 @@ export default function RoomListScreen({
               )}
             </>
           ))}
+          {!hasResults && !(hasError && !hasData) && (
+            <Text
+              style={{
+                backgroundColor: 'transparent',
+
+                marginTop: 22,
+
+                fontSize: 16,
+
+                fontWeight: '900',
+              }}
+            >
+              Found no free rooms.
+            </Text>
+          )}
+          {!hasResults && hasError && !hasData && (
+            <Text
+              style={{
+                backgroundColor: 'transparent',
+
+                marginTop: 22,
+
+                fontSize: 16,
+
+                fontWeight: '900',
+
+                color: '#fe746a',
+              }}
+            >
+              You appear to be offline.
+            </Text>
+          )}
         </View>
       </ScrollView>
 

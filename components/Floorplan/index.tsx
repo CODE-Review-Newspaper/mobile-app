@@ -182,6 +182,35 @@ export default function Floorplan({
             })}
         </View>
       )}
+      {displayMode.id === 'BOOKING_MODE' && (
+        <View style={styles.legend}>
+          {Object.values(RoomBookableData)
+            .filter((i) => i.showInLegend)
+            .map((i) => {
+              return (
+                <View
+                  key={i.displayName}
+                  style={{
+                    backgroundColor: 'transparent',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    paddingVertical: 2,
+                  }}
+                >
+                  <View
+                    style={{
+                      ...styles.legendColorCircle,
+                      backgroundColor: i.color,
+                    }}
+                  />
+                  <Text style={{ color: 'white', fontWeight: '500' }}>
+                    {i.displayName}
+                  </Text>
+                </View>
+              );
+            })}
+        </View>
+      )}
     </>
   );
 }
