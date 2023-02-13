@@ -1,13 +1,9 @@
 import dayjs from 'dayjs';
 import { createContext } from 'react';
 
-import { CreateEventResponse } from '../controller/booking.controller';
+import bookRoomsController from '../controller/booking.controller';
 import { RoomEntity } from '../data/rooms.data';
-import {
-  BusyRooms,
-  CheckBusyRoomRequest,
-  CreateEventRequest,
-} from '../types/dings.types';
+import { GoogleEventResponse } from '../googleClient/google.types';
 
 export interface CalendarContextType {
   selectedRoom: RoomEntity | null;
@@ -23,12 +19,7 @@ export interface CalendarContextType {
   setEndDate: (date: dayjs.Dayjs) => unknown;
 
   roomSchedules: Record<string, RoomEntity>;
-  createEvent: (
-    eventBody: CreateEventRequest,
-    roomBusyBody: CheckBusyRoomRequest
-  ) => Promise<
-    readonly [{}, null] | readonly [null | undefined, CreateEventResponse]
-  >;
+  createEvent: ReturnType<typeof bookRoomsController>['createEvent'];
   loadRoomSchedules: () => Promise<any>;
 
   isLoading: boolean;

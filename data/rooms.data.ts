@@ -1,4 +1,4 @@
-import { BusyRooms } from '../types/dings.types';
+import { GoogleTimeFrame } from '../googleClient/google.types';
 
 export interface BaseMapEntity {
   id: string; // used in figma
@@ -23,7 +23,7 @@ export interface BookableRoomEntity extends BaseMapEntity {
   bookable: 'BOOKABLE';
   email: string;
   capacity: number;
-  busyTimes?: BusyRooms[];
+  busyTimes?: GoogleTimeFrame[];
 }
 export interface UnbookableRoomEntity extends BaseMapEntity {
   type: 'ROOM';

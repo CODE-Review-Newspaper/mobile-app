@@ -2,19 +2,33 @@ import * as AuthSession from 'expo-auth-session';
 import * as Google from 'expo-auth-session/providers/google';
 import * as SecureStorage from 'expo-secure-store';
 import * as WebBrowser from 'expo-web-browser';
+import dayjs from 'dayjs';
 import { TokenError, TokenResponse } from 'expo-auth-session';
 import { useEffect, useState } from 'react';
 import { Platform } from 'react-native';
 import Config from 'react-native-config';
 
-import { User, url } from '../types/dings.types';
+import { GoogleEventsResponse, GoogleUser } from '../googleClient/google.types';
 import { fetchData } from './wrapper';
-import dayjs from 'dayjs';
 
 WebBrowser.maybeCompleteAuthSession();
 
+interface GoogleChunkFormData {
+  _parts: string[][];
+}
+
+const getJsonFromGoogleChunkResponse = async <T = any,>(res: Response) => {
+  const formData = (await res.formData()) as unknown as GoogleChunkFormData;
+
+  const stringifiedObject = formData._parts.map((i) => i.join('')).join('');
+
+  const object: T = JSON.parse(stringifiedObject);
+
+  return object;
+};
+
 export default function userLoginController() {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<GoogleUser | null>(null);
 
   const [isSignedIn, setIsSignedIn] = useState(false);
 
@@ -166,24 +180,27 @@ export default function userLoginController() {
     if (errorUserData != null)
       console.error('error trying to fetchUserInfo:', errorUserData);
 
-    const userInfo: User = await meRes!.json();
+    const userInfo: GoogleUser = await meRes!.json();
 
     setUser(userInfo);
   }
 
   async function fetchUserEvents() {
-    const today = dayjs()
-    console.log((today.toISOString()))
-    const sevenDaysFromNow = dayjs().add(2, "days")
-    console.log(sevenDaysFromNow)
-    const url: url = `https://www.googleapis.com/calendar/v3/calendars/primary/events?timeMin=${today.toISOString()}&timeMax=${sevenDaysFromNow.toISOString()}`
-    const [error, eventsData] = await fetchData(url, await getAuthState())
+    const fromDate = dayjs();
+
+    const untilDate = dayjs().add(7, 'days');
+
+    const url = `https://www.googleapis.com/calendar/v3/calendars/primary/events?timeMin=${fromDate.toISOString()}&timeMax=${untilDate.toISOString()}`;
+
+    const [error, eventsData] = await fetchData(url, await getAuthState());
 
     if (error != null)
-      console.log("Could not get events from User: ", error, eventsData)
-    // TODO: Fix the json
-    console.log(JSON.stringify(eventsData))
-    return eventsData
+      console.error('Could not get events from User: ', error, eventsData);
+
+    const userEvents =
+      await getJsonFromGoogleChunkResponse<GoogleEventsResponse>(eventsData!);
+
+    return userEvents;
   }
 
   useEffect(() => {
@@ -197,6 +214,6 @@ export default function userLoginController() {
     signIn,
     signOut,
     getAuthState,
-    fetchUserEvents
+    fetchUserEvents,
   };
 }

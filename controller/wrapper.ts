@@ -1,7 +1,5 @@
-import { url } from '../types/dings.types';
-
 export async function fetchData(
-  urlToFetchFrom: url,
+  urlToFetchFrom: string,
   authState: any,
   postRequest: any = false,
   body: any = {}
@@ -16,7 +14,7 @@ export async function fetchData(
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${authState?.accessToken}`,
-        'accept-encoding': "gzip",
+        'accept-encoding': 'gzip',
       },
       body: JSON.stringify(data),
     };
@@ -25,7 +23,7 @@ export async function fetchData(
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${authState?.accessToken}`,
-        'accept-encoding': "gzip",
+        'accept-encoding': 'gzip',
       },
     };
   }

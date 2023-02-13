@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 
 import { BookableRoomEntity, rooms } from '../data/rooms.data';
-import { CheckBusyRoomRequest } from '../types/dings.types';
+import { GetGoogleResourceSchedulesRequest } from '../googleClient/google.types';
 import bookRoomsController from './booking.controller';
 
 export default function allRoomsController() {
@@ -17,7 +17,7 @@ export default function allRoomsController() {
           return [key, room] as const;
         }
 
-        const newBody: CheckBusyRoomRequest = {
+        const newBody: GetGoogleResourceSchedulesRequest = {
           items: [
             {
               id: (room as BookableRoomEntity).email,

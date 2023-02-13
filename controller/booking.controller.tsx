@@ -1,58 +1,22 @@
 import {
-  BusyRooms,
-  CheckBusyRoomRequest,
-  CreateEventRequest,
-  Time,
-  TimeFrame,
-} from '../types/dings.types';
-import { url } from '../types/dings.types';
+  CreateGoogleEventRequest,
+  GetGoogleResourceSchedulesRequest,
+  GoogleEventDate,
+  GoogleEventResponse,
+  GoogleResourceScheduleResponse,
+  GoogleTimeFrame,
+} from '../googleClient/google.types';
 import userLoginController from './userLogin.controller';
 import { fetchData } from './wrapper';
-
-export interface EventTime {
-  dateTime: string; // "2023-02-06T22:45:26+01:00",
-  timeZone: string; // "Europe/Berlin"
-}
-
-export interface EventAttendee {
-  email: string;
-  self: boolean;
-  displayName?: string;
-  resource?: boolean;
-  responseStatus?: 'needsAction';
-}
-
-export interface CreateEventResponse {
-  kind: 'calendar#event';
-  etag: string; // "\"3351441171534000\"",
-  id: string; // "edsudrvom8t03j72pe89i7dtac",
-  status: 'confirmed';
-  htmlLink: string; // "https://www.google.com/calendar/event?eid=ZWRzdWRydm9tOHQwM2o3MnBlODlpN2R0YWMgbGludXMuYm9sbHNAY29kZS5iZXJsaW4",
-  created: string; //  // "2023-02-06T21:56:25.000Z",
-  updated: string; // "2023-02-06T21:56:25.767Z",
-  summary: string; // "Working session in Jungle",
-  location: string; // "--4-Jungle (35)",
-  creator: EventAttendee;
-  organizer: EventAttendee;
-  start: EventTime;
-  end: EventTime;
-  iCalUID: string; // "edsudrvom8t03j72pe89i7dtac@google.com",
-  sequence: 0;
-  attendees: EventAttendee[];
-  reminders: {
-    useDefault: boolean;
-  };
-  eventType: 'default';
-}
 
 export default function bookRoomsController() {
   const { getAuthState } = userLoginController();
 
   async function createEvent(
-    eventBody: CreateEventRequest,
-    roomBusyBody: CheckBusyRoomRequest
+    eventBody: CreateGoogleEventRequest,
+    roomBusyBody: GetGoogleResourceSchedulesRequest
   ) {
-    const url: url =
+    const url =
       'https://www.googleapis.com/calendar/v3/calendars/primary/events';
 
     const [errorRooms, roomTimes] = await checkRoomAvailability(roomBusyBody);
@@ -79,13 +43,15 @@ export default function bookRoomsController() {
 
       return [error, null] as const;
     }
-    const data: CreateEventResponse = await res!.json();
+    const data: GoogleEventResponse = await res!.json();
 
     return [error, data] as const;
   }
 
-  async function checkRoomAvailability(body: CheckBusyRoomRequest) {
-    const url: url = 'https://www.googleapis.com/calendar/v3/freeBusy';
+  async function checkRoomAvailability(
+    body: GetGoogleResourceSchedulesRequest
+  ) {
+    const url = 'https://www.googleapis.com/calendar/v3/freeBusy';
 
     const [error, response] = await fetchData(
       url,
@@ -99,7 +65,7 @@ export default function bookRoomsController() {
 
       return [error, null] as const;
     }
-    const content = await response!.json();
+    const content: GoogleResourceScheduleResponse = await response!.json();
 
     const email = body.items[0].id;
 
@@ -108,15 +74,15 @@ export default function bookRoomsController() {
     if (roomCalendar == null) {
       return [`Failed to find calendar for room: "${email}"`, null] as const;
     }
-    const roomBusyTimes: BusyRooms[] = roomCalendar.busy;
+    const roomBusyTimes = roomCalendar.busy;
 
     return [null, roomBusyTimes] as const;
   }
 
   function compareTimeFrames(
-    roomTimes: TimeFrame[],
-    eventTimeStart: Time,
-    eventTimeEnd: Time
+    roomTimes: GoogleTimeFrame[],
+    eventTimeStart: { dateTime: string | Date; timeZone: string },
+    eventTimeEnd: { dateTime: string | Date; timeZone: string }
   ) {
     for (let time of roomTimes) {
       if (typeof time.start === 'string') {
@@ -134,6 +100,5 @@ export default function bookRoomsController() {
     }
     return true;
   }
-
   return { compareTimeFrames, createEvent, checkRoomAvailability };
 }

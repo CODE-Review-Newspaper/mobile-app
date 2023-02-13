@@ -1,9 +1,9 @@
 import { createContext } from 'react';
 
-import { User } from '../types/dings.types';
+import { GoogleUser } from '../googleClient/google.types';
 
 export interface UserContextType {
-  user: User | null;
+  user: GoogleUser | null;
   isSignedIn: boolean;
   signIn: () => unknown;
   signOut: () => unknown;

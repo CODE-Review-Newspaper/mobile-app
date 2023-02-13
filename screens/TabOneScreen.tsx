@@ -41,10 +41,6 @@ export default function TabOneScreen({
     return 'ERROR';
   })();
 
-  useEffect(() => {
-    console.log('selected:', selectedDate.diff(startDate, 'hours') / 12);
-  }, []);
-
   const DisplayMode = {
     MAP_MODE: {
       id: 'MAP_MODE' as const,
