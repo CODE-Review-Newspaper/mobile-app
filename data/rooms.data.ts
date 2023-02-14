@@ -669,7 +669,7 @@ export const RoomCategoryData = {
     showInLegend: true,
   },
   WORKSHOP: {
-    mapModeColor: '#F5BFF8',
+    mapModeColor: '#7BD3E5',
     bookingModeColor: '#D9D9D9',
     displayName: 'Workshop',
     showInLegend: true,
@@ -732,7 +732,7 @@ export const RoomBookableData = {
     displayName: 'Team only',
     showInLegend: false,
   },
-  BOOKED_BY_YOU: {
+  BOOKED_BY_SELF: {
     color: '#9f6aaf',
     displayName: 'You have this room',
     showInLegend: false,
