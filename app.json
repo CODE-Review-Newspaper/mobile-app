@@ -1,16 +1,16 @@
 {
   "expo": {
-    "name": "CODE Navigator",
-    "slug": "code-navigator",
+    "name": "CODE Connect",
+    "slug": "code-connect",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/codeReviewAppIcon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/splash.png",
+      "image": "./assets/images/codeConnectSplashScreen.png",
       "resizeMode": "contain",
-      "backgroundColor": "#222"
+      "backgroundColor": "#111"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -18,10 +18,10 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "berlin.code.roomey"
+      "bundleIdentifier": "berlin.code.code-connect"
     },
     "android": {
-      "package": "berlin.code.roomey",
+      "package": "berlin.code.code-connect",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#222"

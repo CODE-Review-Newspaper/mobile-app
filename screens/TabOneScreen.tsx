@@ -5,7 +5,8 @@ import { Pressable, StyleSheet } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 import ArrowUpArrowDown from '../assets/icons/arrowUpArrowDown.svg';
-import Layers from '../assets/icons/layers.svg';
+import Layer from '../assets/icons/layers/layer.svg';
+import TopLayer from '../assets/icons/layers/topLayer.svg';
 import FifthFloorAssets from '../components/fifthFloor.assetMap';
 import Floorplan from '../components/Floorplan';
 import FourthFloorAssets from '../components/fourthFloor.assetMap';
@@ -85,6 +86,8 @@ export default function TabOneScreen({
       prev < selectableFloors.length - 1 ? prev + 1 : 0
     );
   }
+  const activeFloorColor = '#FF6961';
+  const inactiveFloorColor = '#7c7c7d';
 
   return (
     <>
@@ -141,10 +144,28 @@ export default function TabOneScreen({
           ]}
           onPress={goToNextFloor}
         >
-          {/* <Text style={{ color: 'white', fontSize: 10, paddingBottom: 6 }}>
-          {floor.displayName}
-        </Text> */}
-          <Layers fill="white" width="20" height="20" />
+          <TopLayer
+            fill={
+              floor.id === 'fifthFloor' ? activeFloorColor : inactiveFloorColor
+            }
+            width="20"
+            height="20"
+            style={{
+              position: 'absolute',
+              top: 10,
+            }}
+          />
+          <Layer
+            fill={
+              floor.id === 'fourthFloor' ? activeFloorColor : inactiveFloorColor
+            }
+            width="20"
+            height="20"
+            style={{
+              position: 'absolute',
+              top: 10 + 2 + 6.24,
+            }}
+          />
         </Pressable>
       </LinearGradient>
 
@@ -159,55 +180,71 @@ export default function TabOneScreen({
         handleRoomClick={handleRoomClick}
         Assets={Assets}
       />
-      <LinearGradient
-        // colors={['transparent', 'rgba(0, 0, 0, 0.3)']}
-        colors={['#111', '#111']}
+      <View
         style={{
-          position: 'absolute',
-          zIndex: 3,
-          elevation: 3,
+          borderTopWidth: 97,
+          borderColor: '#444',
 
           width: '100%',
           height: 16 * 6,
 
-          left: 0,
-          bottom: 0,
+          zIndex: 3,
+          elevation: 3,
         }}
       >
-        <TimePicker
+        <LinearGradient
+          // colors={['transparent', 'rgba(0, 0, 0, 0.3)']}
+          colors={['#111', '#111']}
           style={{
             position: 'absolute',
+            zIndex: 3,
+            elevation: 3,
 
             width: '100%',
+            height: 16 * 6,
 
             left: 0,
             bottom: 0,
 
-            backgroundColor: 'transparent',
+            borderTopWidth: 1,
+            borderTopColor: '#444',
           }}
-          title={
-            selectedDate.format('dddd, MMM D H:mma') +
-            ' (' +
-            selectedDate.from(dayjs()) +
-            ')'
-          }
-          value={
-            selectedDate.diff(startDate, 'hours') / MAX_TIMEPICKER_RANGE_HOURS
-          }
-          onValueChange={(numberBetween0and1) =>
-            setSelectedDate(
-              startDate.add(
-                numberBetween0and1 * MAX_TIMEPICKER_RANGE_HOURS,
-                'hours'
+        >
+          <TimePicker
+            style={{
+              position: 'absolute',
+
+              width: '100%',
+
+              left: 0,
+              bottom: 0,
+
+              backgroundColor: 'transparent',
+            }}
+            title={
+              selectedDate.format('dddd, MMM D H:mma') +
+              ' (' +
+              selectedDate.from(dayjs()) +
+              ')'
+            }
+            value={
+              selectedDate.diff(startDate, 'hours') / MAX_TIMEPICKER_RANGE_HOURS
+            }
+            onValueChange={(numberBetween0and1) =>
+              setSelectedDate(
+                startDate.add(
+                  numberBetween0and1 * MAX_TIMEPICKER_RANGE_HOURS,
+                  'hours'
+                )
               )
-            )
-          }
-          goToPrevDay={goToPrevDay}
-          goToNextDay={goToNextDay}
-          canGoToPrevDay={canGoToPrevDay}
-          canGoToNextDay={canGoToNextDay}
-        />
-      </LinearGradient>
+            }
+            goToPrevDay={goToPrevDay}
+            goToNextDay={goToNextDay}
+            canGoToPrevDay={canGoToPrevDay}
+            canGoToNextDay={canGoToNextDay}
+          />
+        </LinearGradient>
+      </View>
     </>
   );
 }

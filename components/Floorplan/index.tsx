@@ -276,7 +276,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
 
     left: 20,
-    bottom: 90,
+    bottom: 112,
   },
   legendColorCircle: {
     width: 16,

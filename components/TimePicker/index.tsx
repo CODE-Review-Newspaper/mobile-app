@@ -1,5 +1,7 @@
 import { FontAwesome } from '@expo/vector-icons';
 import Slider from '@react-native-community/slider';
+import debounce from 'lodash/debounce';
+import { useCallback, useRef, useState } from 'react';
 import { Pressable, StyleProp, StyleSheet, ViewStyle } from 'react-native';
 
 import { MAX_TIMEPICKER_RANGE_HOURS } from '../../data/time.data';
@@ -28,6 +30,10 @@ export default function TimePicker({
   goToPrevDay,
   goToNextDay,
 }: TimePickerProps) {
+  const borderOffset = 16; // 26;
+
+  const debounced = useCallback(debounce(onValueChange, 3), []);
+
   return (
     <View style={[styles.datePicker, style]}>
       <View style={styles.upperRow}>
@@ -39,7 +45,7 @@ export default function TimePicker({
               {
                 position: 'absolute',
                 top: 0,
-                left: 26,
+                left: borderOffset,
               },
             ]}
           >
@@ -67,7 +73,7 @@ export default function TimePicker({
               {
                 position: 'absolute',
                 top: 0,
-                right: 26,
+                right: borderOffset,
               },
             ]}
           >
@@ -88,7 +94,7 @@ export default function TimePicker({
           step={1 / MAX_TIMEPICKER_RANGE_HOURS / 4}
           minimumTrackTintColor="#ff6961"
           maximumTrackTintColor="white"
-          onValueChange={onValueChange}
+          onValueChange={debounced}
           value={value}
         />
       </View>

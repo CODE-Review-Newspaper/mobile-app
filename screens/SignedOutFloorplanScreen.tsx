@@ -6,10 +6,13 @@ import { useContext, useState } from 'react';
 import { Pressable, StyleSheet } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
+import Layer from '../assets/icons/layers/layer.svg';
+import TopLayer from '../assets/icons/layers/topLayer.svg';
 import GoogleIcon from '../assets/images/googleIcon.svg';
 import FifthFloorAssets from '../components/fifthFloor.assetMap';
 import Floorplan from '../components/Floorplan';
 import FourthFloorAssets from '../components/fourthFloor.assetMap';
+import overlayElementsStyles from '../components/overlayUI/overlayElements.styles';
 import { Text, View } from '../components/Themed';
 import CalendarContext from '../contexts/calendar.context';
 import UserContext from '../contexts/user.context';
@@ -62,6 +65,8 @@ export default function SignedOutFloorplanScreen() {
       prev < selectableFloors.length - 1 ? prev + 1 : 0
     );
   }
+  const activeFloorColor = '#FF6961';
+  const inactiveFloorColor = '#7c7c7d';
 
   return (
     <>
@@ -91,60 +96,112 @@ export default function SignedOutFloorplanScreen() {
               />
               <Text style={styles.buttonText}>Sign in with @code.berlin</Text>
             </Pressable>
+            <Pressable
+              accessibilityHint="Go to next floor"
+              style={[
+                overlayElementsStyles.bigOverlaySquare,
+                { position: 'absolute', right: 16, top: 16 },
+              ]}
+              onPress={goToNextFloor}
+            >
+              <TopLayer
+                fill={
+                  floor.id === 'fifthFloor'
+                    ? activeFloorColor
+                    : inactiveFloorColor
+                }
+                width="20"
+                height="20"
+                style={{
+                  position: 'absolute',
+                  top: 10,
+                }}
+              />
+              <Layer
+                fill={
+                  floor.id === 'fourthFloor'
+                    ? activeFloorColor
+                    : inactiveFloorColor
+                }
+                width="20"
+                height="20"
+                style={{
+                  position: 'absolute',
+                  top: 10 + 2 + 6.24,
+                }}
+              />
+            </Pressable>
           </View>
         )}
-        <LinearGradient
-          colors={['rgba(0, 0, 0, 0.8)', 'transparent']}
+        <View
           style={{
-            ...styles.toolBar,
-            opacity: 0,
+            borderTopWidth: 97,
+            borderColor: '#444',
+
+            width: '100%',
+            height: 16 * 6,
+
+            zIndex: 3,
+            elevation: 3,
           }}
         >
-          <Text style={styles.timeDisplay}>
-            {selectedDate.format('MMM D, H:mma')}
-          </Text>
-          <Slider
-            style={{ width: '100%', height: 40 }}
-            minimumValue={0}
-            maximumValue={1}
-            step={1 / MAX_TIMEPICKER_RANGE_HOURS / 4}
-            minimumTrackTintColor="#ff6961"
-            maximumTrackTintColor="white"
-            onValueChange={(numberBetween0and1) =>
-              setSelectedDate(
-                startDate.add(
-                  numberBetween0and1 * MAX_TIMEPICKER_RANGE_HOURS,
-                  'hours'
-                )
-              )
-            }
-            value={
-              selectedDate.diff(startDate, 'hours') / MAX_TIMEPICKER_RANGE_HOURS
-            }
-          />
-          <Pressable
-            accessibilityLabel="Switch to next display mode"
+          <LinearGradient
+            colors={['rgba(0, 0, 0, 0.8)', 'transparent']}
             style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: '100%',
-              paddingBottom: 16,
-              backgroundColor: 'transparent',
+              ...styles.toolBar,
+              opacity: 0,
             }}
-            onPress={switchDisplayMode}
           >
-            <Text
-              style={{ ...styles.timeDisplay, textDecorationLine: 'underline' }}
-            >
-              {displayMode.displayName}
+            <Text style={styles.timeDisplay}>
+              {selectedDate.format('MMM D, H:mma')}
             </Text>
-            <FontAwesome
-              name="arrows-v"
-              style={{ marginLeft: 5, color: '#ccc', fontSize: 15 }}
+            <Slider
+              style={{ width: '100%', height: 40 }}
+              minimumValue={0}
+              maximumValue={1}
+              step={1 / MAX_TIMEPICKER_RANGE_HOURS / 4}
+              minimumTrackTintColor="#ff6961"
+              maximumTrackTintColor="white"
+              onValueChange={(numberBetween0and1) =>
+                setSelectedDate(
+                  startDate.add(
+                    numberBetween0and1 * MAX_TIMEPICKER_RANGE_HOURS,
+                    'hours'
+                  )
+                )
+              }
+              value={
+                selectedDate.diff(startDate, 'hours') /
+                MAX_TIMEPICKER_RANGE_HOURS
+              }
             />
-          </Pressable>
-        </LinearGradient>
+            <Pressable
+              accessibilityLabel="Switch to next display mode"
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '100%',
+                paddingBottom: 16,
+                backgroundColor: 'transparent',
+              }}
+              onPress={switchDisplayMode}
+            >
+              <Text
+                style={{
+                  ...styles.timeDisplay,
+                  textDecorationLine: 'underline',
+                }}
+              >
+                {displayMode.displayName}
+              </Text>
+              <FontAwesome
+                name="arrows-v"
+                style={{ marginLeft: 5, color: '#ccc', fontSize: 15 }}
+              />
+            </Pressable>
+          </LinearGradient>
+        </View>
 
         <Floorplan
           displayMode={DisplayMode.MAP_MODE}
@@ -189,9 +246,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
 
-    width: '100%',
+    // width: '100%',
     height: 48,
-    paddingHorizontal: 32,
+    borderRadius: 4,
+    paddingHorizontal: 16,
 
     backgroundColor: '#FF6961',
   },

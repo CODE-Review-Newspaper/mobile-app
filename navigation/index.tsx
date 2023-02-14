@@ -187,8 +187,10 @@ function RootNavigator() {
 
   useInterval(
     () => {
-      loadUserSchedule();
-      loadRoomSchedules();
+      if (isSignedIn && !isLoadingAuthState) {
+        loadUserSchedule();
+        loadRoomSchedules();
+      }
 
       const newStartDate = getStartDate();
 

@@ -159,28 +159,29 @@ export default function RoomListScreen({
 
   return (
     <>
-      <ScrollView
+      <View
         style={{
-          flexDirection: 'column',
-          paddingHorizontal: 16,
-
           backgroundColor: '#111',
 
-          height: '100%',
-
+          paddingHorizontal: 16,
           paddingTop: 43,
+
+          height: 16 * 3 + 43 + 16,
+
+          borderBottomWidth: 1,
+          borderBottomColor: '#444',
         }}
       >
         <View
           style={{
             flexDirection: 'row',
             alignItems: 'center',
-
-            height: 16 * 3,
-            marginTop: 16,
+            width: '100%',
+            height: '100%',
             backgroundColor: 'transparent',
 
-            backgroundColor: '#111',
+            // borderBottomWidth: 1,
+            // borderBottomColor: "#444",
           }}
         >
           {Object.values(RoomView).map((i) => (
@@ -215,6 +216,17 @@ export default function RoomListScreen({
             </Pressable>
           ))}
         </View>
+      </View>
+      <ScrollView
+        style={{
+          flexDirection: 'column',
+          paddingHorizontal: 16,
+
+          backgroundColor: '#111',
+
+          height: '100%',
+        }}
+      >
         <View
           style={{
             marginBottom: 43 + 96, // paddingTop - height of TimePicker
@@ -321,55 +333,68 @@ export default function RoomListScreen({
         </View>
       </ScrollView>
 
-      <LinearGradient
-        // colors={['transparent', 'rgba(0, 0, 0, 0.3)']}
-        colors={['#111', '#111']}
+      <View
         style={{
-          position: 'absolute',
-          zIndex: 3,
-          elevation: 3,
+          borderTopWidth: 97,
+          borderColor: '#444',
 
           width: '100%',
           height: 16 * 6,
 
-          left: 0,
-          bottom: 0,
+          zIndex: 3,
+          elevation: 3,
         }}
       >
-        <TimePicker
+        <LinearGradient
+          // colors={['transparent', 'rgba(0, 0, 0, 0.3)']}
+          colors={['#111', '#111']}
           style={{
             position: 'absolute',
+            zIndex: 3,
+            elevation: 3,
 
             width: '100%',
+            height: 16 * 6,
 
             left: 0,
             bottom: 0,
-
-            backgroundColor: 'transparent',
           }}
-          title={
-            selectedDate.format('dddd, MMM D H:mma') +
-            ' (' +
-            selectedDate.from(dayjs()) +
-            ')'
-          }
-          value={
-            selectedDate.diff(startDate, 'hours') / MAX_TIMEPICKER_RANGE_HOURS
-          }
-          onValueChange={(numberBetween0and1) =>
-            setSelectedDate(
-              startDate.add(
-                numberBetween0and1 * MAX_TIMEPICKER_RANGE_HOURS,
-                'hours'
+        >
+          <TimePicker
+            style={{
+              position: 'absolute',
+
+              width: '100%',
+
+              left: 0,
+              bottom: 0,
+
+              backgroundColor: 'transparent',
+            }}
+            title={
+              selectedDate.format('dddd, MMM D H:mma') +
+              ' (' +
+              selectedDate.from(dayjs()) +
+              ')'
+            }
+            value={
+              selectedDate.diff(startDate, 'hours') / MAX_TIMEPICKER_RANGE_HOURS
+            }
+            onValueChange={(numberBetween0and1) =>
+              setSelectedDate(
+                startDate.add(
+                  numberBetween0and1 * MAX_TIMEPICKER_RANGE_HOURS,
+                  'hours'
+                )
               )
-            )
-          }
-          goToPrevDay={goToPrevDay}
-          goToNextDay={goToNextDay}
-          canGoToPrevDay={canGoToPrevDay}
-          canGoToNextDay={canGoToNextDay}
-        />
-      </LinearGradient>
+            }
+            goToPrevDay={goToPrevDay}
+            goToNextDay={goToNextDay}
+            canGoToPrevDay={canGoToPrevDay}
+            canGoToNextDay={canGoToNextDay}
+          />
+        </LinearGradient>
+      </View>
     </>
   );
 }

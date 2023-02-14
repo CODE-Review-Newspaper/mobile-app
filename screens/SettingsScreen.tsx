@@ -75,6 +75,7 @@ const styles = StyleSheet.create({
 
     borderColor: '#999',
     borderWidth: 2,
+    borderRadius: 4,
   },
   buttonText: {
     color: '#999',
