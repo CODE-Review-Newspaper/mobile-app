@@ -86,7 +86,7 @@ export default function TabOneScreen({
       prev < selectableFloors.length - 1 ? prev + 1 : 0
     );
   }
-  const activeFloorColor = '#FF6961';
+  const activeFloorColor = 'white';
   const inactiveFloorColor = '#7c7c7d';
 
   return (
