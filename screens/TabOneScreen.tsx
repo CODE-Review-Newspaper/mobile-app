@@ -37,6 +37,10 @@ export default function TabOneScreen({
     isLoading,
     hasData,
     hasError,
+    goToPrevDay,
+    goToNextDay,
+    canGoToPrevDay,
+    canGoToNextDay,
   } = useContext(CalendarContext);
 
   const state = (() => {
@@ -101,6 +105,7 @@ export default function TabOneScreen({
       )}
       <LinearGradient
         colors={['transparent', 'transparent']}
+        // colors={["#111", "#111"]}
         style={{
           ...styles.toolBar,
           opacity: state === 'SUCCESS' ? 1 : 0,
@@ -155,7 +160,8 @@ export default function TabOneScreen({
         Assets={Assets}
       />
       <LinearGradient
-        colors={['transparent', 'rgba(0, 0, 0, 0.3)']}
+        // colors={['transparent', 'rgba(0, 0, 0, 0.3)']}
+        colors={['#111', '#111']}
         style={{
           position: 'absolute',
           zIndex: 3,
@@ -180,12 +186,10 @@ export default function TabOneScreen({
             backgroundColor: 'transparent',
           }}
           title={
-            selectedDate.format('MMM D, H:mma') +
-            (selectedDate.diff(dayjs(), 'minutes') >= 0
-              ? ` (in ${selectedDate.diff(dayjs(), 'minutes')} mins)`
-              : ` (${Math.abs(
-                  selectedDate.diff(dayjs(), 'minutes')
-                )} mins ago)`)
+            selectedDate.format('dddd, MMM D H:mma') +
+            ' (' +
+            selectedDate.from(dayjs()) +
+            ')'
           }
           value={
             selectedDate.diff(startDate, 'hours') / MAX_TIMEPICKER_RANGE_HOURS
@@ -198,10 +202,10 @@ export default function TabOneScreen({
               )
             )
           }
-          goToPrevDay={() => null}
-          goToNextDay={() => null}
-          hasGoToPrevDay={false}
-          hasGoToNextDay={false}
+          goToPrevDay={goToPrevDay}
+          goToNextDay={goToNextDay}
+          canGoToPrevDay={canGoToPrevDay}
+          canGoToNextDay={canGoToNextDay}
         />
       </LinearGradient>
     </>

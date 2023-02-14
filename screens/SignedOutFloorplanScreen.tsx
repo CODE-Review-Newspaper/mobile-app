@@ -14,6 +14,7 @@ import { Text, View } from '../components/Themed';
 import CalendarContext from '../contexts/calendar.context';
 import UserContext from '../contexts/user.context';
 import { rooms } from '../data/rooms.data';
+import { MAX_TIMEPICKER_RANGE_HOURS } from '../data/time.data';
 
 export default function SignedOutFloorplanScreen() {
   const { about, signIn } = useContext(UserContext);
@@ -106,13 +107,20 @@ export default function SignedOutFloorplanScreen() {
             style={{ width: '100%', height: 40 }}
             minimumValue={0}
             maximumValue={1}
-            step={1 / 12 / 4}
+            step={1 / MAX_TIMEPICKER_RANGE_HOURS / 4}
             minimumTrackTintColor="#ff6961"
             maximumTrackTintColor="white"
             onValueChange={(numberBetween0and1) =>
-              setSelectedDate(startDate.add(numberBetween0and1 * 12, 'hours'))
+              setSelectedDate(
+                startDate.add(
+                  numberBetween0and1 * MAX_TIMEPICKER_RANGE_HOURS,
+                  'hours'
+                )
+              )
             }
-            value={selectedDate.diff(startDate, 'hours') / 12}
+            value={
+              selectedDate.diff(startDate, 'hours') / MAX_TIMEPICKER_RANGE_HOURS
+            }
           />
           <Pressable
             accessibilityLabel="Switch to next display mode"

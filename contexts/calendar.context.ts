@@ -29,6 +29,12 @@ export interface CalendarContextType {
   isLoading: boolean;
   hasData: boolean;
   hasError: boolean;
+
+  goToPrevDay: () => any;
+  goToNextDay: () => any;
+
+  canGoToPrevDay: boolean;
+  canGoToNextDay: boolean;
 }
 // @ts-ignore
 const CalendarContext = createContext<CalendarContextType>();

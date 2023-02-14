@@ -2,6 +2,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import Slider from '@react-native-community/slider';
 import { Pressable, StyleProp, StyleSheet, ViewStyle } from 'react-native';
 
+import { MAX_TIMEPICKER_RANGE_HOURS } from '../../data/time.data';
 import overlayElementsStyles from '../overlayUI/overlayElements.styles';
 import { Text, View } from '../Themed';
 
@@ -11,8 +12,8 @@ export interface TimePickerProps {
   title: string;
   value: number;
   onValueChange: (e: number) => any;
-  hasGoToPrevDay: boolean;
-  hasGoToNextDay: boolean;
+  canGoToPrevDay: boolean;
+  canGoToNextDay: boolean;
   goToPrevDay: () => any;
   goToNextDay: () => any;
 }
@@ -22,17 +23,17 @@ export default function TimePicker({
   title,
   value,
   onValueChange,
-  hasGoToPrevDay,
-  hasGoToNextDay,
+  canGoToPrevDay,
+  canGoToNextDay,
   goToPrevDay,
   goToNextDay,
 }: TimePickerProps) {
   return (
     <View style={[styles.datePicker, style]}>
       <View style={styles.upperRow}>
-        {hasGoToNextDay && (
+        {canGoToPrevDay && (
           <Pressable
-            onPress={goToNextDay}
+            onPress={goToPrevDay}
             style={[
               overlayElementsStyles.smallOverlaySquare,
               {
@@ -43,7 +44,7 @@ export default function TimePicker({
             ]}
           >
             <FontAwesome
-              name="chevron-right"
+              name="chevron-left"
               style={overlayElementsStyles.smallOverlayText}
             />
           </Pressable>
@@ -58,7 +59,7 @@ export default function TimePicker({
             {title}
           </Text>
         </View>
-        {hasGoToNextDay && (
+        {canGoToNextDay && (
           <Pressable
             onPress={goToNextDay}
             style={[
@@ -84,7 +85,7 @@ export default function TimePicker({
           }}
           minimumValue={0}
           maximumValue={1}
-          step={1 / 12 / 4}
+          step={1 / MAX_TIMEPICKER_RANGE_HOURS / 4}
           minimumTrackTintColor="#ff6961"
           maximumTrackTintColor="white"
           onValueChange={onValueChange}

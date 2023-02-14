@@ -28,6 +28,7 @@ import bookRoomsController from '../controller/booking.controller';
 import userLoginController from '../controller/userLogin.controller';
 import {
   DEFAULT_MEETING_DURATION_MINS,
+  MAX_TIMEPICKER_RANGE_DAYS,
   ROOM_SCHEDULES_REFETCHING_INTERVAL_SECONDS_DEFAULT,
   ROOM_SCHEDULES_REFETCHING_INTERVAL_SECONDS_OFFLINE,
 } from '../data/time.data';
@@ -88,19 +89,37 @@ function RootNavigator() {
   const { createEvent } = bookRoomsController();
   const { getBusyTimeOfRooms } = allRoomsController();
 
-  const roundDownToNearestQuarterHour = (date: dayjs.Dayjs) => {
+  const startOfQuarterHour = (date: dayjs.Dayjs) => {
     const roundedMinutes = Math.floor(date.get('minutes') / 15) * 15;
 
     return date.set('minutes', roundedMinutes);
   };
+  function getStartDate() {
+    return dayjs().startOf('day');
+  }
+  function getSelectedDate() {
+    return startOfQuarterHour(dayjs());
+  }
+
+  function goToPrevDay() {
+    setStartDate((prev) => prev.subtract(1, 'day'));
+    setEndDate((prev) => prev.subtract(1, 'day'));
+    setSelectedDate((prev) => prev.subtract(1, 'day'));
+  }
+  function goToNextDay() {
+    setStartDate((prev) => prev.add(1, 'day'));
+    setEndDate((prev) => prev.add(1, 'day'));
+    setSelectedDate((prev) => prev.add(1, 'day'));
+  }
 
   const [selectedRoom, setSelectedRoom] =
     useState<CalendarContextType['selectedRoom']>(null);
   const [startDate, setStartDate] = useState<CalendarContextType['startDate']>(
-    roundDownToNearestQuarterHour(dayjs())
+    getStartDate()
   );
-  const [selectedDate, setSelectedDate] =
-    useState<CalendarContextType['selectedDate']>(startDate);
+  const [selectedDate, setSelectedDate] = useState<
+    CalendarContextType['selectedDate']
+  >(getSelectedDate());
   const [endDate, setEndDate] = useState<CalendarContextType['endDate']>(
     selectedDate.add(DEFAULT_MEETING_DURATION_MINS, 'minutes')
   );
@@ -111,6 +130,11 @@ function RootNavigator() {
   const [userSchedule, setUserSchedule] = useState<
     CalendarContextType['userSchedule']
   >([]);
+
+  const daysInTheFuture = startDate.diff(dayjs().startOf('day'), 'days');
+
+  const canGoToPrevDay = daysInTheFuture > 0;
+  const canGoToNextDay = daysInTheFuture < MAX_TIMEPICKER_RANGE_DAYS;
 
   async function loadUserSchedule() {
     const [scheduleError, scheduleData] = await fetchUserEvents();
@@ -155,14 +179,18 @@ function RootNavigator() {
   }
 
   useEffect(() => {
-    if (isSignedIn && !isLoadingAuthState) loadRoomSchedules();
+    if (isSignedIn && !isLoadingAuthState) {
+      loadRoomSchedules();
+      loadUserSchedule();
+    }
   }, [isSignedIn, isLoadingAuthState]);
 
   useInterval(
     () => {
+      loadUserSchedule();
       loadRoomSchedules();
 
-      const newStartDate = roundDownToNearestQuarterHour(dayjs());
+      const newStartDate = getStartDate();
 
       setStartDate(newStartDate);
 
@@ -199,6 +227,10 @@ function RootNavigator() {
     loadRoomSchedules,
     userSchedule,
     loadUserSchedule,
+    goToPrevDay,
+    goToNextDay,
+    canGoToPrevDay,
+    canGoToNextDay,
     ...roomScheduleState,
   };
 

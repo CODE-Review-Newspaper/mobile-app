@@ -1,5 +1,6 @@
 import { FontAwesome } from '@expo/vector-icons';
 import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
 import { useContext, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
@@ -12,6 +13,8 @@ import { RoomEntity } from '../data/rooms.data';
 import { MAX_TIMEPICKER_RANGE_HOURS } from '../data/time.data';
 import { DEFAULT_ROOM_VIEW, RoomView } from '../data/views.data';
 import { RootTabScreenProps } from '../types';
+
+dayjs.extend(relativeTime);
 
 export interface RoomViewEntity {
   room: RoomEntity;
@@ -65,6 +68,10 @@ export default function RoomListScreen({
     hasData,
     hasError,
     setSelectedRoom,
+    goToPrevDay,
+    goToNextDay,
+    canGoToPrevDay,
+    canGoToNextDay,
   } = useContext(CalendarContext);
 
   const [selectedView, setSelectedView] = useState(DEFAULT_ROOM_VIEW);
@@ -172,6 +179,8 @@ export default function RoomListScreen({
             height: 16 * 3,
             marginTop: 16,
             backgroundColor: 'transparent',
+
+            backgroundColor: '#111',
           }}
         >
           {Object.values(RoomView).map((i) => (
@@ -313,7 +322,8 @@ export default function RoomListScreen({
       </ScrollView>
 
       <LinearGradient
-        colors={['transparent', 'rgba(0, 0, 0, 0.3)']}
+        // colors={['transparent', 'rgba(0, 0, 0, 0.3)']}
+        colors={['#111', '#111']}
         style={{
           position: 'absolute',
           zIndex: 3,
@@ -338,12 +348,10 @@ export default function RoomListScreen({
             backgroundColor: 'transparent',
           }}
           title={
-            selectedDate.format('MMM D, H:mma') +
-            (selectedDate.diff(dayjs(), 'minutes') >= 0
-              ? ` (in ${selectedDate.diff(dayjs(), 'minutes')} mins)`
-              : ` (${Math.abs(
-                  selectedDate.diff(dayjs(), 'minutes')
-                )} mins ago)`)
+            selectedDate.format('dddd, MMM D H:mma') +
+            ' (' +
+            selectedDate.from(dayjs()) +
+            ')'
           }
           value={
             selectedDate.diff(startDate, 'hours') / MAX_TIMEPICKER_RANGE_HOURS
@@ -356,10 +364,10 @@ export default function RoomListScreen({
               )
             )
           }
-          goToPrevDay={() => null}
-          goToNextDay={() => null}
-          hasGoToPrevDay={false}
-          hasGoToNextDay={false}
+          goToPrevDay={goToPrevDay}
+          goToNextDay={goToNextDay}
+          canGoToPrevDay={canGoToPrevDay}
+          canGoToNextDay={canGoToNextDay}
         />
       </LinearGradient>
     </>
