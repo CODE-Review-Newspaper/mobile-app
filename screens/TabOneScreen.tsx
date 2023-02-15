@@ -1,7 +1,7 @@
 import { FontAwesome } from '@expo/vector-icons';
 import dayjs from 'dayjs';
 import { useContext, useEffect, useState } from 'react';
-import { Pressable, StyleSheet } from 'react-native';
+import { Dimensions, Pressable, StyleSheet } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 import ArrowUpArrowDown from '../assets/icons/arrowUpArrowDown.svg';
@@ -72,14 +72,14 @@ export default function TabOneScreen({
 
     navigation.navigate('Modal');
   }
-  const selectableFloors = [rooms.fourthFloor, rooms.fifthFloor];
+  const selectableFloors = [rooms.FourthFloor, rooms.FifthFloor];
 
   const [activeFloorIdx, setActiveFloorIdx] = useState<number>(0);
 
   const floor = selectableFloors[activeFloorIdx];
 
   const Assets =
-    floor.id === 'fourthFloor' ? FourthFloorAssets : FifthFloorAssets;
+    floor.id === 'FourthFloor' ? FourthFloorAssets : FifthFloorAssets;
 
   function goToNextFloor() {
     setActiveFloorIdx((prev) =>
@@ -146,7 +146,7 @@ export default function TabOneScreen({
         >
           <TopLayer
             fill={
-              floor.id === 'fifthFloor' ? activeFloorColor : inactiveFloorColor
+              floor.id === 'FifthFloor' ? activeFloorColor : inactiveFloorColor
             }
             width="20"
             height="20"
@@ -157,7 +157,7 @@ export default function TabOneScreen({
           />
           <Layer
             fill={
-              floor.id === 'fourthFloor' ? activeFloorColor : inactiveFloorColor
+              floor.id === 'FourthFloor' ? activeFloorColor : inactiveFloorColor
             }
             width="20"
             height="20"
@@ -169,17 +169,29 @@ export default function TabOneScreen({
         </Pressable>
       </LinearGradient>
 
-      <Floorplan
-        displayMode={displayMode}
-        isZoomEnabled={state === 'SUCCESS'}
-        hasData={hasData}
-        hasError={hasError}
-        isLoading={isLoading}
-        selectedDate={selectedDate}
-        roomSchedules={roomSchedules}
-        handleRoomClick={handleRoomClick}
-        Assets={Assets}
-      />
+      <View
+        style={{
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+
+          width: '100%',
+
+          backgroundColor: 'transparent',
+        }}
+      >
+        <Floorplan
+          displayMode={displayMode}
+          isZoomEnabled={state === 'SUCCESS'}
+          hasData={hasData}
+          hasError={hasError}
+          isLoading={isLoading}
+          selectedDate={selectedDate}
+          roomSchedules={roomSchedules}
+          handleRoomClick={handleRoomClick}
+          Assets={Assets}
+        />
+      </View>
       <View
         style={{
           borderTopWidth: 97,
@@ -222,7 +234,11 @@ export default function TabOneScreen({
               backgroundColor: 'transparent',
             }}
             title={
-              selectedDate.format('dddd, MMM D H:mma') +
+              selectedDate.format(
+                Dimensions.get('window').width >= 430
+                  ? 'dddd, MMM D H:mma'
+                  : 'ddd, MMM D H:mma'
+              ) +
               ' (' +
               selectedDate.from(dayjs()) +
               ')'

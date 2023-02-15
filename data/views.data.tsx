@@ -126,6 +126,11 @@ export const MapMode = {
     displayName: 'Booking mode',
     next: 'MAP_MODE' as const,
   },
+  HIGHLIGHT_MODE: {
+    id: 'HIGHLIGHT_MODE' as const,
+    displayName: 'Highlight mode',
+    next: null,
+  },
 };
 export const DEFAULT_SIGNED_IN_MAP_MODE = MapMode.BOOKING_MODE;
 export const DEFAULT_SIGNED_OUT_MAP_MODE = MapMode.MAP_MODE;

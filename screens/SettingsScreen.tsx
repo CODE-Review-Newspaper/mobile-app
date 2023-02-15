@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { Pressable, StyleSheet } from 'react-native';
+import { Linking, Pressable, StyleSheet } from 'react-native';
 
 import { Text, View } from '../components/Themed';
 import UserContext from '../contexts/user.context';
@@ -36,6 +36,25 @@ export default function SettingsScreen() {
         accessibilityLabel="Sign out"
       >
         <Text style={styles.buttonText}>Sign out</Text>
+      </Pressable>
+
+      <Pressable
+        onPress={() =>
+          Linking.openURL('https://github.com/CODE-Review-Newspaper/mobile-app')
+        }
+      >
+        <Text
+          style={{
+            color: '#007acc',
+            textDecorationColor: '#007acc',
+            textDecorationLine: 'underline',
+            fontSize: 16,
+            fontWeight: '900',
+            marginTop: 128,
+          }}
+        >
+          Contribute or open an issue
+        </Text>
       </Pressable>
     </View>
   );

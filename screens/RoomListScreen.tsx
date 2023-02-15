@@ -2,7 +2,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { useContext, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet } from 'react-native';
+import { Dimensions, Pressable, ScrollView, StyleSheet } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 import Sparkles from '../assets/icons/sparkles.svg';
@@ -36,8 +36,14 @@ export interface RoomViewType {
 }
 
 const MinutesUntilNextEventDesc = ({ mins }: { mins: number }) => {
+  if (mins === Infinity) return <Text style={{ color: '#222' }}>Free</Text>;
+
   if (mins >= 120)
-    return <Text style={{ color: '#222' }}>Free for multiple hours</Text>;
+    return (
+      <Text style={{ color: '#222' }}>
+        Free for {Math.floor(mins / 60)} hours
+      </Text>
+    );
 
   return (
     <Text style={{ color: '#222' }}>
@@ -229,7 +235,7 @@ export default function RoomListScreen({
       >
         <View
           style={{
-            marginBottom: 43 + 96, // paddingTop - height of TimePicker
+            marginBottom: 16,
 
             backgroundColor: 'transparent',
           }}
@@ -372,7 +378,11 @@ export default function RoomListScreen({
               backgroundColor: 'transparent',
             }}
             title={
-              selectedDate.format('dddd, MMM D H:mma') +
+              selectedDate.format(
+                Dimensions.get('window').width >= 430
+                  ? 'dddd, MMM D H:mma'
+                  : 'ddd, MMM D H:mma'
+              ) +
               ' (' +
               selectedDate.from(dayjs()) +
               ')'

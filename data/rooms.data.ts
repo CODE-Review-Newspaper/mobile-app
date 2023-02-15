@@ -106,8 +106,8 @@ export const rooms = {
     factoryNumber: '5.?',
     category: 'FACTORY_INACCESSIBLE',
   },
-  fifthFloor: {
-    id: 'fifthFloor',
+  FifthFloor: {
+    id: 'FifthFloor',
     parentId: null,
     type: 'FLOOR',
 
@@ -115,8 +115,8 @@ export const rooms = {
     factoryNumber: '5',
     category: 'FLOOR',
   },
-  fourthFloor: {
-    id: 'fourthFloor',
+  FourthFloor: {
+    id: 'FourthFloor',
     parentId: null,
     type: 'FLOOR',
 

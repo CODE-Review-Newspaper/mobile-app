@@ -25,9 +25,16 @@ export const DisplayMode = {
     displayName: 'Booking mode',
     next: 'MAP_MODE' as const,
   },
+  HIGHLIGHT_MODE: {
+    id: 'HIGHLIGHT_MODE' as const,
+    displayName: 'Highlight mode',
+    next: null,
+  },
 };
 
 export interface FloorplanProps {
+  highlightData?: Record<string, { isHighlighted: boolean }>;
+
   displayMode: (typeof DisplayMode)[keyof typeof DisplayMode];
   isZoomEnabled: boolean;
 
@@ -44,6 +51,8 @@ export interface FloorplanProps {
 }
 
 export default function Floorplan({
+  highlightData = {},
+
   displayMode,
   isZoomEnabled,
 
@@ -79,138 +88,158 @@ export default function Floorplan({
 
   return (
     <>
-      <ReactNativeZoomableView
-        zoomEnabled={isZoomEnabled}
-        maxZoom={2}
-        minZoom={1}
-        zoomStep={0.25}
-        initialZoom={1}
-        bindToBorders={true}
-        style={styles.container}
+      <View
+        style={{
+          width: '100%',
+          height: '100%',
+          backgroundColor: 'transparent',
+        }}
       >
-        <View style={styles.floorPlanContainer}>
-          {Object.values(Assets).map((i) => {
-            const selectedRoomSchedule = roomSchedules[i.id];
+        <ReactNativeZoomableView
+          zoomEnabled={isZoomEnabled}
+          maxZoom={2}
+          minZoom={1}
+          zoomStep={0.25}
+          initialZoom={1}
+          bindToBorders={true}
+          style={styles.zoomContainer}
+        >
+          <View style={styles.floorPlanContainer}>
+            <View style={styles.sached}>
+              {Object.values(Assets).map((i) => {
+                const selectedRoomSchedule = roomSchedules[i.id];
 
-            const isUnavailable =
-              selectedRoomSchedule?.busyTimes?.some((j) => {
                 const isUnavailable =
-                  selectedDate.isAfter(dayjs(j.start)) &&
-                  selectedDate.isBefore(dayjs(j.end));
+                  selectedRoomSchedule?.busyTimes?.some((j) => {
+                    const isUnavailable =
+                      selectedDate.isAfter(dayjs(j.start)) &&
+                      selectedDate.isBefore(dayjs(j.end));
 
-                return isUnavailable;
-              }) ?? true;
+                    return isUnavailable;
+                  }) ?? true;
 
-            const isAvailable = !isUnavailable;
+                const isAvailable = !isUnavailable;
 
-            const color = (() => {
-              if (!(i.id in rooms)) return 'black';
+                const color = (() => {
+                  if (!(i.id in rooms)) return 'black';
 
-              const roomCategory = RoomCategoryData[rooms[i.id].category];
+                  const roomCategory = RoomCategoryData[rooms[i.id].category];
 
-              if (displayMode.id === 'MAP_MODE')
-                return roomCategory.mapModeColor;
+                  if (displayMode.id === 'HIGHLIGHT_MODE') {
+                    if (['FourthFloor', 'FifthFloor'].includes(i.id))
+                      return '#efefef';
 
-              if (displayMode.id === 'BOOKING_MODE') {
-                if (
-                  selectedRoomSchedule?.bookable === 'BOOKABLE' &&
-                  isAvailable
-                )
-                  return RoomBookableData.BOOKABLE.color;
+                    if (highlightData[i.id]?.isHighlighted)
+                      return RoomBookableData.BOOKABLE.color;
 
-                if (
-                  selectedRoomSchedule?.bookable === 'BOOKABLE' &&
-                  isUnavailable
-                )
-                  return RoomBookableData.UNAVAILABLE.color;
+                    return roomCategory.bookingModeColor;
+                  }
 
-                return roomCategory.bookingModeColor;
-              }
-              // this should never happen so we make it black to stand out
-              return 'black';
-            })();
+                  if (displayMode.id === 'MAP_MODE')
+                    return roomCategory.mapModeColor;
 
-            return (
-              <i.Component
-                key={i.id}
-                width="100%"
-                height="100%"
-                style={styles.floorPlanComponent}
-                fill={color}
-                onPress={() => {
-                  if (
-                    !(
+                  if (displayMode.id === 'BOOKING_MODE') {
+                    if (
                       selectedRoomSchedule?.bookable === 'BOOKABLE' &&
                       isAvailable
                     )
-                  )
-                    return;
+                      return RoomBookableData.BOOKABLE.color;
 
-                  handleRoomClick(selectedRoomSchedule);
-                }}
-              />
-            );
-          })}
-        </View>
-      </ReactNativeZoomableView>
-      {displayMode.id === 'MAP_MODE' && (
-        <View style={styles.legend}>
-          {Object.values(RoomCategoryData)
-            .filter((i) => i.showInLegend)
-            .map((i) => {
-              return (
-                <View
-                  key={i.displayName}
-                  style={{
-                    backgroundColor: 'transparent',
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    paddingVertical: 2,
-                  }}
-                >
-                  <View
-                    style={{
-                      ...styles.legendColorCircle,
-                      backgroundColor: i.mapModeColor,
+                    if (
+                      selectedRoomSchedule?.bookable === 'BOOKABLE' &&
+                      isUnavailable
+                    )
+                      return RoomBookableData.UNAVAILABLE.color;
+
+                    return roomCategory.bookingModeColor;
+                  }
+                  // this should never happen so we make it black to stand out
+                  return 'black';
+                })();
+
+                return (
+                  <i.Component
+                    key={i.id}
+                    width="100%"
+                    height="100%"
+                    style={styles.floorPlanComponent}
+                    fill={color}
+                    onPress={() => {
+                      if (
+                        !(
+                          selectedRoomSchedule?.bookable === 'BOOKABLE' &&
+                          isAvailable
+                        )
+                      )
+                        return;
+
+                      handleRoomClick(selectedRoomSchedule);
                     }}
                   />
-                  <Text style={{ color: 'white', fontWeight: '500' }}>
-                    {i.displayName}
-                  </Text>
-                </View>
-              );
-            })}
-        </View>
-      )}
-      {displayMode.id === 'BOOKING_MODE' && (
-        <View style={styles.legend}>
-          {Object.values(RoomBookableData)
-            .filter((i) => i.showInLegend)
-            .map((i) => {
-              return (
-                <View
-                  key={i.displayName}
-                  style={{
-                    backgroundColor: 'transparent',
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    paddingVertical: 2,
-                  }}
-                >
-                  <View
-                    style={{
-                      ...styles.legendColorCircle,
-                      backgroundColor: i.color,
-                    }}
-                  />
-                  <Text style={{ color: 'white', fontWeight: '500' }}>
-                    {i.displayName}
-                  </Text>
-                </View>
-              );
-            })}
-        </View>
-      )}
+                );
+              })}
+            </View>
+            {displayMode.id === 'MAP_MODE' && (
+              <View style={styles.legend}>
+                {Object.values(RoomCategoryData)
+                  .filter((i) => i.showInLegend)
+                  .map((i) => {
+                    return (
+                      <View
+                        key={i.displayName}
+                        style={{
+                          backgroundColor: 'transparent',
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                          paddingVertical: 2,
+                        }}
+                      >
+                        <View
+                          style={{
+                            ...styles.legendColorCircle,
+                            backgroundColor: i.mapModeColor,
+                          }}
+                        />
+                        <Text style={{ color: 'white', fontWeight: '500' }}>
+                          {i.displayName}
+                        </Text>
+                      </View>
+                    );
+                  })}
+              </View>
+            )}
+            {displayMode.id === 'BOOKING_MODE' && (
+              <View style={styles.legend}>
+                {Object.values(RoomBookableData)
+                  .filter((i) => i.showInLegend)
+                  .map((i) => {
+                    return (
+                      <View
+                        key={i.displayName}
+                        style={{
+                          backgroundColor: 'transparent',
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                          paddingVertical: 2,
+                        }}
+                      >
+                        <View
+                          style={{
+                            ...styles.legendColorCircle,
+                            backgroundColor: i.color,
+                          }}
+                        />
+                        <Text style={{ color: 'white', fontWeight: '500' }}>
+                          {i.displayName}
+                        </Text>
+                      </View>
+                    );
+                  })}
+              </View>
+            )}
+          </View>
+        </ReactNativeZoomableView>
+      </View>
     </>
   );
 }
@@ -262,21 +291,34 @@ const styles = StyleSheet.create({
   floorPlanContainer: {
     position: 'relative',
 
-    width: '110%',
-    height: '999%',
+    backgroundColor: 'transparent',
 
-    left: 135,
-    bottom: 180,
+    alignItems: 'center',
+
+    width: '100%',
+    height: '90%',
+  },
+  sached: {
+    height: '100%',
+    aspectRatio: 10 / 32,
 
     backgroundColor: 'transparent',
+  },
+  zoomContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
+
+    width: '100%',
+    height: '100%',
   },
   legend: {
     position: 'absolute',
 
     backgroundColor: 'transparent',
 
-    left: 20,
-    bottom: 112,
+    left: 16,
+    bottom: 0,
   },
   legendColorCircle: {
     width: 16,
@@ -295,17 +337,16 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     backgroundColor: '#222',
+    backgroundColor: 'transparent',
   },
   floorPlanComponent: {
     position: 'absolute',
     left: 0,
     top: 0,
-  },
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#222',
+    backgroundColor: 'transparent',
+
+    width: 10,
+    height: '100%',
   },
   title: {
     fontSize: 20,
