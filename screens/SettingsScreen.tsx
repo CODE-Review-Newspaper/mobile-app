@@ -47,7 +47,7 @@ export default function SettingsScreen() {
           style={{
             color: '#007acc',
             textDecorationColor: '#007acc',
-            textDecorationLine: 'underline',
+            // textDecorationLine: 'underline',
             fontSize: 16,
             fontWeight: '900',
             marginTop: 128,

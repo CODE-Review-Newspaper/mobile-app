@@ -16,7 +16,10 @@ import TimePicker from '../components/TimePicker';
 import CalendarContext from '../contexts/calendar.context';
 import UserContext from '../contexts/user.context';
 import { RoomEntity, rooms } from '../data/rooms.data';
-import { MAX_TIMEPICKER_RANGE_HOURS } from '../data/time.data';
+import {
+  getTimepickerTitle,
+  MAX_TIMEPICKER_RANGE_HOURS,
+} from '../data/time.data';
 import {
   DEFAULT_SIGNED_IN_MAP_MODE,
   DEFAULT_SIGNED_OUT_MAP_MODE,
@@ -233,16 +236,7 @@ export default function TabOneScreen({
 
               backgroundColor: 'transparent',
             }}
-            title={
-              selectedDate.format(
-                Dimensions.get('window').width >= 430
-                  ? 'dddd, MMM D H:mma'
-                  : 'ddd, MMM D H:mma'
-              ) +
-              ' (' +
-              selectedDate.from(dayjs()) +
-              ')'
-            }
+            title={getTimepickerTitle(selectedDate)}
             value={
               selectedDate.diff(startDate, 'hours') / MAX_TIMEPICKER_RANGE_HOURS
             }

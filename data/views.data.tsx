@@ -94,7 +94,7 @@ export const RoomView: Record<string, RoomViewType> = {
   },
   ALL: {
     id: 'ALL',
-    label: <Text style={styles.chipText}>{'ALL'}</Text>,
+    label: <Text style={styles.chipText}>ALL</Text>,
     filters: [
       RoomFilter.MAX_THREE_PEOPLE,
       RoomFilter.MAX_NINE_PEOPLE,

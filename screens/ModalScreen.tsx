@@ -137,10 +137,6 @@ export default function ModalScreen({
   );
   const sliderWidth = 394;
 
-  const numSegments = Math.floor(6 * 4);
-
-  const segmentWidth = sliderWidth / numSegments;
-
   const segments = (nextEventsInSelectedRoom ?? []).flatMap((i, idx) => {
     const ding = {
       start: dayjs(i.start),
@@ -300,22 +296,9 @@ export default function ModalScreen({
             backgroundColor: 'transparent',
           }}
         >
-          {/* {Array.from(Array(numSegments).keys()).map((_, idx) => (
-            <View
-              style={{
-                height: 4,
-                backgroundColor:
-                  idx < sache
-                    ? RoomBookableData.BOOKABLE.color
-                    : RoomBookableData.UNAVAILABLE.color,
-                borderRadius: 999,
-                width: segmentWidth,
-                // marginLeft: 2,
-              }}
-            />
-          ))} */}
           {segments.map((i, idx) => (
             <View
+              key={idx}
               style={{
                 height: '100%',
                 backgroundColor: RoomBookableData[i.type].color,

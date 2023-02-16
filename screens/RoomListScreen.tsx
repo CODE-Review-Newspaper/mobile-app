@@ -10,7 +10,10 @@ import { Text, View } from '../components/Themed';
 import TimePicker from '../components/TimePicker';
 import CalendarContext from '../contexts/calendar.context';
 import { RoomEntity } from '../data/rooms.data';
-import { MAX_TIMEPICKER_RANGE_HOURS } from '../data/time.data';
+import {
+  getTimepickerTitle,
+  MAX_TIMEPICKER_RANGE_HOURS,
+} from '../data/time.data';
 import { DEFAULT_ROOM_VIEW, RoomView } from '../data/views.data';
 import { RootTabScreenProps } from '../types';
 
@@ -192,6 +195,7 @@ export default function RoomListScreen({
         >
           {Object.values(RoomView).map((i) => (
             <Pressable
+              key={i.id}
               onPress={() => setSelectedView(i)}
               style={[
                 {
@@ -242,11 +246,15 @@ export default function RoomListScreen({
         >
           {sachen.map(([filter, results]) => (
             <>
-              <Text style={[styles.timeDisplay, { marginLeft: 12 }]}>
+              <Text
+                key={filter.id + '-text'}
+                style={[styles.timeDisplay, { marginLeft: 12 }]}
+              >
                 {filter.displayName} ({results.length})
               </Text>
               {results.length > 0 && (
                 <View
+                  key={filter.id + '-results'}
                   style={{
                     flexDirection: 'column',
 
@@ -260,6 +268,7 @@ export default function RoomListScreen({
                   {results.map(({ room, minutesUntilNextEvent }) => {
                     return (
                       <Pressable
+                        key={room.id}
                         style={{
                           flexDirection: 'row',
                           alignItems: 'center',
@@ -377,16 +386,7 @@ export default function RoomListScreen({
 
               backgroundColor: 'transparent',
             }}
-            title={
-              selectedDate.format(
-                Dimensions.get('window').width >= 430
-                  ? 'dddd, MMM D H:mma'
-                  : 'ddd, MMM D H:mma'
-              ) +
-              ' (' +
-              selectedDate.from(dayjs()) +
-              ')'
-            }
+            title={getTimepickerTitle(selectedDate)}
             value={
               selectedDate.diff(startDate, 'hours') / MAX_TIMEPICKER_RANGE_HOURS
             }

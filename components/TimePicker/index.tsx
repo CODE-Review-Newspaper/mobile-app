@@ -1,10 +1,21 @@
 import { FontAwesome } from '@expo/vector-icons';
 import Slider from '@react-native-community/slider';
+import dayjs from 'dayjs';
 import debounce from 'lodash/debounce';
 import { useCallback, useRef, useState } from 'react';
-import { Pressable, StyleProp, StyleSheet, ViewStyle } from 'react-native';
+import {
+  Dimensions,
+  Pressable,
+  StyleProp,
+  StyleSheet,
+  ViewStyle,
+} from 'react-native';
 
-import { MAX_TIMEPICKER_RANGE_HOURS } from '../../data/time.data';
+import { RoomBookableData } from '../../data/rooms.data';
+import {
+  MAX_TIMEPICKER_RANGE_DAYS,
+  MAX_TIMEPICKER_RANGE_HOURS,
+} from '../../data/time.data';
 import overlayElementsStyles from '../overlayUI/overlayElements.styles';
 import { Text, View } from '../Themed';
 
@@ -33,6 +44,17 @@ export default function TimePicker({
   const borderOffset = 16; // 26;
 
   const debounced = useCallback(debounce(onValueChange, 3), []);
+
+  const sliderWidth = 394;
+
+  const segments = [
+    {
+      start: dayjs(),
+      end: dayjs().add(MAX_TIMEPICKER_RANGE_HOURS, 'hours'),
+      lengthMins: MAX_TIMEPICKER_RANGE_HOURS * 60,
+      type: 'BOOKABLE',
+    } as const,
+  ];
 
   return (
     <View style={[styles.datePicker, style]}>
@@ -85,18 +107,100 @@ export default function TimePicker({
         )}
       </View>
       <View style={styles.lowerRow}>
-        <Slider
+        <View
           style={{
             width: '100%',
+            paddingHorizontal: 16,
+            // marginTop: 32,
+            backgroundColor: 'transparent',
           }}
-          minimumValue={0}
-          maximumValue={1}
-          step={1 / MAX_TIMEPICKER_RANGE_HOURS / 4}
-          minimumTrackTintColor="#ff6961"
-          maximumTrackTintColor="white"
-          onValueChange={debounced}
-          value={value}
-        />
+        >
+          <View
+            style={{
+              position: 'absolute',
+              bottom: 98,
+              left: 16,
+              height: 6,
+              width: '100%',
+              overflow: 'hidden',
+              flexDirection: 'row',
+              backgroundColor: 'transparent',
+
+              top: 16,
+
+              borderRadius: 4,
+            }}
+          >
+            {segments.map((i, idx) => {
+              return (
+                <View
+                  key={idx}
+                  style={{
+                    height: '100%',
+                    backgroundColor: RoomBookableData[i.type].color,
+                    borderRadius: 4,
+                    width:
+                      ((MAX_TIMEPICKER_RANGE_HOURS * 4) /
+                        Math.round(i.lengthMins / 15)) *
+                        100 +
+                      '%',
+                    marginLeft: 2,
+                  }}
+                />
+              );
+            })}
+            {!canGoToPrevDay && (
+              <View
+                style={{
+                  position: 'absolute',
+                  height: '100%',
+                  backgroundColor: '#7c7c7c',
+                  borderRadius: 4,
+                  width:
+                    (1 / MAX_TIMEPICKER_RANGE_HOURS / 4) *
+                      Math.round(
+                        dayjs().diff(dayjs().startOf('day'), 'minutes') / 15
+                      ) *
+                      100 +
+                    '%',
+                }}
+              />
+            )}
+          </View>
+          {/* {!canGoToPrevDay && <View style={{
+            backgroundColor: "white",
+
+            width: 8,
+
+            height: 30,
+
+            position: "absolute",
+            left: (1 / MAX_TIMEPICKER_RANGE_HOURS / 4) * (dayjs().diff(dayjs().startOf("day"), "minutes") / 15) * sliderWidth - 5,
+
+            top: 4
+
+          }} />} */}
+          <Slider
+            style={{
+              width: '100%',
+            }}
+            minimumValue={0}
+            maximumValue={1}
+            step={1 / MAX_TIMEPICKER_RANGE_HOURS / 4}
+            minimumTrackTintColor="#ff6961"
+            maximumTrackTintColor="white"
+            onValueChange={debounced}
+            value={value}
+            minimumTrackTintColor="transparent"
+            maximumTrackTintColor="transparent"
+            lowerLimit={
+              canGoToPrevDay
+                ? 0
+                : (1 / MAX_TIMEPICKER_RANGE_HOURS / 4) *
+                  (dayjs().diff(dayjs().startOf('day'), 'minutes') / 15)
+            }
+          />
+        </View>
       </View>
     </View>
   );
