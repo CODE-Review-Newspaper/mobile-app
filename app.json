@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "CODE Connect",
-    "slug": "code-connect",
+    "slug": "code_connect",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/codeReviewAppIcon.png",
@@ -15,13 +15,15 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "berlin.code.code-connect"
+      "bundleIdentifier": "berlin.code.code_connect"
     },
     "android": {
-      "package": "berlin.code.code-connect",
+      "package": "berlin.code.code_connect",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#222"
@@ -29,6 +31,11 @@
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "e4676b7e-0bd2-446e-bc4f-959fe4f4f981"
+      }
     }
   }
 }
