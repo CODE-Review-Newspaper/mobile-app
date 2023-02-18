@@ -7,6 +7,7 @@ import { Linking, Pressable, StyleSheet, TextInput } from 'react-native';
 import FifthFloorAssets from '../components/fifthFloor.assetMap';
 import Floorplan, { DisplayMode } from '../components/Floorplan';
 import FourthFloorAssets from '../components/fourthFloor.assetMap';
+import SegmentedSlider from '../components/SegmentedSlider';
 import { Text, View } from '../components/Themed';
 import CalendarContext from '../contexts/calendar.context';
 import {
@@ -135,7 +136,6 @@ export default function ModalScreen({
     minutesUntilNextEvent,
     MAX_MEETING_DURATION_MINS
   );
-  const sliderWidth = 394;
 
   const segments = (nextEventsInSelectedRoom ?? []).flatMap((i, idx) => {
     const ding = {
@@ -162,23 +162,14 @@ export default function ModalScreen({
     return [dong, ding];
   });
 
-  const [isSliding, setIsSliding] = useState(false);
+  const [sliderValue, setSliderValue] = useState<any>(null);
 
-  function startSlide() {
-    setIsSliding(true);
+  function onSliderValueChange(event: any) {
+    setEndDate(
+      selectedDate.add(event.value * MAX_MEETING_DURATION_MINS, 'minutes')
+    );
+    setSliderValue(event);
   }
-  function endSlide() {
-    setIsSliding(false);
-  }
-
-  // const sache = Math.floor(
-  //   dayjs(nextEventInSelectedRoom?.end).diff(
-  //     dayjs(nextEventInSelectedRoom?.start),
-  //     'minutes'
-  //   ) / 15
-  // );
-
-  // console.log('sasche:', sache);
 
   return (
     <View style={styles.container}>
@@ -284,32 +275,7 @@ export default function ModalScreen({
           backgroundColor: 'transparent',
         }}
       >
-        <View
-          style={{
-            position: 'absolute',
-            bottom: 90,
-            left: 16,
-            height: 6,
-            width: '100%',
-            overflow: 'hidden',
-            flexDirection: 'row',
-            backgroundColor: 'transparent',
-          }}
-        >
-          {segments.map((i, idx) => (
-            <View
-              key={idx}
-              style={{
-                height: '100%',
-                backgroundColor: RoomBookableData[i.type].color,
-                borderRadius: 4,
-                width: (sliderWidth / 6 / 4) * (i.lengthMins / 15),
-                marginLeft: 2,
-              }}
-            />
-          ))}
-        </View>
-        {maxEventDurationMins === endDate.diff(selectedDate, 'minutes') && (
+        {sliderValue?.isUpperLimit && (
           <View
             style={{
               position: 'absolute',
@@ -320,8 +286,10 @@ export default function ModalScreen({
               alignItems: 'center',
               justifyContent: 'center',
 
-              left:
-                (sliderWidth / 6 / 4) * (minutesUntilNextEvent / 15) + 16 + 12,
+              left: 16,
+
+              // left:
+              //   (sliderWidth / 6 / 4) * (minutesUntilNextEvent / 15) + 16 + 12,
               bottom: 110,
             }}
           >
@@ -335,26 +303,17 @@ export default function ModalScreen({
             </Text>
           </View>
         )}
-        {state !== 'SUCCESS' && (
-          <Slider
-            onSlidingStart={startSlide}
-            onSlidingComplete={endSlide}
-            disabled={state === 'LOADING'}
-            style={{ width: '100%', height: 40 }}
-            minimumValue={MIN_MEETING_DURATION_MINS}
-            maximumValue={MAX_MEETING_DURATION_MINS}
-            value={DEFAULT_MEETING_DURATION_MINS}
-            step={15}
-            minimumTrackTintColor="#ff6961"
-            maximumTrackTintColor="#efefef"
-            minimumTrackTintColor="transparent"
-            maximumTrackTintColor="transparent"
-            upperLimit={maxEventDurationMins}
-            onValueChange={(durationMinutes) =>
-              setEndDate(selectedDate.add(durationMinutes, 'minutes'))
-            }
-          />
-        )}
+
+        <SegmentedSlider
+          value={DEFAULT_MEETING_DURATION_MINS / MAX_MEETING_DURATION_MINS}
+          onValueChange={onSliderValueChange}
+          step={1 / (MAX_MEETING_DURATION_MINS / 15)}
+          segments={segments.map((i) => ({
+            width: 1 / (MAX_MEETING_DURATION_MINS / i.lengthMins),
+            color: RoomBookableData[i.type].color,
+            isUpperLimit: i.type === 'UNAVAILABLE',
+          }))}
+        />
 
         <Pressable
           disabled={state === 'LOADING'}
