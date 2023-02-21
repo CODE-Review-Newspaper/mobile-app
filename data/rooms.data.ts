@@ -106,8 +106,8 @@ export const rooms = {
     factoryNumber: '5.?',
     category: 'FACTORY_INACCESSIBLE',
   },
-  fifthFloor: {
-    id: 'fifthFloor',
+  FifthFloor: {
+    id: 'FifthFloor',
     parentId: null,
     type: 'FLOOR',
 
@@ -115,8 +115,8 @@ export const rooms = {
     factoryNumber: '5',
     category: 'FLOOR',
   },
-  fourthFloor: {
-    id: 'fourthFloor',
+  FourthFloor: {
+    id: 'FourthFloor',
     parentId: null,
     type: 'FLOOR',
 
@@ -712,8 +712,13 @@ export const RoomBookableData = {
     displayName: 'Bookable',
     showInLegend: true,
   },
+  BOOKED_FOR_ACADEMIC_EVENT: {
+    color: '#4285f4',
+    displayName: 'Booked for academic event',
+    showInLegend: false,
+  },
   UNBOOKABLE: {
-    color: 'cyan',
+    color: '#7c7c7d',
     displayName: 'Not bookable',
     showInLegend: false,
   },

@@ -94,7 +94,7 @@ export const RoomView: Record<string, RoomViewType> = {
   },
   ALL: {
     id: 'ALL',
-    label: <Text style={styles.chipText}>{'ALL'}</Text>,
+    label: <Text style={styles.chipText}>ALL</Text>,
     filters: [
       RoomFilter.MAX_THREE_PEOPLE,
       RoomFilter.MAX_NINE_PEOPLE,
@@ -125,6 +125,11 @@ export const MapMode = {
     id: 'BOOKING_MODE' as const,
     displayName: 'Booking mode',
     next: 'MAP_MODE' as const,
+  },
+  HIGHLIGHT_MODE: {
+    id: 'HIGHLIGHT_MODE' as const,
+    displayName: 'Highlight mode',
+    next: null,
   },
 };
 export const DEFAULT_SIGNED_IN_MAP_MODE = MapMode.BOOKING_MODE;

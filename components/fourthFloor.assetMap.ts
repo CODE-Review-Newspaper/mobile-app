@@ -5,7 +5,7 @@ import Cognito from '../assets/images/floorplan/Cognito.svg';
 import D2 from '../assets/images/floorplan/D2.svg';
 import Echo from '../assets/images/floorplan/Echo.svg';
 import EightBit from '../assets/images/floorplan/EightBit.svg';
-import fourthFloor_2 from '../assets/images/floorplan/fourthFloor_2.svg';
+import FourthFloor from '../assets/images/floorplan/FourthFloor.svg';
 import FourthFloorRestrooms1 from '../assets/images/floorplan/FourthFloorRestrooms1.svg';
 import FourthFloorRestrooms2 from '../assets/images/floorplan/FourthFloorRestrooms2.svg';
 import Hat from '../assets/images/floorplan/Hat.svg';
@@ -37,9 +37,9 @@ import Warp from '../assets/images/floorplan/Warp.svg';
 import Zuse from '../assets/images/floorplan/Zuse.svg';
 
 const AssetMap = {
-  fourthFloor: {
-    id: 'fourthFloor',
-    Component: fourthFloor_2,
+  FourthFloor: {
+    id: 'FourthFloor',
+    Component: FourthFloor,
   },
   Zuse: {
     id: 'Zuse',

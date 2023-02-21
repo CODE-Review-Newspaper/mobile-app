@@ -24,7 +24,7 @@
       "package": "berlin.code.codeconnect",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#222"
+        "backgroundColor": "#111"
       }
     },
     "web": {

@@ -1,7 +1,7 @@
 import { FontAwesome } from '@expo/vector-icons';
 import dayjs from 'dayjs';
 import { useContext, useEffect, useState } from 'react';
-import { Pressable, StyleSheet } from 'react-native';
+import { Dimensions, Pressable, StyleSheet } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 import ArrowUpArrowDown from '../assets/icons/arrowUpArrowDown.svg';
@@ -16,7 +16,10 @@ import TimePicker from '../components/TimePicker';
 import CalendarContext from '../contexts/calendar.context';
 import UserContext from '../contexts/user.context';
 import { RoomEntity, rooms } from '../data/rooms.data';
-import { MAX_TIMEPICKER_RANGE_HOURS } from '../data/time.data';
+import {
+  getTimepickerTitle,
+  MAX_TIMEPICKER_RANGE_HOURS,
+} from '../data/time.data';
 import {
   DEFAULT_SIGNED_IN_MAP_MODE,
   DEFAULT_SIGNED_OUT_MAP_MODE,
@@ -72,21 +75,21 @@ export default function TabOneScreen({
 
     navigation.navigate('Modal');
   }
-  const selectableFloors = [rooms.fourthFloor, rooms.fifthFloor];
+  const selectableFloors = [rooms.FourthFloor, rooms.FifthFloor];
 
   const [activeFloorIdx, setActiveFloorIdx] = useState<number>(0);
 
   const floor = selectableFloors[activeFloorIdx];
 
   const Assets =
-    floor.id === 'fourthFloor' ? FourthFloorAssets : FifthFloorAssets;
+    floor.id === 'FourthFloor' ? FourthFloorAssets : FifthFloorAssets;
 
   function goToNextFloor() {
     setActiveFloorIdx((prev) =>
       prev < selectableFloors.length - 1 ? prev + 1 : 0
     );
   }
-  const activeFloorColor = '#FF6961';
+  const activeFloorColor = 'white';
   const inactiveFloorColor = '#7c7c7d';
 
   return (
@@ -146,7 +149,7 @@ export default function TabOneScreen({
         >
           <TopLayer
             fill={
-              floor.id === 'fifthFloor' ? activeFloorColor : inactiveFloorColor
+              floor.id === 'FifthFloor' ? activeFloorColor : inactiveFloorColor
             }
             width="20"
             height="20"
@@ -157,7 +160,7 @@ export default function TabOneScreen({
           />
           <Layer
             fill={
-              floor.id === 'fourthFloor' ? activeFloorColor : inactiveFloorColor
+              floor.id === 'FourthFloor' ? activeFloorColor : inactiveFloorColor
             }
             width="20"
             height="20"
@@ -169,17 +172,29 @@ export default function TabOneScreen({
         </Pressable>
       </LinearGradient>
 
-      <Floorplan
-        displayMode={displayMode}
-        isZoomEnabled={state === 'SUCCESS'}
-        hasData={hasData}
-        hasError={hasError}
-        isLoading={isLoading}
-        selectedDate={selectedDate}
-        roomSchedules={roomSchedules}
-        handleRoomClick={handleRoomClick}
-        Assets={Assets}
-      />
+      <View
+        style={{
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+
+          width: '100%',
+
+          backgroundColor: 'transparent',
+        }}
+      >
+        <Floorplan
+          displayMode={displayMode}
+          isZoomEnabled={state === 'SUCCESS'}
+          hasData={hasData}
+          hasError={hasError}
+          isLoading={isLoading}
+          selectedDate={selectedDate}
+          roomSchedules={roomSchedules}
+          handleRoomClick={handleRoomClick}
+          Assets={Assets}
+        />
+      </View>
       <View
         style={{
           borderTopWidth: 97,
@@ -221,21 +236,13 @@ export default function TabOneScreen({
 
               backgroundColor: 'transparent',
             }}
-            title={
-              selectedDate.format('dddd, MMM D H:mma') +
-              ' (' +
-              selectedDate.from(dayjs()) +
-              ')'
-            }
+            title={getTimepickerTitle(selectedDate)}
             value={
               selectedDate.diff(startDate, 'hours') / MAX_TIMEPICKER_RANGE_HOURS
             }
-            onValueChange={(numberBetween0and1) =>
+            onValueChange={(e) =>
               setSelectedDate(
-                startDate.add(
-                  numberBetween0and1 * MAX_TIMEPICKER_RANGE_HOURS,
-                  'hours'
-                )
+                startDate.add(e.value * MAX_TIMEPICKER_RANGE_HOURS, 'hours')
               )
             }
             goToPrevDay={goToPrevDay}

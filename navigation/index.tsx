@@ -102,14 +102,22 @@ function RootNavigator() {
   }
 
   function goToPrevDay() {
+    console.log('old start date in goToPrevDay:', startDate.toString());
+
     setStartDate((prev) => prev.subtract(1, 'day'));
     setEndDate((prev) => prev.subtract(1, 'day'));
     setSelectedDate((prev) => prev.subtract(1, 'day'));
+
+    // console.log("new start date in goToPrevDay:", startDate.toString())
   }
   function goToNextDay() {
+    console.log('old start date in goToNextDay:', startDate.toString());
+
     setStartDate((prev) => prev.add(1, 'day'));
     setEndDate((prev) => prev.add(1, 'day'));
     setSelectedDate((prev) => prev.add(1, 'day'));
+
+    // console.log("new start date in goToNextDay:", startDate.toString())
   }
 
   const [selectedRoom, setSelectedRoom] =
@@ -130,6 +138,14 @@ function RootNavigator() {
   const [userSchedule, setUserSchedule] = useState<
     CalendarContextType['userSchedule']
   >([]);
+
+  useEffect(() => {
+    console.log('root =========================================');
+    console.log('startDate:', startDate.toString());
+    console.log('endDate:', endDate.toString());
+    console.log('selectedDate:', selectedDate.toString());
+    console.log('==============================================');
+  }, [startDate, endDate, selectedDate]);
 
   const daysInTheFuture = startDate.diff(dayjs().startOf('day'), 'days');
 
@@ -192,14 +208,14 @@ function RootNavigator() {
         loadRoomSchedules();
       }
 
-      const newStartDate = getStartDate();
+      // const newStartDate = getStartDate();
 
-      setStartDate(newStartDate);
+      // setStartDate(newStartDate);
 
       // we DON'T want to set endDate here because that would mess up
       // the event creation screen
 
-      if (selectedDate.isBefore(newStartDate)) setSelectedDate(newStartDate);
+      // if (selectedDate.isBefore(newStartDate)) setSelectedDate(newStartDate);
     },
     roomScheduleState.hasError
       ? ROOM_SCHEDULES_REFETCHING_INTERVAL_SECONDS_OFFLINE * 1000

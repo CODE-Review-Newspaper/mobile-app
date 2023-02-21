@@ -3,7 +3,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import Slider from '@react-native-community/slider';
 import dayjs from 'dayjs';
 import { useContext, useState } from 'react';
-import { Pressable, StyleSheet } from 'react-native';
+import { Dimensions, Pressable, StyleSheet } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 import Layer from '../assets/icons/layers/layer.svg';
@@ -51,21 +51,21 @@ export default function SignedOutFloorplanScreen() {
   function switchDisplayMode() {
     setDisplayMode(DisplayMode[displayMode.next]);
   }
-  const selectableFloors = [rooms.fourthFloor, rooms.fifthFloor];
+  const selectableFloors = [rooms.FourthFloor, rooms.FifthFloor];
 
   const [activeFloorIdx, setActiveFloorIdx] = useState<number>(0);
 
   const floor = selectableFloors[activeFloorIdx];
 
   const Assets =
-    floor.id === 'fourthFloor' ? FourthFloorAssets : FifthFloorAssets;
+    floor.id === 'FourthFloor' ? FourthFloorAssets : FifthFloorAssets;
 
   function goToNextFloor() {
     setActiveFloorIdx((prev) =>
       prev < selectableFloors.length - 1 ? prev + 1 : 0
     );
   }
-  const activeFloorColor = '#FF6961';
+  const activeFloorColor = 'white';
   const inactiveFloorColor = '#7c7c7d';
 
   return (
@@ -94,7 +94,11 @@ export default function SignedOutFloorplanScreen() {
                 fill="white"
                 style={{ marginBottom: 1 }}
               />
-              <Text style={styles.buttonText}>Sign in with @code.berlin</Text>
+              <Text style={styles.buttonText}>
+                {Dimensions.get('window').width >= 430
+                  ? 'Sign in with @code.berlin'
+                  : 'Sign in with Google'}
+              </Text>
             </Pressable>
             <Pressable
               accessibilityHint="Go to next floor"
@@ -106,7 +110,7 @@ export default function SignedOutFloorplanScreen() {
             >
               <TopLayer
                 fill={
-                  floor.id === 'fifthFloor'
+                  floor.id === 'FifthFloor'
                     ? activeFloorColor
                     : inactiveFloorColor
                 }
@@ -119,7 +123,7 @@ export default function SignedOutFloorplanScreen() {
               />
               <Layer
                 fill={
-                  floor.id === 'fourthFloor'
+                  floor.id === 'FourthFloor'
                     ? activeFloorColor
                     : inactiveFloorColor
                 }
@@ -136,7 +140,7 @@ export default function SignedOutFloorplanScreen() {
         <View
           style={{
             borderTopWidth: 97,
-            borderColor: '#444',
+            borderColor: '#222',
 
             width: '100%',
             height: 16 * 6,
@@ -203,17 +207,29 @@ export default function SignedOutFloorplanScreen() {
           </LinearGradient>
         </View>
 
-        <Floorplan
-          displayMode={DisplayMode.MAP_MODE}
-          isZoomEnabled={true}
-          hasData={hasData}
-          hasError={hasError}
-          isLoading={isLoading}
-          selectedDate={selectedDate}
-          roomSchedules={roomSchedules}
-          handleRoomClick={() => null}
-          Assets={Assets}
-        />
+        <View
+          style={{
+            flex: 1,
+            alignItems: 'center',
+            justifyContent: 'center',
+
+            width: '100%',
+
+            backgroundColor: 'transparent',
+          }}
+        >
+          <Floorplan
+            displayMode={DisplayMode.MAP_MODE}
+            isZoomEnabled={true}
+            hasData={hasData}
+            hasError={hasError}
+            isLoading={isLoading}
+            selectedDate={selectedDate}
+            roomSchedules={roomSchedules}
+            handleRoomClick={() => null}
+            Assets={Assets}
+          />
+        </View>
       </View>
     </>
   );
