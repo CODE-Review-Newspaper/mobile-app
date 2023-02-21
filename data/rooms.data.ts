@@ -712,8 +712,13 @@ export const RoomBookableData = {
     displayName: 'Bookable',
     showInLegend: true,
   },
+  BOOKED_FOR_ACADEMIC_EVENT: {
+    color: '#4285f4',
+    displayName: 'Booked for academic event',
+    showInLegend: false,
+  },
   UNBOOKABLE: {
-    color: 'cyan',
+    color: '#7c7c7d',
     displayName: 'Not bookable',
     showInLegend: false,
   },

@@ -240,12 +240,9 @@ export default function TabOneScreen({
             value={
               selectedDate.diff(startDate, 'hours') / MAX_TIMEPICKER_RANGE_HOURS
             }
-            onValueChange={(numberBetween0and1) =>
+            onValueChange={(e) =>
               setSelectedDate(
-                startDate.add(
-                  numberBetween0and1 * MAX_TIMEPICKER_RANGE_HOURS,
-                  'hours'
-                )
+                startDate.add(e.value * MAX_TIMEPICKER_RANGE_HOURS, 'hours')
               )
             }
             goToPrevDay={goToPrevDay}

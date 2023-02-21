@@ -127,6 +127,8 @@ export default function ModalScreen({
 
   const nextEventInSelectedRoom = nextEventsInSelectedRoom?.[0] ?? null;
 
+  const hasEvents = nextEventInSelectedRoom != null;
+
   const minutesUntilNextEvent =
     nextEventInSelectedRoom == null
       ? Infinity
@@ -137,30 +139,74 @@ export default function ModalScreen({
     MAX_MEETING_DURATION_MINS
   );
 
-  const segments = (nextEventsInSelectedRoom ?? []).flatMap((i, idx) => {
-    const ding = {
-      start: dayjs(i.start),
-      end: dayjs(i.end),
-      lengthMins: dayjs(i.end).diff(dayjs(i.start), 'minutes'),
-      type: 'UNAVAILABLE',
-    } as const;
-    const dong = {
-      start:
-        idx === 0
-          ? selectedDate
-          : dayjs(nextEventsInSelectedRoom![idx - 1].end),
-      end: dayjs(i.start),
-      lengthMins: dayjs(i.start).diff(
-        idx === 0
-          ? selectedDate
-          : dayjs(nextEventsInSelectedRoom![idx - 1].end),
-        'minutes'
-      ),
-      type: 'BOOKABLE',
-    } as const;
+  const MinutesUntilNextEventDesc = ({ mins }: { mins: number }) => {
+    // if (mins <= 0) return "0 minutes"
 
-    return [dong, ding];
-  });
+    const hours = Math.floor(mins / 60);
+
+    const minutes = mins % 60;
+
+    const hoursStr = hours > 0 ? `${hours} hours` : '';
+
+    const minutesStr = minutes > 0 ? `${minutes} minutes` : '';
+
+    return (
+      <View
+        style={{
+          width: 170,
+          flexDirection: 'column',
+          backgroundColor: 'transparent',
+        }}
+      >
+        <View style={{ flexDirection: 'row', backgroundColor: 'transparent' }}>
+          <Text style={[styles.moreText, { width: 35, textAlign: 'right' }]}>
+            {hours}
+          </Text>
+          <Text style={[styles.moreText, { textAlign: 'left' }]}> hours</Text>
+        </View>
+        <View style={{ flexDirection: 'row', backgroundColor: 'transparent' }}>
+          <Text style={[styles.moreText, { width: 35, textAlign: 'right' }]}>
+            {minutes}
+          </Text>
+          <Text style={[styles.moreText, { textAlign: 'left' }]}> minutes</Text>
+        </View>
+      </View>
+    );
+  };
+
+  const segments = hasEvents
+    ? nextEventsInSelectedRoom.flatMap((i, idx) => {
+        const ding = {
+          start: dayjs(i.start),
+          end: dayjs(i.end),
+          lengthMins: dayjs(i.end).diff(dayjs(i.start), 'minutes'),
+          type: 'UNAVAILABLE',
+        } as const;
+        const dong = {
+          start:
+            idx === 0
+              ? selectedDate
+              : dayjs(nextEventsInSelectedRoom![idx - 1].end),
+          end: dayjs(i.start),
+          lengthMins: dayjs(i.start).diff(
+            idx === 0
+              ? selectedDate
+              : dayjs(nextEventsInSelectedRoom![idx - 1].end),
+            'minutes'
+          ),
+          type: 'BOOKABLE',
+        } as const;
+
+        return [dong, ding];
+      })
+    : [
+        {
+          start: dayjs(),
+          end: dayjs().add(MAX_MEETING_DURATION_MINS, 'minutes'),
+          lengthMins: MAX_MEETING_DURATION_MINS,
+          type: 'BOOKABLE',
+        } as const,
+      ];
 
   const [sliderValue, setSliderValue] = useState<any>(null);
 
@@ -259,9 +305,7 @@ export default function ModalScreen({
         />
       </View>
 
-      <Text style={styles.moreText}>
-        {endDate.diff(selectedDate, 'minutes')} minutes
-      </Text>
+      <MinutesUntilNextEventDesc mins={endDate.diff(selectedDate, 'minutes')} />
 
       <Text style={styles.text}>
         {selectedDate.format('H:mma')} - {endDate.format('H:mma')}
@@ -342,9 +386,9 @@ export default function ModalScreen({
 
 const styles = StyleSheet.create({
   moreText: {
+    maxWidth: '66%',
     fontSize: 25,
     fontWeight: '900',
-    maxWidth: '66%',
     textAlign: 'center',
 
     color: '#222',

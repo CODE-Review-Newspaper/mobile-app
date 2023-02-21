@@ -17,6 +17,7 @@ import {
   MAX_TIMEPICKER_RANGE_HOURS,
 } from '../../data/time.data';
 import overlayElementsStyles from '../overlayUI/overlayElements.styles';
+import SegmentedSlider from '../SegmentedSlider';
 import { Text, View } from '../Themed';
 
 export interface TimePickerProps {
@@ -43,18 +44,32 @@ export default function TimePicker({
 }: TimePickerProps) {
   const borderOffset = 16; // 26;
 
-  const debounced = useCallback(debounce(onValueChange, 3), []);
+  const minsFromStartOfDay = dayjs().diff(dayjs().startOf('day'), 'minutes');
 
-  const sliderWidth = 394;
-
-  const segments = [
-    {
-      start: dayjs(),
-      end: dayjs().add(MAX_TIMEPICKER_RANGE_HOURS, 'hours'),
-      lengthMins: MAX_TIMEPICKER_RANGE_HOURS * 60,
-      type: 'BOOKABLE',
-    } as const,
-  ];
+  const segments = canGoToPrevDay
+    ? [
+        {
+          // start: dayjs(),
+          // end: dayjs().add(MAX_TIMEPICKER_RANGE_HOURS, 'nhours'),
+          lengthMins: MAX_TIMEPICKER_RANGE_HOURS * 60,
+          type: 'BOOKABLE',
+        } as const,
+      ]
+    : [
+        {
+          // start: dayjs(),
+          // end: dayjs().add(60 * 120, "minutes"),
+          lengthMins: minsFromStartOfDay,
+          type: 'UNBOOKABLE',
+          isLowerLimit: true,
+        } as const,
+        {
+          // start: dayjs(),
+          // end: dayjs().add(MAX_TIMEPICKER_RANGE_HOURS, 'hours'),
+          lengthMins: MAX_TIMEPICKER_RANGE_HOURS * 60 - minsFromStartOfDay,
+          type: 'BOOKABLE',
+        } as const,
+      ];
 
   return (
     <View style={[styles.datePicker, style]}>
@@ -107,7 +122,22 @@ export default function TimePicker({
         )}
       </View>
       <View style={styles.lowerRow}>
-        <View
+        <SegmentedSlider
+          // value={DEFAULT_MEETING_DURATION_MINS / (24 * 60)}
+          // onValueChange={onSliderValueChange}
+
+          value={value}
+          onValueChange={onValueChange}
+          step={1 / ((24 * 60) / 15)}
+          segments={segments.map((i) => ({
+            width: 1 / ((24 * 60) / i.lengthMins),
+            color: RoomBookableData[i.type].color,
+            isLowerLimit: i.isLowerLimit,
+            isUpperLimit: i.isUpperLimit,
+            // isUpperLimit: i.type === 'UNAVAILABLE',
+          }))}
+        />
+        {/* <View
           style={{
             width: '100%',
             paddingHorizontal: 16,
@@ -179,28 +209,28 @@ export default function TimePicker({
 
             top: 4
 
-          }} />} */}
-          <Slider
-            style={{
-              width: '100%',
-            }}
-            minimumValue={0}
-            maximumValue={1}
-            step={1 / MAX_TIMEPICKER_RANGE_HOURS / 4}
-            minimumTrackTintColor="#ff6961"
-            maximumTrackTintColor="white"
-            onValueChange={debounced}
-            value={value}
-            minimumTrackTintColor="transparent"
-            maximumTrackTintColor="transparent"
-            lowerLimit={
-              canGoToPrevDay
-                ? 0
-                : (1 / MAX_TIMEPICKER_RANGE_HOURS / 4) *
-                  (dayjs().diff(dayjs().startOf('day'), 'minutes') / 15)
-            }
-          />
-        </View>
+          }} />} 
+        <Slider
+          style={{
+            width: '100%',
+          }}
+          minimumValue={0}
+          maximumValue={1}
+          step={1 / MAX_TIMEPICKER_RANGE_HOURS / 4}
+          minimumTrackTintColor="#ff6961"
+          maximumTrackTintColor="white"
+          onValueChange={debounced}
+          value={value}
+          minimumTrackTintColor="transparent"
+          maximumTrackTintColor="transparent"
+          lowerLimit={
+            canGoToPrevDay
+              ? 0
+              : (1 / MAX_TIMEPICKER_RANGE_HOURS / 4) *
+              (dayjs().diff(dayjs().startOf('day'), 'minutes') / 15)
+          }
+        />
+      </View> */}
       </View>
     </View>
   );

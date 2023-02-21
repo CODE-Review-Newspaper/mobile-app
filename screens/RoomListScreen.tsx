@@ -1,7 +1,7 @@
 import { FontAwesome } from '@expo/vector-icons';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { useContext, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import { Dimensions, Pressable, ScrollView, StyleSheet } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
@@ -18,6 +18,15 @@ import { DEFAULT_ROOM_VIEW, RoomView } from '../data/views.data';
 import { RootTabScreenProps } from '../types';
 
 dayjs.extend(relativeTime);
+
+// const cardColor = "white"
+// const textColor = "#222"
+// const borderColor = "#ccc"
+
+const backgroundColor = '#111';
+const cardColor = '#222';
+const textColor = 'white';
+const borderColor = '#111';
 
 export interface RoomViewEntity {
   room: RoomEntity;
@@ -39,17 +48,24 @@ export interface RoomViewType {
 }
 
 const MinutesUntilNextEventDesc = ({ mins }: { mins: number }) => {
-  if (mins === Infinity) return <Text style={{ color: '#222' }}>Free</Text>;
+  if (mins >= 60 * 24)
+    return <Text style={styles.secondaryText}>Free for over a day</Text>;
 
-  if (mins >= 120)
-    return (
-      <Text style={{ color: '#222' }}>
-        Free for {Math.floor(mins / 60)} hours
-      </Text>
-    );
+  const hours = Math.floor(mins / 60);
+
+  const minutes = mins % 60;
+
+  const hoursStr = hours > 0 ? `${hours} hours` : '';
+
+  const minutesStr = minutes > 0 ? `${minutes} mins` : '';
+
+  const timeStr = hoursStr + ' ' + minutesStr;
+
+  if (mins >= 60)
+    return <Text style={styles.secondaryText}>Free for {timeStr}</Text>;
 
   return (
-    <Text style={{ color: '#222' }}>
+    <Text style={styles.secondaryText}>
       Free for{'  '}
       <Text
         style={{
@@ -81,6 +97,7 @@ export default function RoomListScreen({
     goToNextDay,
     canGoToPrevDay,
     canGoToNextDay,
+    setStartDate,
   } = useContext(CalendarContext);
 
   const [selectedView, setSelectedView] = useState(DEFAULT_ROOM_VIEW);
@@ -166,11 +183,23 @@ export default function RoomListScreen({
   const hasResults =
     sachen.map((i) => i[1]).filter((i) => i.length > 0).length > 0;
 
+  function sached(e: any) {
+    setStartDate((prev) => {
+      console.log('startDate:', prev.toString());
+
+      setSelectedDate(
+        prev.add(e.value * (MAX_TIMEPICKER_RANGE_HOURS * 60), 'minutes')
+      );
+      return prev;
+    });
+  }
+  const sache = useCallback(sached, []);
+
   return (
     <>
       <View
         style={{
-          backgroundColor: '#111',
+          backgroundColor: backgroundColor,
 
           paddingHorizontal: 16,
           paddingTop: 43,
@@ -185,6 +214,7 @@ export default function RoomListScreen({
           style={{
             flexDirection: 'row',
             alignItems: 'center',
+            justifyContent: 'space-between',
             width: '100%',
             height: '100%',
             backgroundColor: 'transparent',
@@ -232,7 +262,7 @@ export default function RoomListScreen({
           flexDirection: 'column',
           paddingHorizontal: 16,
 
-          backgroundColor: '#111',
+          backgroundColor: backgroundColor,
 
           height: '100%',
         }}
@@ -262,10 +292,10 @@ export default function RoomListScreen({
 
                     overflow: 'hidden',
 
-                    backgroundColor: 'white',
+                    backgroundColor: cardColor,
                   }}
                 >
-                  {results.map(({ room, minutesUntilNextEvent }) => {
+                  {results.map(({ room, minutesUntilNextEvent }, idx) => {
                     return (
                       <Pressable
                         key={room.id}
@@ -278,8 +308,8 @@ export default function RoomListScreen({
                           paddingHorizontal: 24,
 
                           backgroundColor: 'transparent',
-                          borderColor: '#ccc',
-                          borderTopWidth: 1,
+                          borderColor: borderColor,
+                          borderTopWidth: idx === 0 ? 0 : 1,
                         }}
                         onPress={() => {
                           setSelectedRoom(room);
@@ -295,7 +325,7 @@ export default function RoomListScreen({
                         >
                           <Text
                             style={{
-                              color: '#222',
+                              color: textColor,
                               fontWeight: '900',
                               fontSize: 16,
                             }}
@@ -390,14 +420,7 @@ export default function RoomListScreen({
             value={
               selectedDate.diff(startDate, 'hours') / MAX_TIMEPICKER_RANGE_HOURS
             }
-            onValueChange={(numberBetween0and1) =>
-              setSelectedDate(
-                startDate.add(
-                  numberBetween0and1 * MAX_TIMEPICKER_RANGE_HOURS,
-                  'hours'
-                )
-              )
-            }
+            onValueChange={sache}
             goToPrevDay={goToPrevDay}
             goToNextDay={goToNextDay}
             canGoToPrevDay={canGoToPrevDay}
@@ -410,6 +433,11 @@ export default function RoomListScreen({
 }
 
 const styles = StyleSheet.create({
+  secondaryText: {
+    color: '#ccc',
+    fontSize: 12,
+    fontWeight: '700',
+  },
   timeDisplay: {
     color: '#ccc',
     fontSize: 16,

@@ -20,8 +20,6 @@ export const MAX_MEETING_DURATION_MINS = 60 * 6;
 export const DEFAULT_MEETING_DURATION_MINS = 60;
 
 export const getTimepickerTitle = (selectedDate: dayjs.Dayjs) => {
-  console.log(selectedDate.format('dddd, MMM D H:mm'));
-
   const date = selectedDate.format(
     Dimensions.get('window').width >= 430 ? 'dddd, MMM D' : 'ddd, MMM D'
   );
@@ -37,7 +35,7 @@ export const getTimepickerTitle = (selectedDate: dayjs.Dayjs) => {
           { fontWeight: '700', color: '#777', fontSize: 15 },
         ]}
       >
-        {date} {time}
+        {date} | {time}
       </Text>{' '}
       <Text
         style={[overlayElementsStyles.smallOverlayText, { fontWeight: '700' }]}
