@@ -159,13 +159,13 @@ export default function ModalScreen({
         }}
       >
         <View style={{ flexDirection: 'row', backgroundColor: 'transparent' }}>
-          <Text style={[styles.moreText, { width: 35, textAlign: 'right' }]}>
+          <Text style={[styles.moreText, { width: 37, textAlign: 'right' }]}>
             {hours}
           </Text>
           <Text style={[styles.moreText, { textAlign: 'left' }]}> hours</Text>
         </View>
         <View style={{ flexDirection: 'row', backgroundColor: 'transparent' }}>
-          <Text style={[styles.moreText, { width: 35, textAlign: 'right' }]}>
+          <Text style={[styles.moreText, { width: 37, textAlign: 'right' }]}>
             {minutes}
           </Text>
           <Text style={[styles.moreText, { textAlign: 'left' }]}> minutes</Text>
