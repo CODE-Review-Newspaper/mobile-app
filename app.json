@@ -15,7 +15,9 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "berlin.code.codeconnect"
@@ -32,7 +34,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "e4676b7e-0bd2-446e-bc4f-959fe4f4f981"
+        "projectId": "a2a34639-2273-487c-81c6-08ef219f1b9f"
       }
     }
   }
