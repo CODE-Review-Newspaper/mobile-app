@@ -1,6 +1,6 @@
 import ReactNativeZoomableView from '@dudigital/react-native-zoomable-view/src/ReactNativeZoomableView';
 import dayjs from 'dayjs';
-import { useState } from 'react';
+import { FunctionComponent, useState } from 'react';
 import { Pressable, StyleSheet } from 'react-native';
 
 import ErrorTriangle from '../../assets/images/errorTriangle.svg';
@@ -10,6 +10,7 @@ import {
   RoomEntity,
   rooms,
 } from '../../data/rooms.data';
+import { GoogleEventResponse } from '../../googleClient/google.types';
 import FifthFloorAssets from '../fifthFloor.assetMap';
 import FourthFloorAssets from '../fourthFloor.assetMap';
 import { Text, View } from '../Themed';
@@ -45,9 +46,13 @@ export interface FloorplanProps {
   selectedDate: dayjs.Dayjs;
 
   roomSchedules: Record<string, RoomEntity>;
+  userSchedule: GoogleEventResponse[];
   handleRoomClick: (room: RoomEntity) => any;
 
-  Assets: Record<string, any>;
+  Assets: Record<
+    string,
+    { id: keyof typeof rooms; Component: FunctionComponent }
+  >;
 }
 
 export default function Floorplan({
@@ -63,6 +68,7 @@ export default function Floorplan({
   selectedDate,
 
   roomSchedules,
+  userSchedule,
   handleRoomClick,
   Assets,
 }: FloorplanProps) {
@@ -109,6 +115,23 @@ export default function Floorplan({
               {Object.values(Assets).map((i) => {
                 const selectedRoomSchedule = roomSchedules[i.id];
 
+                const isBookedBySelf =
+                  userSchedule?.some((j) => {
+                    const isSameRoom = j.attendees?.some(
+                      (k) => k.email === rooms[i.id]?.email
+                    );
+
+                    const isBookedBySelf =
+                      selectedDate.isAfter(
+                        dayjs(j.start?.dateTime?.slice(0, -6))
+                      ) &&
+                      selectedDate.isBefore(
+                        dayjs(j.end?.dateTime?.slice(0, -6))
+                      );
+
+                    return isSameRoom && isBookedBySelf;
+                  }) ?? false;
+
                 const isUnavailable =
                   selectedRoomSchedule?.busyTimes?.some((j) => {
                     const isUnavailable =
@@ -139,6 +162,9 @@ export default function Floorplan({
                     return roomCategory.mapModeColor;
 
                   if (displayMode.id === 'BOOKING_MODE') {
+                    if (isBookedBySelf) {
+                      return RoomBookableData.BOOKED_BY_SELF.color;
+                    }
                     if (
                       selectedRoomSchedule?.bookable === 'BOOKABLE' &&
                       isAvailable

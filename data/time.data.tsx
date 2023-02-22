@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
 import { Dimensions } from 'react-native';
 
 import overlayElementsStyles from '../components/overlayUI/overlayElements.styles';
@@ -18,6 +19,8 @@ export const MAX_TIMEPICKER_RANGE_DAYS = 7;
 export const MIN_MEETING_DURATION_MINS = 15;
 export const MAX_MEETING_DURATION_MINS = 60 * 6;
 export const DEFAULT_MEETING_DURATION_MINS = 60;
+
+dayjs.extend(relativeTime);
 
 export const getTimepickerTitle = (selectedDate: dayjs.Dayjs) => {
   const date = selectedDate.format(

@@ -1,6 +1,5 @@
-import { FontAwesome } from '@expo/vector-icons';
 import dayjs from 'dayjs';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { Dimensions, Pressable, StyleSheet } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
@@ -45,6 +44,8 @@ export default function TabOneScreen({
     goToNextDay,
     canGoToPrevDay,
     canGoToNextDay,
+    userSchedule,
+    setStartDate,
   } = useContext(CalendarContext);
 
   const state = (() => {
@@ -78,6 +79,10 @@ export default function TabOneScreen({
   const selectableFloors = [rooms.FourthFloor, rooms.FifthFloor];
 
   const [activeFloorIdx, setActiveFloorIdx] = useState<number>(0);
+
+  const startDateRef = useRef<dayjs.Dayjs>(startDate);
+
+  startDateRef.current = startDate;
 
   const floor = selectableFloors[activeFloorIdx];
 
@@ -191,6 +196,7 @@ export default function TabOneScreen({
           isLoading={isLoading}
           selectedDate={selectedDate}
           roomSchedules={roomSchedules}
+          userSchedule={userSchedule}
           handleRoomClick={handleRoomClick}
           Assets={Assets}
         />
@@ -242,7 +248,10 @@ export default function TabOneScreen({
             }
             onValueChange={(e) =>
               setSelectedDate(
-                startDate.add(e.value * MAX_TIMEPICKER_RANGE_HOURS, 'hours')
+                startDateRef.current.add(
+                  e.value * MAX_TIMEPICKER_RANGE_HOURS,
+                  'hours'
+                )
               )
             }
             goToPrevDay={goToPrevDay}

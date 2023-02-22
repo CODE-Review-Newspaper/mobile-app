@@ -2,7 +2,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import Slider from '@react-native-community/slider';
 import dayjs from 'dayjs';
 import debounce from 'lodash/debounce';
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useContext, useRef, useState } from 'react';
 import {
   Dimensions,
   Pressable,
@@ -11,7 +11,8 @@ import {
   ViewStyle,
 } from 'react-native';
 
-import { RoomBookableData } from '../../data/rooms.data';
+import CalendarContext from '../../contexts/calendar.context';
+import { RoomBookableData, rooms } from '../../data/rooms.data';
 import {
   MAX_TIMEPICKER_RANGE_DAYS,
   MAX_TIMEPICKER_RANGE_HOURS,
@@ -19,6 +20,8 @@ import {
 import overlayElementsStyles from '../overlayUI/overlayElements.styles';
 import SegmentedSlider from '../SegmentedSlider';
 import { Text, View } from '../Themed';
+
+function handleOverlappingSegments(segments: any[]) {}
 
 export interface TimePickerProps {
   style: StyleProp<ViewStyle>;
@@ -42,30 +45,108 @@ export default function TimePicker({
   goToPrevDay,
   goToNextDay,
 }: TimePickerProps) {
+  const { userSchedule, startDate } = useContext(CalendarContext);
+
+  const meetingsWithRooms =
+    userSchedule?.map((i) => {
+      const roomEmails =
+        i.attendees?.filter((j) => j.resource)?.map((j) => j.email) ?? [];
+
+      const meetingRooms = Object.values(rooms).filter((j) =>
+        roomEmails.includes(j.email)
+      );
+
+      return {
+        ...i,
+        meetingRooms,
+      };
+    }) ?? [];
+
+  const meetingSegments = meetingsWithRooms
+    .filter((i) => i.meetingRooms.length)
+    .map((i) => {
+      // TODO: investigate weird google dateTime format with timezone offset add the end
+
+      const start = dayjs(i.start.dateTime.slice(0, -6));
+      const end = dayjs(i.end.dateTime.slice(0, -6));
+
+      const lengthMins = end.diff(start, 'minutes');
+
+      return {
+        start,
+        end,
+        lengthMins,
+        type: 'BOOKED_BY_SELF',
+      } as const;
+    })
+    .filter(
+      (i) =>
+        i.end.isAfter(startDate) &&
+        i.start.isBefore(startDate.add(MAX_TIMEPICKER_RANGE_HOURS, 'hours'))
+    );
+
+  meetingSegments.sort((a, b) => (a.start.isBefore(b.start) ? -1 : 1));
+
+  const segments =
+    meetingSegments.length > 0
+      ? meetingSegments.flatMap((i, idx) => {
+          const isLastSegment = idx === meetingSegments.length - 1;
+
+          const prevDate =
+            idx === 0 ? startDate.startOf('day') : meetingSegments[idx - 1].end;
+
+          const inBetweenSegment = {
+            lengthMins: i.start.diff(prevDate, 'minutes'),
+            type: 'BOOKABLE',
+          } as const;
+
+          if (isLastSegment) {
+            const finalSegment = {
+              lengthMins: startDate
+                .add(MAX_TIMEPICKER_RANGE_HOURS, 'hours')
+                .diff(i.end, 'minutes'),
+              type: 'BOOKABLE',
+            } as const;
+
+            return [inBetweenSegment, i, finalSegment];
+          }
+          return [inBetweenSegment, i];
+        })
+      : [
+          {
+            // start: dayjs(),
+            // end: dayjs().add(MAX_TIMEPICKER_RANGE_HOURS, 'nhours'),
+            lengthMins: MAX_TIMEPICKER_RANGE_HOURS * 60,
+            type: 'BOOKABLE',
+          } as const,
+        ];
+
   const borderOffset = 16; // 26;
 
   const minsFromStartOfDay = dayjs().diff(dayjs().startOf('day'), 'minutes');
 
-  const segments = canGoToPrevDay
+  // TODO: reimplement UNBOOKABLE segment on slider if in past
+
+  const segmentss = canGoToPrevDay
     ? [
         {
-          // start: dayjs(),
-          // end: dayjs().add(MAX_TIMEPICKER_RANGE_HOURS, 'nhours'),
+          start: startDate,
+          end: startDate.add(MAX_TIMEPICKER_RANGE_HOURS, 'hours'),
           lengthMins: MAX_TIMEPICKER_RANGE_HOURS * 60,
           type: 'BOOKABLE',
         } as const,
       ]
     : [
         {
-          // start: dayjs(),
-          // end: dayjs().add(60 * 120, "minutes"),
+          start: startDate,
+          end: startDate.add(minsFromStartOfDay, 'minutes'),
           lengthMins: minsFromStartOfDay,
           type: 'UNBOOKABLE',
           isLowerLimit: true,
         } as const,
         {
-          // start: dayjs(),
-          // end: dayjs().add(MAX_TIMEPICKER_RANGE_HOURS, 'hours'),
+          start: startDate.add(minsFromStartOfDay, 'minutes'),
+          end: startDate.add(MAX_TIMEPICKER_RANGE_HOURS, 'hours'),
           lengthMins: MAX_TIMEPICKER_RANGE_HOURS * 60 - minsFromStartOfDay,
           type: 'BOOKABLE',
         } as const,

@@ -226,6 +226,7 @@ export default function SignedOutFloorplanScreen() {
             isLoading={isLoading}
             selectedDate={selectedDate}
             roomSchedules={roomSchedules}
+            userSchedule={[]}
             handleRoomClick={() => null}
             Assets={Assets}
           />

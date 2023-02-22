@@ -376,6 +376,7 @@ export const rooms = {
   MrKrabs: {
     id: 'MrKrabs',
     bookable: 'APPLICATION_REQUIRED',
+    email: 'c_188b39t7a2lp0ivalb4cj6mfqq970@resource.calendar.google.com',
 
     displayName: 'Mr. Krabs',
     factoryNumber: '4.1.3',
@@ -740,6 +741,6 @@ export const RoomBookableData = {
   BOOKED_BY_SELF: {
     color: '#9f6aaf',
     displayName: 'You have this room',
-    showInLegend: false,
+    showInLegend: true,
   },
 } as const;
