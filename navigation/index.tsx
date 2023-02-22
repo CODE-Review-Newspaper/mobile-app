@@ -3,7 +3,6 @@
  * https://reactnavigation.org/docs/getting-started
  *
  */
-import Constants from "expo-constants"
 import { FontAwesome } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {
@@ -13,6 +12,7 @@ import {
 } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import dayjs from 'dayjs';
+import Constants from 'expo-constants';
 import { maybeCompleteAuthSession } from 'expo-web-browser';
 import { ComponentProps, useEffect } from 'react';
 import { useState } from 'react';
@@ -90,7 +90,7 @@ function TestComponent() {
           fontWeight: '900',
         }}
       >
-        Version {Constants.manifest?.version ?? "unknown"}
+        Version {Constants.manifest?.version ?? 'unknown'}
       </Text>
     </View>
   );
@@ -384,7 +384,7 @@ function BottomTabNavigator() {
           tabBarIcon: ({ color }) => <TabBarIcon name="list" color={color} />,
           headerRight: () => (
             <Pressable
-              onPress={() => { }}
+              onPress={() => {}}
               style={({ pressed }) => ({
                 opacity: pressed ? 0.5 : 1,
               })}
@@ -409,7 +409,7 @@ function BottomTabNavigator() {
           tabBarIcon: ({ color }) => <TabBarIcon name="gear" color={color} />,
           headerRight: () => (
             <Pressable
-              onPress={() => { }}
+              onPress={() => {}}
               style={({ pressed }) => ({
                 opacity: pressed ? 0.5 : 1,
               })}
