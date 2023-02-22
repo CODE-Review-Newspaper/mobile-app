@@ -17,6 +17,7 @@ import { ComponentProps, useEffect } from 'react';
 import { useState } from 'react';
 import { ColorSchemeName, Pressable } from 'react-native';
 import { useInterval } from 'usehooks-ts';
+import { Text, View } from '../components/Themed';
 
 import Colors from '../constants/Colors';
 import CalendarContext, {
@@ -68,6 +69,26 @@ export default function Navigation({
  * https://reactnavigation.org/docs/modal
  */
 const Stack = createNativeStackNavigator<RootStackParamList>();
+
+function TestComponent() {
+
+  return <View style={{
+    width: "100%",
+    height: "100%",
+    flex: 1,
+    backgroundColor: "orange",
+    alignItems: "center",
+    justifyContent: "center"
+  }}>
+    <Text style={{
+      color: "white",
+      fontSize: 50,
+      fontWeight: "900"
+    }}>
+      Version dings
+    </Text>
+  </View>
+}
 
 maybeCompleteAuthSession();
 
@@ -263,7 +284,7 @@ function RootNavigator() {
               return (
                 <Stack.Screen
                   name="Root"
-                  component={SignedOutFloorplanScreen}
+                  component={TestComponent}
                   options={{ headerShown: false }}
                 />
               );
@@ -357,7 +378,7 @@ function BottomTabNavigator() {
           tabBarIcon: ({ color }) => <TabBarIcon name="list" color={color} />,
           headerRight: () => (
             <Pressable
-              onPress={() => {}}
+              onPress={() => { }}
               style={({ pressed }) => ({
                 opacity: pressed ? 0.5 : 1,
               })}
@@ -382,7 +403,7 @@ function BottomTabNavigator() {
           tabBarIcon: ({ color }) => <TabBarIcon name="gear" color={color} />,
           headerRight: () => (
             <Pressable
-              onPress={() => {}}
+              onPress={() => { }}
               style={({ pressed }) => ({
                 opacity: pressed ? 0.5 : 1,
               })}
