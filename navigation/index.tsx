@@ -264,63 +264,64 @@ function RootNavigator() {
   };
 
   return (
-    <UserContext.Provider value={userContextValue}>
-      <CalendarContext.Provider value={calendarContextValue}>
-        <Stack.Navigator>
-          {(() => {
-            if (isLoadingAuthState)
-              return (
-                <Stack.Screen
-                  name="Root"
-                  component={TestComponent}
-                  options={{ headerShown: false }}
-                />
-              );
+    <TestComponent />
+    // <UserContext.Provider value={userContextValue}>
+    //   <CalendarContext.Provider value={calendarContextValue}>
+    //     <Stack.Navigator>
+    //       {(() => {
+    //         if (isLoadingAuthState)
+    //           return (
+    //             <Stack.Screen
+    //               name="Root"
+    //               component={TestComponent}
+    //               options={{ headerShown: false }}
+    //             />
+    //           );
 
-            // if (!isSignedIn)
-            //   return (
-            //     <Stack.Screen
-            //       name="Root"
-            //       component={TestComponent}
-            //       options={{ headerShown: false }}
-            //     />
-            //   );
+    //         // if (!isSignedIn)
+    //         //   return (
+    //         //     <Stack.Screen
+    //         //       name="Root"
+    //         //       component={TestComponent}
+    //         //       options={{ headerShown: false }}
+    //         //     />
+    //         //   );
 
-            if (!isSignedIn) {
-              return (
-                <Stack.Screen
-                  name="Root"
-                  component={TestComponent}
-                  options={{ headerShown: false }}
-                />
-              );
-            }
+    //         if (!isSignedIn) {
+    //           return (
+    //             <Stack.Screen
+    //               name="Root"
+    //               component={TestComponent}
+    //               options={{ headerShown: false }}
+    //             />
+    //           );
+    //         }
 
-            return (
-              <>
-                <Stack.Screen
-                  name="Root"
-                  component={TestComponent}
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name="NotFound"
-                  component={TestComponent}
-                  options={{ title: 'Oops!' }}
-                />
-                <Stack.Group screenOptions={{ presentation: 'modal' }}>
-                  <Stack.Screen
-                    name="Modal"
-                    component={TestComponent}
-                    options={{ headerShown: false }}
-                  />
-                </Stack.Group>
-              </>
-            );
-          })()}
-        </Stack.Navigator>
-      </CalendarContext.Provider>
-    </UserContext.Provider>
+    //         return (
+    //           <>
+    //             <Stack.Screen
+    //               name="Root"
+    //               component={TestComponent}
+    //               options={{ headerShown: false }}
+    //             />
+    //             <Stack.Screen
+    //               name="NotFound"
+    //               component={TestComponent}
+    //               options={{ title: 'Oops!' }}
+    //             />
+    //             <Stack.Group screenOptions={{ presentation: 'modal' }}>
+    //               <Stack.Screen
+    //                 name="Modal"
+    //                 component={TestComponent}
+    //                 options={{ headerShown: false }}
+    //               />
+    //             </Stack.Group>
+    //           </>
+    //         );
+    //       })()}
+    //     </Stack.Navigator>
+    //   </CalendarContext.Provider>
+    // </UserContext.Provider>
   );
 }
 
@@ -384,7 +385,7 @@ function BottomTabNavigator() {
           tabBarIcon: ({ color }) => <TabBarIcon name="list" color={color} />,
           headerRight: () => (
             <Pressable
-              onPress={() => {}}
+              onPress={() => { }}
               style={({ pressed }) => ({
                 opacity: pressed ? 0.5 : 1,
               })}
@@ -409,7 +410,7 @@ function BottomTabNavigator() {
           tabBarIcon: ({ color }) => <TabBarIcon name="gear" color={color} />,
           headerRight: () => (
             <Pressable
-              onPress={() => {}}
+              onPress={() => { }}
               style={({ pressed }) => ({
                 opacity: pressed ? 0.5 : 1,
               })}
