@@ -3,6 +3,7 @@
  * https://reactnavigation.org/docs/getting-started
  *
  */
+import Constants from "expo-constants"
 import { FontAwesome } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {
@@ -17,8 +18,8 @@ import { ComponentProps, useEffect } from 'react';
 import { useState } from 'react';
 import { ColorSchemeName, Pressable } from 'react-native';
 import { useInterval } from 'usehooks-ts';
-import { Text, View } from '../components/Themed';
 
+import { Text, View } from '../components/Themed';
 import Colors from '../constants/Colors';
 import CalendarContext, {
   CalendarContextType,
@@ -71,23 +72,28 @@ export default function Navigation({
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function TestComponent() {
-
-  return <View style={{
-    width: "100%",
-    height: "100%",
-    flex: 1,
-    backgroundColor: "orange",
-    alignItems: "center",
-    justifyContent: "center"
-  }}>
-    <Text style={{
-      color: "white",
-      fontSize: 50,
-      fontWeight: "900"
-    }}>
-      Version dings
-    </Text>
-  </View>
+  return (
+    <View
+      style={{
+        width: '100%',
+        height: '100%',
+        flex: 1,
+        backgroundColor: 'orange',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <Text
+        style={{
+          color: 'white',
+          fontSize: 50,
+          fontWeight: '900',
+        }}
+      >
+        Version {Constants.manifest?.version ?? "unknown"}
+      </Text>
+    </View>
+  );
 }
 
 maybeCompleteAuthSession();
@@ -266,7 +272,7 @@ function RootNavigator() {
               return (
                 <Stack.Screen
                   name="Root"
-                  component={LoadingScreen}
+                  component={TestComponent}
                   options={{ headerShown: false }}
                 />
               );
@@ -275,7 +281,7 @@ function RootNavigator() {
             //   return (
             //     <Stack.Screen
             //       name="Root"
-            //       component={LoginScreen}
+            //       component={TestComponent}
             //       options={{ headerShown: false }}
             //     />
             //   );
@@ -294,18 +300,18 @@ function RootNavigator() {
               <>
                 <Stack.Screen
                   name="Root"
-                  component={BottomTabNavigator}
+                  component={TestComponent}
                   options={{ headerShown: false }}
                 />
                 <Stack.Screen
                   name="NotFound"
-                  component={NotFoundScreen}
+                  component={TestComponent}
                   options={{ title: 'Oops!' }}
                 />
                 <Stack.Group screenOptions={{ presentation: 'modal' }}>
                   <Stack.Screen
                     name="Modal"
-                    component={ModalScreen}
+                    component={TestComponent}
                     options={{ headerShown: false }}
                   />
                 </Stack.Group>
@@ -340,7 +346,7 @@ function BottomTabNavigator() {
     >
       <BottomTab.Screen
         name="TabOne"
-        component={TabOneScreen}
+        component={TestComponent}
         options={({ navigation }: RootTabScreenProps<'TabOne'>) => ({
           title: 'Floorplan',
           tabBarActiveTintColor: '#FF6961',
@@ -370,7 +376,7 @@ function BottomTabNavigator() {
       />
       <BottomTab.Screen
         name="TabTwo"
-        component={RoomListScreen}
+        component={TestComponent}
         options={{
           headerShown: false,
           title: 'Rooms',
@@ -395,7 +401,7 @@ function BottomTabNavigator() {
       />
       <BottomTab.Screen
         name="Settings"
-        component={SettingsScreen}
+        component={TestComponent}
         options={{
           headerShown: false,
           title: 'Settings',
