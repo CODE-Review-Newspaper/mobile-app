@@ -99,20 +99,20 @@ function TestComponent() {
 maybeCompleteAuthSession();
 
 function RootNavigator() {
-  // const [roomScheduleState, setRoomScheduleState] = useState<{
-  //   isLoading: boolean;
-  //   hasData: boolean;
-  //   hasError: boolean;
-  // }>({ isLoading: true, hasData: false, hasError: false });
+  const [roomScheduleState, setRoomScheduleState] = useState<{
+    isLoading: boolean;
+    hasData: boolean;
+    hasError: boolean;
+  }>({ isLoading: true, hasData: false, hasError: false });
 
-  // const {
-  //   user,
-  //   isSignedIn,
-  //   isLoadingAuthState,
-  //   signIn,
-  //   signOut,
-  //   fetchUserEvents,
-  // } = userLoginController();
+  const {
+    user,
+    isSignedIn,
+    isLoadingAuthState,
+    signIn,
+    signOut,
+    fetchUserEvents,
+  } = userLoginController();
   // const { createEvent } = bookRoomsController();
   // const { getBusyTimeOfRooms } = allRoomsController();
 
