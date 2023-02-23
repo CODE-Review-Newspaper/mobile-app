@@ -7,7 +7,6 @@ import useCachedResources from './hooks/useCachedResources';
 import useColorScheme from './hooks/useColorScheme';
 import Navigation from './navigation';
 
-
 function TestComponent() {
   return (
     <View
