@@ -266,13 +266,13 @@ function RootNavigator() {
 
   return (
     <>
-      {/* <FontAwesome
+      <FontAwesome
         name="info-circle"
         size={25}
         color={'#fff'}
         style={{ marginRight: 15 }}
-      /> */}
-      <TabBarIcon name="map-marker" color={'#fff'} />
+      />
+      {/* <TabBarIcon name="map-marker" color={'#fff'} /> */}
       <TestComponent />
     </>
     // <UserContext.Provider value={userContextValue}>
