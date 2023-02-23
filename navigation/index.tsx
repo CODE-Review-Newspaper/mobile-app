@@ -288,7 +288,7 @@ function RootNavigator() {
               return (
                 <Stack.Screen
                   name="Root"
-                  component={TestComponent}
+                  component={LoadingScreen}
                   options={{ headerShown: false }}
                 />
               );
@@ -306,7 +306,7 @@ function RootNavigator() {
               return (
                 <Stack.Screen
                   name="Root"
-                  component={TestComponent}
+                  component={SignedOutFloorplanScreen}
                   options={{ headerShown: false }}
                 />
               );

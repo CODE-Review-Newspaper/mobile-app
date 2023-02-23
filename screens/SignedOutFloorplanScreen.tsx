@@ -2,6 +2,7 @@ import ReactNativeZoomableView from '@dudigital/react-native-zoomable-view/src/R
 import { FontAwesome } from '@expo/vector-icons';
 import Slider from '@react-native-community/slider';
 import dayjs from 'dayjs';
+import Constants from 'expo-constants';
 import { useContext, useState } from 'react';
 import { Dimensions, Pressable, StyleSheet } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
@@ -18,6 +19,31 @@ import CalendarContext from '../contexts/calendar.context';
 import UserContext from '../contexts/user.context';
 import { rooms } from '../data/rooms.data';
 import { MAX_TIMEPICKER_RANGE_HOURS } from '../data/time.data';
+
+function TestComponent() {
+  return (
+    <View
+      style={{
+        width: '100%',
+        height: '100%',
+        flex: 1,
+        backgroundColor: 'orange',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <Text
+        style={{
+          color: 'white',
+          fontSize: 50,
+          fontWeight: '900',
+        }}
+      >
+        Version {Constants.manifest?.version ?? 'unknown'}
+      </Text>
+    </View>
+  );
+}
 
 export default function SignedOutFloorplanScreen() {
   const { about, signIn } = useContext(UserContext);
@@ -69,170 +95,171 @@ export default function SignedOutFloorplanScreen() {
   const inactiveFloorColor = '#7c7c7d';
 
   return (
-    <>
-      <View style={{ width: '100%', height: '100%', backgroundColor: '#222' }}>
-        {!about.isCodeMember && (
-          <View
-            style={{
-              ...styles.statusTopBar,
-              position: 'absolute',
-              zIndex: 4,
-              elevation: 4,
-              paddingTop: 16,
-            }}
-          >
-            <Pressable
-              onPress={signIn}
-              style={({ pressed }) =>
-                pressed ? [styles.button, styles.buttonPressed] : styles.button
-              }
-              accessibilityLabel="Sign in with @code.berlin"
-            >
-              <GoogleIcon
-                width="16"
-                height="16"
-                fill="white"
-                style={{ marginBottom: 1 }}
-              />
-              <Text style={styles.buttonText}>
-                {Dimensions.get('window').width >= 430
-                  ? 'Sign in with @code.berlin'
-                  : 'Sign in with Google'}
-              </Text>
-            </Pressable>
-            <Pressable
-              accessibilityHint="Go to next floor"
-              style={[
-                overlayElementsStyles.bigOverlaySquare,
-                { position: 'absolute', right: 16, top: 16 },
-              ]}
-              onPress={goToNextFloor}
-            >
-              <TopLayer
-                fill={
-                  floor.id === 'FifthFloor'
-                    ? activeFloorColor
-                    : inactiveFloorColor
-                }
-                width="20"
-                height="20"
-                style={{
-                  position: 'absolute',
-                  top: 10,
-                }}
-              />
-              <Layer
-                fill={
-                  floor.id === 'FourthFloor'
-                    ? activeFloorColor
-                    : inactiveFloorColor
-                }
-                width="20"
-                height="20"
-                style={{
-                  position: 'absolute',
-                  top: 10 + 2 + 6.24,
-                }}
-              />
-            </Pressable>
-          </View>
-        )}
-        <View
-          style={{
-            borderTopWidth: 97,
-            borderColor: '#222',
+    // <>
+    //   <View style={{ width: '100%', height: '100%', backgroundColor: '#222' }}>
+    //     {!about.isCodeMember && (
+    //       <View
+    //         style={{
+    //           ...styles.statusTopBar,
+    //           position: 'absolute',
+    //           zIndex: 4,
+    //           elevation: 4,
+    //           paddingTop: 16,
+    //         }}
+    //       >
+    //         <Pressable
+    //           onPress={signIn}
+    //           style={({ pressed }) =>
+    //             pressed ? [styles.button, styles.buttonPressed] : styles.button
+    //           }
+    //           accessibilityLabel="Sign in with @code.berlin"
+    //         >
+    //           <GoogleIcon
+    //             width="16"
+    //             height="16"
+    //             fill="white"
+    //             style={{ marginBottom: 1 }}
+    //           />
+    //           <Text style={styles.buttonText}>
+    //             {Dimensions.get('window').width >= 430
+    //               ? 'Sign in with @code.berlin'
+    //               : 'Sign in with Google'}
+    //           </Text>
+    //         </Pressable>
+    //         <Pressable
+    //           accessibilityHint="Go to next floor"
+    //           style={[
+    //             overlayElementsStyles.bigOverlaySquare,
+    //             { position: 'absolute', right: 16, top: 16 },
+    //           ]}
+    //           onPress={goToNextFloor}
+    //         >
+    //           <TopLayer
+    //             fill={
+    //               floor.id === 'FifthFloor'
+    //                 ? activeFloorColor
+    //                 : inactiveFloorColor
+    //             }
+    //             width="20"
+    //             height="20"
+    //             style={{
+    //               position: 'absolute',
+    //               top: 10,
+    //             }}
+    //           />
+    //           <Layer
+    //             fill={
+    //               floor.id === 'FourthFloor'
+    //                 ? activeFloorColor
+    //                 : inactiveFloorColor
+    //             }
+    //             width="20"
+    //             height="20"
+    //             style={{
+    //               position: 'absolute',
+    //               top: 10 + 2 + 6.24,
+    //             }}
+    //           />
+    //         </Pressable>
+    //       </View>
+    //     )}
+    //     <View
+    //       style={{
+    //         borderTopWidth: 97,
+    //         borderColor: '#222',
 
-            width: '100%',
-            height: 16 * 6,
+    //         width: '100%',
+    //         height: 16 * 6,
 
-            zIndex: 3,
-            elevation: 3,
-          }}
-        >
-          <LinearGradient
-            colors={['rgba(0, 0, 0, 0.8)', 'transparent']}
-            style={{
-              ...styles.toolBar,
-              opacity: 0,
-            }}
-          >
-            <Text style={styles.timeDisplay}>
-              {selectedDate.format('MMM D, H:mma')}
-            </Text>
-            <Slider
-              style={{ width: '100%', height: 40 }}
-              minimumValue={0}
-              maximumValue={1}
-              step={1 / MAX_TIMEPICKER_RANGE_HOURS / 4}
-              minimumTrackTintColor="#ff6961"
-              maximumTrackTintColor="white"
-              onValueChange={(numberBetween0and1) =>
-                setSelectedDate(
-                  startDate.add(
-                    numberBetween0and1 * MAX_TIMEPICKER_RANGE_HOURS,
-                    'hours'
-                  )
-                )
-              }
-              value={
-                selectedDate.diff(startDate, 'hours') /
-                MAX_TIMEPICKER_RANGE_HOURS
-              }
-            />
-            <Pressable
-              accessibilityLabel="Switch to next display mode"
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: '100%',
-                paddingBottom: 16,
-                backgroundColor: 'transparent',
-              }}
-              onPress={switchDisplayMode}
-            >
-              <Text
-                style={{
-                  ...styles.timeDisplay,
-                  textDecorationLine: 'underline',
-                }}
-              >
-                {displayMode.displayName}
-              </Text>
-              <FontAwesome
-                name="arrows-v"
-                style={{ marginLeft: 5, color: '#ccc', fontSize: 15 }}
-              />
-            </Pressable>
-          </LinearGradient>
-        </View>
+    //         zIndex: 3,
+    //         elevation: 3,
+    //       }}
+    //     >
+    //       <LinearGradient
+    //         colors={['rgba(0, 0, 0, 0.8)', 'transparent']}
+    //         style={{
+    //           ...styles.toolBar,
+    //           opacity: 0,
+    //         }}
+    //       >
+    //         <Text style={styles.timeDisplay}>
+    //           {selectedDate.format('MMM D, H:mma')}
+    //         </Text>
+    //         <Slider
+    //           style={{ width: '100%', height: 40 }}
+    //           minimumValue={0}
+    //           maximumValue={1}
+    //           step={1 / MAX_TIMEPICKER_RANGE_HOURS / 4}
+    //           minimumTrackTintColor="#ff6961"
+    //           maximumTrackTintColor="white"
+    //           onValueChange={(numberBetween0and1) =>
+    //             setSelectedDate(
+    //               startDate.add(
+    //                 numberBetween0and1 * MAX_TIMEPICKER_RANGE_HOURS,
+    //                 'hours'
+    //               )
+    //             )
+    //           }
+    //           value={
+    //             selectedDate.diff(startDate, 'hours') /
+    //             MAX_TIMEPICKER_RANGE_HOURS
+    //           }
+    //         />
+    //         <Pressable
+    //           accessibilityLabel="Switch to next display mode"
+    //           style={{
+    //             flexDirection: 'row',
+    //             alignItems: 'center',
+    //             justifyContent: 'center',
+    //             width: '100%',
+    //             paddingBottom: 16,
+    //             backgroundColor: 'transparent',
+    //           }}
+    //           onPress={switchDisplayMode}
+    //         >
+    //           <Text
+    //             style={{
+    //               ...styles.timeDisplay,
+    //               textDecorationLine: 'underline',
+    //             }}
+    //           >
+    //             {displayMode.displayName}
+    //           </Text>
+    //           <FontAwesome
+    //             name="arrows-v"
+    //             style={{ marginLeft: 5, color: '#ccc', fontSize: 15 }}
+    //           />
+    //         </Pressable>
+    //       </LinearGradient>
+    //     </View>
 
-        <View
-          style={{
-            flex: 1,
-            alignItems: 'center',
-            justifyContent: 'center',
+    //     <View
+    //       style={{
+    //         flex: 1,
+    //         alignItems: 'center',
+    //         justifyContent: 'center',
 
-            width: '100%',
+    //         width: '100%',
 
-            backgroundColor: 'transparent',
-          }}
-        >
-          <Floorplan
-            displayMode={DisplayMode.MAP_MODE}
-            isZoomEnabled={true}
-            hasData={hasData}
-            hasError={hasError}
-            isLoading={isLoading}
-            selectedDate={selectedDate}
-            roomSchedules={roomSchedules}
-            userSchedule={[]}
-            handleRoomClick={() => null}
-            Assets={Assets}
-          />
-        </View>
-      </View>
-    </>
+    //         backgroundColor: 'transparent',
+    //       }}
+    //     >
+    //       <Floorplan
+    //         displayMode={DisplayMode.MAP_MODE}
+    //         isZoomEnabled={true}
+    //         hasData={hasData}
+    //         hasError={hasError}
+    //         isLoading={isLoading}
+    //         selectedDate={selectedDate}
+    //         roomSchedules={roomSchedules}
+    //         userSchedule={[]}
+    //         handleRoomClick={() => null}
+    //         Assets={Assets}
+    //       />
+    //     </View>
+    //   </View>
+    // </>
+    <TestComponent />
   );
 }
 
