@@ -113,158 +113,158 @@ function RootNavigator() {
     signOut,
     fetchUserEvents,
   } = userLoginController();
-  // const { createEvent } = bookRoomsController();
-  // const { getBusyTimeOfRooms } = allRoomsController();
+  const { createEvent } = bookRoomsController();
+  const { getBusyTimeOfRooms } = allRoomsController();
 
-  // const startOfQuarterHour = (date: dayjs.Dayjs) => {
-  //   const roundedMinutes = Math.floor(date.get('minutes') / 15) * 15;
+  const startOfQuarterHour = (date: dayjs.Dayjs) => {
+    const roundedMinutes = Math.floor(date.get('minutes') / 15) * 15;
 
-  //   return date.set('minutes', roundedMinutes);
-  // };
-  // function getStartDate() {
-  //   return dayjs().startOf('day');
-  // }
-  // function getSelectedDate() {
-  //   return startOfQuarterHour(dayjs());
-  // }
+    return date.set('minutes', roundedMinutes);
+  };
+  function getStartDate() {
+    return dayjs().startOf('day');
+  }
+  function getSelectedDate() {
+    return startOfQuarterHour(dayjs());
+  }
 
-  // function goToPrevDay() {
-  //   setStartDate((prev) => prev.subtract(1, 'day'));
-  //   setEndDate((prev) => prev.subtract(1, 'day'));
-  //   setSelectedDate((prev) => prev.subtract(1, 'day'));
-  // }
-  // function goToNextDay() {
-  //   setStartDate((prev) => prev.add(1, 'day'));
-  //   setEndDate((prev) => prev.add(1, 'day'));
-  //   setSelectedDate((prev) => prev.add(1, 'day'));
-  // }
+  function goToPrevDay() {
+    setStartDate((prev) => prev.subtract(1, 'day'));
+    setEndDate((prev) => prev.subtract(1, 'day'));
+    setSelectedDate((prev) => prev.subtract(1, 'day'));
+  }
+  function goToNextDay() {
+    setStartDate((prev) => prev.add(1, 'day'));
+    setEndDate((prev) => prev.add(1, 'day'));
+    setSelectedDate((prev) => prev.add(1, 'day'));
+  }
 
-  // const [selectedRoom, setSelectedRoom] =
-  //   useState<CalendarContextType['selectedRoom']>(null);
-  // const [startDate, setStartDate] = useState<CalendarContextType['startDate']>(
-  //   getStartDate()
-  // );
-  // const [selectedDate, setSelectedDate] = useState<
-  //   CalendarContextType['selectedDate']
-  // >(getSelectedDate());
-  // const [endDate, setEndDate] = useState<CalendarContextType['endDate']>(
-  //   selectedDate.add(DEFAULT_MEETING_DURATION_MINS, 'minutes')
-  // );
-  // const [roomSchedules, setRoomSchedules] = useState<
-  //   CalendarContextType['roomSchedules']
-  // >({});
+  const [selectedRoom, setSelectedRoom] =
+    useState<CalendarContextType['selectedRoom']>(null);
+  const [startDate, setStartDate] = useState<CalendarContextType['startDate']>(
+    getStartDate()
+  );
+  const [selectedDate, setSelectedDate] = useState<
+    CalendarContextType['selectedDate']
+  >(getSelectedDate());
+  const [endDate, setEndDate] = useState<CalendarContextType['endDate']>(
+    selectedDate.add(DEFAULT_MEETING_DURATION_MINS, 'minutes')
+  );
+  const [roomSchedules, setRoomSchedules] = useState<
+    CalendarContextType['roomSchedules']
+  >({});
 
-  // const [userSchedule, setUserSchedule] = useState<
-  //   CalendarContextType['userSchedule']
-  // >([]);
+  const [userSchedule, setUserSchedule] = useState<
+    CalendarContextType['userSchedule']
+  >([]);
 
-  // const daysInTheFuture = startDate.diff(dayjs().startOf('day'), 'days');
+  const daysInTheFuture = startDate.diff(dayjs().startOf('day'), 'days');
 
-  // const canGoToPrevDay = daysInTheFuture > 0;
-  // const canGoToNextDay = daysInTheFuture < MAX_TIMEPICKER_RANGE_DAYS;
+  const canGoToPrevDay = daysInTheFuture > 0;
+  const canGoToNextDay = daysInTheFuture < MAX_TIMEPICKER_RANGE_DAYS;
 
-  // async function loadUserSchedule() {
-  //   const [scheduleError, scheduleData] = await fetchUserEvents();
+  async function loadUserSchedule() {
+    const [scheduleError, scheduleData] = await fetchUserEvents();
 
-  //   if (scheduleError != null) {
-  //     console.error('error loading user schedule:', scheduleError);
+    if (scheduleError != null) {
+      console.error('error loading user schedule:', scheduleError);
 
-  //     return;
-  //   }
-  //   setUserSchedule(scheduleData.items);
+      return;
+    }
+    setUserSchedule(scheduleData.items);
 
-  //   console.info('loaded user schedule');
-  // }
+    console.info('loaded user schedule');
+  }
 
-  // async function loadRoomSchedules() {
-  //   setRoomScheduleState((prev) => ({
-  //     ...prev,
-  //     isLoading: true,
-  //   }));
+  async function loadRoomSchedules() {
+    setRoomScheduleState((prev) => ({
+      ...prev,
+      isLoading: true,
+    }));
 
-  //   const [scheduleError, scheduleData] = await getBusyTimeOfRooms();
+    const [scheduleError, scheduleData] = await getBusyTimeOfRooms();
 
-  //   if (scheduleError != null) {
-  //     console.error('error loading room schedules:', scheduleError);
+    if (scheduleError != null) {
+      console.error('error loading room schedules:', scheduleError);
 
-  //     setRoomScheduleState((prev) => ({
-  //       ...prev,
-  //       isLoading: false,
-  //       hasError: true,
-  //     }));
-  //     return;
-  //   }
-  //   setRoomScheduleState((prev) => ({
-  //     ...prev,
-  //     isLoading: false,
-  //     hasError: false,
-  //     hasData: true,
-  //   }));
-  //   setRoomSchedules(scheduleData);
+      setRoomScheduleState((prev) => ({
+        ...prev,
+        isLoading: false,
+        hasError: true,
+      }));
+      return;
+    }
+    setRoomScheduleState((prev) => ({
+      ...prev,
+      isLoading: false,
+      hasError: false,
+      hasData: true,
+    }));
+    setRoomSchedules(scheduleData);
 
-  //   console.info('loaded room schedules');
-  // }
+    console.info('loaded room schedules');
+  }
 
-  // useEffect(() => {
-  //   if (isSignedIn && !isLoadingAuthState) {
-  //     loadRoomSchedules();
-  //     loadUserSchedule();
-  //   }
-  // }, [isSignedIn, isLoadingAuthState]);
+  useEffect(() => {
+    if (isSignedIn && !isLoadingAuthState) {
+      loadRoomSchedules();
+      loadUserSchedule();
+    }
+  }, [isSignedIn, isLoadingAuthState]);
 
-  // useInterval(
-  //   () => {
-  //     if (isSignedIn && !isLoadingAuthState) {
-  //       loadUserSchedule();
-  //       loadRoomSchedules();
-  //     }
+  useInterval(
+    () => {
+      if (isSignedIn && !isLoadingAuthState) {
+        loadUserSchedule();
+        loadRoomSchedules();
+      }
 
-  //     // const newStartDate = getStartDate();
+      // const newStartDate = getStartDate();
 
-  //     // setStartDate(newStartDate);
+      // setStartDate(newStartDate);
 
-  //     // we DON'T want to set endDate here because that would mess up
-  //     // the event creation screen
+      // we DON'T want to set endDate here because that would mess up
+      // the event creation screen
 
-  //     // if (selectedDate.isBefore(newStartDate)) setSelectedDate(newStartDate);
-  //   },
-  //   roomScheduleState.hasError
-  //     ? ROOM_SCHEDULES_REFETCHING_INTERVAL_SECONDS_OFFLINE * 1000
-  //     : ROOM_SCHEDULES_REFETCHING_INTERVAL_SECONDS_DEFAULT * 1000
-  // );
+      // if (selectedDate.isBefore(newStartDate)) setSelectedDate(newStartDate);
+    },
+    roomScheduleState.hasError
+      ? ROOM_SCHEDULES_REFETCHING_INTERVAL_SECONDS_OFFLINE * 1000
+      : ROOM_SCHEDULES_REFETCHING_INTERVAL_SECONDS_DEFAULT * 1000
+  );
 
-  // const userContextValue: UserContextType = {
-  //   user,
-  //   isSignedIn,
-  //   signIn,
-  //   signOut,
-  //   about: {
-  //     isCodeMember: user?.hd === 'code.berlin',
-  //   },
-  // };
-  // const calendarContextValue: CalendarContextType = {
-  //   selectedRoom,
-  //   setSelectedRoom,
-  //   startDate,
-  //   setStartDate,
-  //   endDate,
-  //   setEndDate,
-  //   selectedDate,
-  //   setSelectedDate,
-  //   roomSchedules,
-  //   createEvent,
-  //   loadRoomSchedules,
-  //   userSchedule,
-  //   loadUserSchedule,
-  //   goToPrevDay,
-  //   goToNextDay,
-  //   canGoToPrevDay,
-  //   canGoToNextDay,
-  //   ...roomScheduleState,
-  // };
-  // useEffect(() => {
-  //   alert(Constants.manifest?.version);
-  // }, [])
+  const userContextValue: UserContextType = {
+    user,
+    isSignedIn,
+    signIn,
+    signOut,
+    about: {
+      isCodeMember: user?.hd === 'code.berlin',
+    },
+  };
+  const calendarContextValue: CalendarContextType = {
+    selectedRoom,
+    setSelectedRoom,
+    startDate,
+    setStartDate,
+    endDate,
+    setEndDate,
+    selectedDate,
+    setSelectedDate,
+    roomSchedules,
+    createEvent,
+    loadRoomSchedules,
+    userSchedule,
+    loadUserSchedule,
+    goToPrevDay,
+    goToNextDay,
+    canGoToPrevDay,
+    canGoToNextDay,
+    ...roomScheduleState,
+  };
+  useEffect(() => {
+    alert(Constants.manifest?.version);
+  }, []);
 
   return (
     <>
