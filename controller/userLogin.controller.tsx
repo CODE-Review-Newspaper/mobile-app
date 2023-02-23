@@ -6,7 +6,6 @@ import dayjs from 'dayjs';
 import { TokenError, TokenResponse } from 'expo-auth-session';
 import { useEffect, useState } from 'react';
 import { Platform } from 'react-native';
-import Config from 'react-native-config';
 
 import { USER_SCHEDULE_FETCH_TIME_DAYS } from '../data/time.data';
 import { GoogleEventsResponse, GoogleUser } from '../googleClient/google.types';
@@ -36,9 +35,12 @@ export default function userLoginController() {
   const [isLoadingAuthState, setIsLoadingAuthState] = useState(true);
 
   const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
-    clientId: Config.CLIENT_ID,
-    iosClientId: Config.IOS_CLIENT_ID,
-    androidClientId: Config.ANDROID_CLIENT_ID,
+    clientId:
+      '614417646190-dbl1mao4r8bcjmam2cmcgtfo4c35ho1h.apps.googleusercontent.com',
+    iosClientId:
+      '614417646190-vcu5a3ini5nnr0elfaqt8fprs358mp2i.apps.googleusercontent.com',
+    androidClientId:
+      '614417646190-hhupm8k97a22rvv2gfdcoqi1gus8qunq.apps.googleusercontent.com',
     scopes: ['https://www.googleapis.com/auth/calendar'],
   });
 
@@ -109,9 +111,9 @@ export default function userLoginController() {
 
   function getClientId() {
     if (Platform.OS === 'ios') {
-      return Config.IOS_CLIENT_ID;
+      return '614417646190-vcu5a3ini5nnr0elfaqt8fprs358mp2i.apps.googleusercontent.com';
     } else if (Platform.OS === 'android') {
-      return Config.ANDROID_CLIENT_ID;
+      return '614417646190-hhupm8k97a22rvv2gfdcoqi1gus8qunq.apps.googleusercontent.com';
     } else {
       console.error('Invalid platform - not handled');
     }
