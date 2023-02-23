@@ -260,17 +260,11 @@ export default function SignedOutFloorplanScreen() {
     //   </View>
     // </>
     <>
-      {/* <GoogleIcon
+      <GoogleIcon
         width="16"
         height="16"
         fill="white"
         style={{ marginBottom: 1 }}
-      /> */}
-      <FontAwesome
-        name="info-circle"
-        size={25}
-        color={'#fff'}
-        style={{ marginRight: 15 }}
       />
       <TestComponent />
     </>
