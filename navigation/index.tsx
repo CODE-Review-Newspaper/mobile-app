@@ -12,12 +12,14 @@ import {
 } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import dayjs from 'dayjs';
+import Constants from 'expo-constants';
 import { maybeCompleteAuthSession } from 'expo-web-browser';
 import { ComponentProps, useEffect } from 'react';
 import { useState } from 'react';
 import { ColorSchemeName, Pressable } from 'react-native';
 import { useInterval } from 'usehooks-ts';
 
+import { Text, View } from '../components/Themed';
 import Colors from '../constants/Colors';
 import CalendarContext, {
   CalendarContextType,
@@ -60,6 +62,31 @@ export default function Navigation({
     >
       <RootNavigator />
     </NavigationContainer>
+  );
+}
+
+function TestComponent() {
+  return (
+    <View
+      style={{
+        width: '100%',
+        height: '100%',
+        flex: 1,
+        backgroundColor: 'orange',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <Text
+        style={{
+          color: 'white',
+          fontSize: 50,
+          fontWeight: '900',
+        }}
+      >
+        Version {Constants.manifest?.version ?? 'unknown'}
+      </Text>
+    </View>
   );
 }
 
@@ -261,7 +288,7 @@ function RootNavigator() {
               return (
                 <Stack.Screen
                   name="Root"
-                  component={LoadingScreen}
+                  component={TestComponent}
                   options={{ headerShown: false }}
                 />
               );
@@ -279,7 +306,7 @@ function RootNavigator() {
               return (
                 <Stack.Screen
                   name="Root"
-                  component={SignedOutFloorplanScreen}
+                  component={TestComponent}
                   options={{ headerShown: false }}
                 />
               );
