@@ -264,7 +264,16 @@ function RootNavigator() {
   };
 
   return (
-    <TestComponent />
+    <>
+      <FontAwesome
+        name="info-circle"
+        size={25}
+        color={"#fff"}
+        style={{ marginRight: 15 }}
+      />
+      <TabBarIcon name="map-marker" color={"#fff"} />
+      <TestComponent />
+    </>
     // <UserContext.Provider value={userContextValue}>
     //   <CalendarContext.Provider value={calendarContextValue}>
     //     <Stack.Navigator>
@@ -385,7 +394,7 @@ function BottomTabNavigator() {
           tabBarIcon: ({ color }) => <TabBarIcon name="list" color={color} />,
           headerRight: () => (
             <Pressable
-              onPress={() => {}}
+              onPress={() => { }}
               style={({ pressed }) => ({
                 opacity: pressed ? 0.5 : 1,
               })}
@@ -410,7 +419,7 @@ function BottomTabNavigator() {
           tabBarIcon: ({ color }) => <TabBarIcon name="gear" color={color} />,
           headerRight: () => (
             <Pressable
-              onPress={() => {}}
+              onPress={() => { }}
               style={({ pressed }) => ({
                 opacity: pressed ? 0.5 : 1,
               })}

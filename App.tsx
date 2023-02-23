@@ -1,11 +1,12 @@
+import Constants from 'expo-constants';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { Text, View } from './components/Themed';
 
+import { Text, View } from './components/Themed';
 import useCachedResources from './hooks/useCachedResources';
 import useColorScheme from './hooks/useColorScheme';
 import Navigation from './navigation';
-import Constants from 'expo-constants';
+
 
 function TestComponent() {
   return (
@@ -41,8 +42,8 @@ export default function App() {
   } else {
     return (
       <SafeAreaProvider>
-        {/* <Navigation colorScheme={colorScheme} /> */}
-        <TestComponent />
+        <Navigation colorScheme={colorScheme} />
+        {/* <TestComponent /> */}
         <StatusBar />
       </SafeAreaProvider>
     );
