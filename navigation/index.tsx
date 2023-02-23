@@ -12,14 +12,12 @@ import {
 } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import dayjs from 'dayjs';
-import Constants from 'expo-constants';
 import { maybeCompleteAuthSession } from 'expo-web-browser';
 import { ComponentProps, useEffect } from 'react';
 import { useState } from 'react';
 import { ColorSchemeName, Pressable } from 'react-native';
 import { useInterval } from 'usehooks-ts';
 
-import { Text, View } from '../components/Themed';
 import Colors from '../constants/Colors';
 import CalendarContext, {
   CalendarContextType,
@@ -71,31 +69,6 @@ export default function Navigation({
  */
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
-function TestComponent() {
-  return (
-    <View
-      style={{
-        width: '100%',
-        height: '100%',
-        flex: 1,
-        backgroundColor: 'orange',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-    >
-      <Text
-        style={{
-          color: 'white',
-          fontSize: 50,
-          fontWeight: '900',
-        }}
-      >
-        Version {Constants.manifest?.version ?? 'unknown'}
-      </Text>
-    </View>
-  );
-}
-
 maybeCompleteAuthSession();
 
 function RootNavigator() {
@@ -129,14 +102,22 @@ function RootNavigator() {
   }
 
   function goToPrevDay() {
+    console.log('old start date in goToPrevDay:', startDate.toString());
+
     setStartDate((prev) => prev.subtract(1, 'day'));
     setEndDate((prev) => prev.subtract(1, 'day'));
     setSelectedDate((prev) => prev.subtract(1, 'day'));
+
+    // console.log("new start date in goToPrevDay:", startDate.toString())
   }
   function goToNextDay() {
+    console.log('old start date in goToNextDay:', startDate.toString());
+
     setStartDate((prev) => prev.add(1, 'day'));
     setEndDate((prev) => prev.add(1, 'day'));
     setSelectedDate((prev) => prev.add(1, 'day'));
+
+    // console.log("new start date in goToNextDay:", startDate.toString())
   }
 
   const [selectedRoom, setSelectedRoom] =
@@ -157,6 +138,14 @@ function RootNavigator() {
   const [userSchedule, setUserSchedule] = useState<
     CalendarContextType['userSchedule']
   >([]);
+
+  useEffect(() => {
+    console.log('root =========================================');
+    console.log('startDate:', startDate.toString());
+    console.log('endDate:', endDate.toString());
+    console.log('selectedDate:', selectedDate.toString());
+    console.log('==============================================');
+  }, [startDate, endDate, selectedDate]);
 
   const daysInTheFuture = startDate.diff(dayjs().startOf('day'), 'days');
 
@@ -262,9 +251,6 @@ function RootNavigator() {
     canGoToNextDay,
     ...roomScheduleState,
   };
-  useEffect(() => {
-    alert(Constants.manifest?.version);
-  }, []);
 
   return (
     <UserContext.Provider value={userContextValue}>
@@ -275,7 +261,7 @@ function RootNavigator() {
               return (
                 <Stack.Screen
                   name="Root"
-                  component={TestComponent}
+                  component={LoadingScreen}
                   options={{ headerShown: false }}
                 />
               );
@@ -284,7 +270,7 @@ function RootNavigator() {
             //   return (
             //     <Stack.Screen
             //       name="Root"
-            //       component={TestComponent}
+            //       component={LoginScreen}
             //       options={{ headerShown: false }}
             //     />
             //   );
@@ -293,7 +279,7 @@ function RootNavigator() {
               return (
                 <Stack.Screen
                   name="Root"
-                  component={TestComponent}
+                  component={SignedOutFloorplanScreen}
                   options={{ headerShown: false }}
                 />
               );
@@ -303,18 +289,18 @@ function RootNavigator() {
               <>
                 <Stack.Screen
                   name="Root"
-                  component={TestComponent}
+                  component={BottomTabNavigator}
                   options={{ headerShown: false }}
                 />
                 <Stack.Screen
                   name="NotFound"
-                  component={TestComponent}
+                  component={NotFoundScreen}
                   options={{ title: 'Oops!' }}
                 />
                 <Stack.Group screenOptions={{ presentation: 'modal' }}>
                   <Stack.Screen
                     name="Modal"
-                    component={TestComponent}
+                    component={ModalScreen}
                     options={{ headerShown: false }}
                   />
                 </Stack.Group>
@@ -349,7 +335,7 @@ function BottomTabNavigator() {
     >
       <BottomTab.Screen
         name="TabOne"
-        component={TestComponent}
+        component={TabOneScreen}
         options={({ navigation }: RootTabScreenProps<'TabOne'>) => ({
           title: 'Floorplan',
           tabBarActiveTintColor: '#FF6961',
@@ -379,7 +365,7 @@ function BottomTabNavigator() {
       />
       <BottomTab.Screen
         name="TabTwo"
-        component={TestComponent}
+        component={RoomListScreen}
         options={{
           headerShown: false,
           title: 'Rooms',
@@ -404,7 +390,7 @@ function BottomTabNavigator() {
       />
       <BottomTab.Screen
         name="Settings"
-        component={TestComponent}
+        component={SettingsScreen}
         options={{
           headerShown: false,
           title: 'Settings',
