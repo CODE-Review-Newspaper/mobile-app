@@ -3,8 +3,8 @@
  * https://reactnavigation.org/docs/getting-started
  *
  */
-// import { FontAwesome } from '@expo/vector-icons';
-// import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { FontAwesome } from '@expo/vector-icons';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {
   DarkTheme,
   DefaultTheme,
@@ -69,7 +69,7 @@ export default function Navigation({
  * A root stack navigator is often used for displaying modals on top of all other content.
  * https://reactnavigation.org/docs/modal
  */
-// const Stack = createNativeStackNavigator<RootStackParamList>();
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function TestComponent() {
   return (
@@ -267,73 +267,63 @@ function RootNavigator() {
   }, []);
 
   return (
-    <>
-      {/* <FontAwesome
-        name="info-circle"
-        size={25}
-        color={'#fff'}
-        style={{ marginRight: 15 }}
-      /> */}
-      {/* <TabBarIcon name="map-marker" color={'#fff'} /> */}
-      <TestComponent />
-    </>
-    // <UserContext.Provider value={userContextValue}>
-    //   <CalendarContext.Provider value={calendarContextValue}>
-    //     <Stack.Navigator>
-    //       {(() => {
-    //         if (isLoadingAuthState)
-    //           return (
-    //             <Stack.Screen
-    //               name="Root"
-    //               component={TestComponent}
-    //               options={{ headerShown: false }}
-    //             />
-    //           );
+    <UserContext.Provider value={userContextValue}>
+      <CalendarContext.Provider value={calendarContextValue}>
+        <Stack.Navigator>
+          {(() => {
+            if (isLoadingAuthState)
+              return (
+                <Stack.Screen
+                  name="Root"
+                  component={TestComponent}
+                  options={{ headerShown: false }}
+                />
+              );
 
-    //         // if (!isSignedIn)
-    //         //   return (
-    //         //     <Stack.Screen
-    //         //       name="Root"
-    //         //       component={TestComponent}
-    //         //       options={{ headerShown: false }}
-    //         //     />
-    //         //   );
+            // if (!isSignedIn)
+            //   return (
+            //     <Stack.Screen
+            //       name="Root"
+            //       component={TestComponent}
+            //       options={{ headerShown: false }}
+            //     />
+            //   );
 
-    //         if (!isSignedIn) {
-    //           return (
-    //             <Stack.Screen
-    //               name="Root"
-    //               component={TestComponent}
-    //               options={{ headerShown: false }}
-    //             />
-    //           );
-    //         }
+            if (!isSignedIn) {
+              return (
+                <Stack.Screen
+                  name="Root"
+                  component={TestComponent}
+                  options={{ headerShown: false }}
+                />
+              );
+            }
 
-    //         return (
-    //           <>
-    //             <Stack.Screen
-    //               name="Root"
-    //               component={TestComponent}
-    //               options={{ headerShown: false }}
-    //             />
-    //             <Stack.Screen
-    //               name="NotFound"
-    //               component={TestComponent}
-    //               options={{ title: 'Oops!' }}
-    //             />
-    //             <Stack.Group screenOptions={{ presentation: 'modal' }}>
-    //               <Stack.Screen
-    //                 name="Modal"
-    //                 component={TestComponent}
-    //                 options={{ headerShown: false }}
-    //               />
-    //             </Stack.Group>
-    //           </>
-    //         );
-    //       })()}
-    //     </Stack.Navigator>
-    //   </CalendarContext.Provider>
-    // </UserContext.Provider>
+            return (
+              <>
+                <Stack.Screen
+                  name="Root"
+                  component={TestComponent}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="NotFound"
+                  component={TestComponent}
+                  options={{ title: 'Oops!' }}
+                />
+                <Stack.Group screenOptions={{ presentation: 'modal' }}>
+                  <Stack.Screen
+                    name="Modal"
+                    component={TestComponent}
+                    options={{ headerShown: false }}
+                  />
+                </Stack.Group>
+              </>
+            );
+          })()}
+        </Stack.Navigator>
+      </CalendarContext.Provider>
+    </UserContext.Provider>
   );
 }
 
@@ -341,112 +331,112 @@ function RootNavigator() {
  * A bottom tab navigator displays tab buttons on the bottom of the display to switch screens.
  * https://reactnavigation.org/docs/bottom-tab-navigator
  */
-// const BottomTab = createBottomTabNavigator<RootTabParamList>();
+const BottomTab = createBottomTabNavigator<RootTabParamList>();
 
-// function BottomTabNavigator() {
-//   const colorScheme = useColorScheme();
+function BottomTabNavigator() {
+  const colorScheme = useColorScheme();
 
-//   return (
-//     <BottomTab.Navigator
-//       initialRouteName="TabTwo"
-//       screenOptions={{
-//         tabBarStyle: {
-//           backgroundColor: '#111',
-//           borderTopColor: '#444',
-//         },
-//       }}
-//       sceneContainerStyle={{ backgroundColor: '#222' }}
-//     >
-//       <BottomTab.Screen
-//         name="TabOne"
-//         component={TestComponent}
-//         options={({ navigation }: RootTabScreenProps<'TabOne'>) => ({
-//           title: 'Floorplan',
-//           tabBarActiveTintColor: '#FF6961',
-//           // tabBarInactiveTintColor: "#efefef",
-//           // tabBarActiveBackgroundColor: "blue",
-//           // tabBarInActiveBackgroundColor: "green",
-//           headerShown: false,
-//           tabBarIcon: ({ color }) => (
-//             <TabBarIcon name="map-marker" color={color} />
-//           ),
-//           headerRight: () => (
-//             <Pressable
-//               onPress={() => navigation.navigate('Modal')}
-//               style={({ pressed }) => ({
-//                 opacity: pressed ? 0.5 : 1,
-//               })}
-//             >
-//               <FontAwesome
-//                 name="info-circle"
-//                 size={25}
-//                 color={Colors[colorScheme].text}
-//                 style={{ marginRight: 15 }}
-//               />
-//             </Pressable>
-//           ),
-//         })}
-//       />
-//       <BottomTab.Screen
-//         name="TabTwo"
-//         component={TestComponent}
-//         options={{
-//           headerShown: false,
-//           title: 'Rooms',
-//           tabBarActiveTintColor: '#FF6961',
-//           tabBarIcon: ({ color }) => <TabBarIcon name="list" color={color} />,
-//           headerRight: () => (
-//             <Pressable
-//               onPress={() => { }}
-//               style={({ pressed }) => ({
-//                 opacity: pressed ? 0.5 : 1,
-//               })}
-//             >
-//               <FontAwesome
-//                 name="info-circle"
-//                 size={25}
-//                 color={Colors[colorScheme].text}
-//                 style={{ marginRight: 15 }}
-//               />
-//             </Pressable>
-//           ),
-//         }}
-//       />
-//       <BottomTab.Screen
-//         name="Settings"
-//         component={TestComponent}
-//         options={{
-//           headerShown: false,
-//           title: 'Settings',
-//           tabBarActiveTintColor: '#FF6961',
-//           tabBarIcon: ({ color }) => <TabBarIcon name="gear" color={color} />,
-//           headerRight: () => (
-//             <Pressable
-//               onPress={() => { }}
-//               style={({ pressed }) => ({
-//                 opacity: pressed ? 0.5 : 1,
-//               })}
-//             >
-//               <FontAwesome
-//                 name="info-circle"
-//                 size={25}
-//                 color={Colors[colorScheme].text}
-//                 style={{ marginRight: 15 }}
-//               />
-//             </Pressable>
-//           ),
-//         }}
-//       />
-//     </BottomTab.Navigator>
-//   );
-// }
+  return (
+    <BottomTab.Navigator
+      initialRouteName="TabTwo"
+      screenOptions={{
+        tabBarStyle: {
+          backgroundColor: '#111',
+          borderTopColor: '#444',
+        },
+      }}
+      sceneContainerStyle={{ backgroundColor: '#222' }}
+    >
+      <BottomTab.Screen
+        name="TabOne"
+        component={TestComponent}
+        options={({ navigation }: RootTabScreenProps<'TabOne'>) => ({
+          title: 'Floorplan',
+          tabBarActiveTintColor: '#FF6961',
+          // tabBarInactiveTintColor: "#efefef",
+          // tabBarActiveBackgroundColor: "blue",
+          // tabBarInActiveBackgroundColor: "green",
+          headerShown: false,
+          tabBarIcon: ({ color }) => (
+            <TabBarIcon name="map-marker" color={color} />
+          ),
+          headerRight: () => (
+            <Pressable
+              onPress={() => navigation.navigate('Modal')}
+              style={({ pressed }) => ({
+                opacity: pressed ? 0.5 : 1,
+              })}
+            >
+              <FontAwesome
+                name="info-circle"
+                size={25}
+                color={Colors[colorScheme].text}
+                style={{ marginRight: 15 }}
+              />
+            </Pressable>
+          ),
+        })}
+      />
+      <BottomTab.Screen
+        name="TabTwo"
+        component={TestComponent}
+        options={{
+          headerShown: false,
+          title: 'Rooms',
+          tabBarActiveTintColor: '#FF6961',
+          tabBarIcon: ({ color }) => <TabBarIcon name="list" color={color} />,
+          headerRight: () => (
+            <Pressable
+              onPress={() => {}}
+              style={({ pressed }) => ({
+                opacity: pressed ? 0.5 : 1,
+              })}
+            >
+              <FontAwesome
+                name="info-circle"
+                size={25}
+                color={Colors[colorScheme].text}
+                style={{ marginRight: 15 }}
+              />
+            </Pressable>
+          ),
+        }}
+      />
+      <BottomTab.Screen
+        name="Settings"
+        component={TestComponent}
+        options={{
+          headerShown: false,
+          title: 'Settings',
+          tabBarActiveTintColor: '#FF6961',
+          tabBarIcon: ({ color }) => <TabBarIcon name="gear" color={color} />,
+          headerRight: () => (
+            <Pressable
+              onPress={() => {}}
+              style={({ pressed }) => ({
+                opacity: pressed ? 0.5 : 1,
+              })}
+            >
+              <FontAwesome
+                name="info-circle"
+                size={25}
+                color={Colors[colorScheme].text}
+                style={{ marginRight: 15 }}
+              />
+            </Pressable>
+          ),
+        }}
+      />
+    </BottomTab.Navigator>
+  );
+}
 
-// /**
-//  * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
-//  */
-// function TabBarIcon(props: {
-//   name: ComponentProps<typeof FontAwesome>['name'];
-//   color: string;
-// }) {
-//   return <FontAwesome size={30} style={{ marginBottom: -3 }} {...props} />;
-// }
+/**
+ * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
+ */
+function TabBarIcon(props: {
+  name: ComponentProps<typeof FontAwesome>['name'];
+  color: string;
+}) {
+  return <FontAwesome size={30} style={{ marginBottom: -3 }} {...props} />;
+}
