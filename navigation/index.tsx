@@ -262,16 +262,16 @@ function RootNavigator() {
     canGoToNextDay,
     ...roomScheduleState,
   };
-  alert(Constants.manifest?.version)
+  alert(Constants.manifest?.version);
 
   return (
     <>
-      <FontAwesome
+      {/* <FontAwesome
         name="info-circle"
         size={25}
         color={'#fff'}
         style={{ marginRight: 15 }}
-      />
+      /> */}
       <TabBarIcon name="map-marker" color={'#fff'} />
       <TestComponent />
     </>
