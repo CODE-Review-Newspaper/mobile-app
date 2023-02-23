@@ -20,3 +20,9 @@ android
 .env
 
 .idea
+
+# output from eas build -p ios --local --profile preview looks something like build-1677141338643.tar.gz
+build-[0-9]*.tar.gz
+
+# double-clicking the above tar archive creates CODEConnect.app, which can be dragged into the simulator to install
+*.app

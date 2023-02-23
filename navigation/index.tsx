@@ -3,8 +3,8 @@
  * https://reactnavigation.org/docs/getting-started
  *
  */
-import { FontAwesome } from '@expo/vector-icons';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+// import { FontAwesome } from '@expo/vector-icons';
+// import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {
   DarkTheme,
   DefaultTheme,
@@ -69,7 +69,7 @@ export default function Navigation({
  * A root stack navigator is often used for displaying modals on top of all other content.
  * https://reactnavigation.org/docs/modal
  */
-const Stack = createNativeStackNavigator<RootStackParamList>();
+// const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function TestComponent() {
   return (
@@ -99,179 +99,181 @@ function TestComponent() {
 maybeCompleteAuthSession();
 
 function RootNavigator() {
-  const [roomScheduleState, setRoomScheduleState] = useState<{
-    isLoading: boolean;
-    hasData: boolean;
-    hasError: boolean;
-  }>({ isLoading: true, hasData: false, hasError: false });
+  // const [roomScheduleState, setRoomScheduleState] = useState<{
+  //   isLoading: boolean;
+  //   hasData: boolean;
+  //   hasError: boolean;
+  // }>({ isLoading: true, hasData: false, hasError: false });
 
-  const {
-    user,
-    isSignedIn,
-    isLoadingAuthState,
-    signIn,
-    signOut,
-    fetchUserEvents,
-  } = userLoginController();
-  const { createEvent } = bookRoomsController();
-  const { getBusyTimeOfRooms } = allRoomsController();
+  // const {
+  //   user,
+  //   isSignedIn,
+  //   isLoadingAuthState,
+  //   signIn,
+  //   signOut,
+  //   fetchUserEvents,
+  // } = userLoginController();
+  // const { createEvent } = bookRoomsController();
+  // const { getBusyTimeOfRooms } = allRoomsController();
 
-  const startOfQuarterHour = (date: dayjs.Dayjs) => {
-    const roundedMinutes = Math.floor(date.get('minutes') / 15) * 15;
+  // const startOfQuarterHour = (date: dayjs.Dayjs) => {
+  //   const roundedMinutes = Math.floor(date.get('minutes') / 15) * 15;
 
-    return date.set('minutes', roundedMinutes);
-  };
-  function getStartDate() {
-    return dayjs().startOf('day');
-  }
-  function getSelectedDate() {
-    return startOfQuarterHour(dayjs());
-  }
+  //   return date.set('minutes', roundedMinutes);
+  // };
+  // function getStartDate() {
+  //   return dayjs().startOf('day');
+  // }
+  // function getSelectedDate() {
+  //   return startOfQuarterHour(dayjs());
+  // }
 
-  function goToPrevDay() {
-    setStartDate((prev) => prev.subtract(1, 'day'));
-    setEndDate((prev) => prev.subtract(1, 'day'));
-    setSelectedDate((prev) => prev.subtract(1, 'day'));
-  }
-  function goToNextDay() {
-    setStartDate((prev) => prev.add(1, 'day'));
-    setEndDate((prev) => prev.add(1, 'day'));
-    setSelectedDate((prev) => prev.add(1, 'day'));
-  }
+  // function goToPrevDay() {
+  //   setStartDate((prev) => prev.subtract(1, 'day'));
+  //   setEndDate((prev) => prev.subtract(1, 'day'));
+  //   setSelectedDate((prev) => prev.subtract(1, 'day'));
+  // }
+  // function goToNextDay() {
+  //   setStartDate((prev) => prev.add(1, 'day'));
+  //   setEndDate((prev) => prev.add(1, 'day'));
+  //   setSelectedDate((prev) => prev.add(1, 'day'));
+  // }
 
-  const [selectedRoom, setSelectedRoom] =
-    useState<CalendarContextType['selectedRoom']>(null);
-  const [startDate, setStartDate] = useState<CalendarContextType['startDate']>(
-    getStartDate()
-  );
-  const [selectedDate, setSelectedDate] = useState<
-    CalendarContextType['selectedDate']
-  >(getSelectedDate());
-  const [endDate, setEndDate] = useState<CalendarContextType['endDate']>(
-    selectedDate.add(DEFAULT_MEETING_DURATION_MINS, 'minutes')
-  );
-  const [roomSchedules, setRoomSchedules] = useState<
-    CalendarContextType['roomSchedules']
-  >({});
+  // const [selectedRoom, setSelectedRoom] =
+  //   useState<CalendarContextType['selectedRoom']>(null);
+  // const [startDate, setStartDate] = useState<CalendarContextType['startDate']>(
+  //   getStartDate()
+  // );
+  // const [selectedDate, setSelectedDate] = useState<
+  //   CalendarContextType['selectedDate']
+  // >(getSelectedDate());
+  // const [endDate, setEndDate] = useState<CalendarContextType['endDate']>(
+  //   selectedDate.add(DEFAULT_MEETING_DURATION_MINS, 'minutes')
+  // );
+  // const [roomSchedules, setRoomSchedules] = useState<
+  //   CalendarContextType['roomSchedules']
+  // >({});
 
-  const [userSchedule, setUserSchedule] = useState<
-    CalendarContextType['userSchedule']
-  >([]);
+  // const [userSchedule, setUserSchedule] = useState<
+  //   CalendarContextType['userSchedule']
+  // >([]);
 
-  const daysInTheFuture = startDate.diff(dayjs().startOf('day'), 'days');
+  // const daysInTheFuture = startDate.diff(dayjs().startOf('day'), 'days');
 
-  const canGoToPrevDay = daysInTheFuture > 0;
-  const canGoToNextDay = daysInTheFuture < MAX_TIMEPICKER_RANGE_DAYS;
+  // const canGoToPrevDay = daysInTheFuture > 0;
+  // const canGoToNextDay = daysInTheFuture < MAX_TIMEPICKER_RANGE_DAYS;
 
-  async function loadUserSchedule() {
-    const [scheduleError, scheduleData] = await fetchUserEvents();
+  // async function loadUserSchedule() {
+  //   const [scheduleError, scheduleData] = await fetchUserEvents();
 
-    if (scheduleError != null) {
-      console.error('error loading user schedule:', scheduleError);
+  //   if (scheduleError != null) {
+  //     console.error('error loading user schedule:', scheduleError);
 
-      return;
-    }
-    setUserSchedule(scheduleData.items);
+  //     return;
+  //   }
+  //   setUserSchedule(scheduleData.items);
 
-    console.info('loaded user schedule');
-  }
+  //   console.info('loaded user schedule');
+  // }
 
-  async function loadRoomSchedules() {
-    setRoomScheduleState((prev) => ({
-      ...prev,
-      isLoading: true,
-    }));
+  // async function loadRoomSchedules() {
+  //   setRoomScheduleState((prev) => ({
+  //     ...prev,
+  //     isLoading: true,
+  //   }));
 
-    const [scheduleError, scheduleData] = await getBusyTimeOfRooms();
+  //   const [scheduleError, scheduleData] = await getBusyTimeOfRooms();
 
-    if (scheduleError != null) {
-      console.error('error loading room schedules:', scheduleError);
+  //   if (scheduleError != null) {
+  //     console.error('error loading room schedules:', scheduleError);
 
-      setRoomScheduleState((prev) => ({
-        ...prev,
-        isLoading: false,
-        hasError: true,
-      }));
-      return;
-    }
-    setRoomScheduleState((prev) => ({
-      ...prev,
-      isLoading: false,
-      hasError: false,
-      hasData: true,
-    }));
-    setRoomSchedules(scheduleData);
+  //     setRoomScheduleState((prev) => ({
+  //       ...prev,
+  //       isLoading: false,
+  //       hasError: true,
+  //     }));
+  //     return;
+  //   }
+  //   setRoomScheduleState((prev) => ({
+  //     ...prev,
+  //     isLoading: false,
+  //     hasError: false,
+  //     hasData: true,
+  //   }));
+  //   setRoomSchedules(scheduleData);
 
-    console.info('loaded room schedules');
-  }
+  //   console.info('loaded room schedules');
+  // }
 
-  useEffect(() => {
-    if (isSignedIn && !isLoadingAuthState) {
-      loadRoomSchedules();
-      loadUserSchedule();
-    }
-  }, [isSignedIn, isLoadingAuthState]);
+  // useEffect(() => {
+  //   if (isSignedIn && !isLoadingAuthState) {
+  //     loadRoomSchedules();
+  //     loadUserSchedule();
+  //   }
+  // }, [isSignedIn, isLoadingAuthState]);
 
-  useInterval(
-    () => {
-      if (isSignedIn && !isLoadingAuthState) {
-        loadUserSchedule();
-        loadRoomSchedules();
-      }
+  // useInterval(
+  //   () => {
+  //     if (isSignedIn && !isLoadingAuthState) {
+  //       loadUserSchedule();
+  //       loadRoomSchedules();
+  //     }
 
-      // const newStartDate = getStartDate();
+  //     // const newStartDate = getStartDate();
 
-      // setStartDate(newStartDate);
+  //     // setStartDate(newStartDate);
 
-      // we DON'T want to set endDate here because that would mess up
-      // the event creation screen
+  //     // we DON'T want to set endDate here because that would mess up
+  //     // the event creation screen
 
-      // if (selectedDate.isBefore(newStartDate)) setSelectedDate(newStartDate);
-    },
-    roomScheduleState.hasError
-      ? ROOM_SCHEDULES_REFETCHING_INTERVAL_SECONDS_OFFLINE * 1000
-      : ROOM_SCHEDULES_REFETCHING_INTERVAL_SECONDS_DEFAULT * 1000
-  );
+  //     // if (selectedDate.isBefore(newStartDate)) setSelectedDate(newStartDate);
+  //   },
+  //   roomScheduleState.hasError
+  //     ? ROOM_SCHEDULES_REFETCHING_INTERVAL_SECONDS_OFFLINE * 1000
+  //     : ROOM_SCHEDULES_REFETCHING_INTERVAL_SECONDS_DEFAULT * 1000
+  // );
 
-  const userContextValue: UserContextType = {
-    user,
-    isSignedIn,
-    signIn,
-    signOut,
-    about: {
-      isCodeMember: user?.hd === 'code.berlin',
-    },
-  };
-  const calendarContextValue: CalendarContextType = {
-    selectedRoom,
-    setSelectedRoom,
-    startDate,
-    setStartDate,
-    endDate,
-    setEndDate,
-    selectedDate,
-    setSelectedDate,
-    roomSchedules,
-    createEvent,
-    loadRoomSchedules,
-    userSchedule,
-    loadUserSchedule,
-    goToPrevDay,
-    goToNextDay,
-    canGoToPrevDay,
-    canGoToNextDay,
-    ...roomScheduleState,
-  };
-  alert(Constants.manifest?.version);
+  // const userContextValue: UserContextType = {
+  //   user,
+  //   isSignedIn,
+  //   signIn,
+  //   signOut,
+  //   about: {
+  //     isCodeMember: user?.hd === 'code.berlin',
+  //   },
+  // };
+  // const calendarContextValue: CalendarContextType = {
+  //   selectedRoom,
+  //   setSelectedRoom,
+  //   startDate,
+  //   setStartDate,
+  //   endDate,
+  //   setEndDate,
+  //   selectedDate,
+  //   setSelectedDate,
+  //   roomSchedules,
+  //   createEvent,
+  //   loadRoomSchedules,
+  //   userSchedule,
+  //   loadUserSchedule,
+  //   goToPrevDay,
+  //   goToNextDay,
+  //   canGoToPrevDay,
+  //   canGoToNextDay,
+  //   ...roomScheduleState,
+  // };
+  // useEffect(() => {
+  //   alert(Constants.manifest?.version);
+  // }, [])
 
   return (
     <>
-      <FontAwesome
+      {/* <FontAwesome
         name="info-circle"
         size={25}
         color={'#fff'}
         style={{ marginRight: 15 }}
-      />
+      /> */}
       {/* <TabBarIcon name="map-marker" color={'#fff'} /> */}
       <TestComponent />
     </>
@@ -339,112 +341,112 @@ function RootNavigator() {
  * A bottom tab navigator displays tab buttons on the bottom of the display to switch screens.
  * https://reactnavigation.org/docs/bottom-tab-navigator
  */
-const BottomTab = createBottomTabNavigator<RootTabParamList>();
+// const BottomTab = createBottomTabNavigator<RootTabParamList>();
 
-function BottomTabNavigator() {
-  const colorScheme = useColorScheme();
+// function BottomTabNavigator() {
+//   const colorScheme = useColorScheme();
 
-  return (
-    <BottomTab.Navigator
-      initialRouteName="TabTwo"
-      screenOptions={{
-        tabBarStyle: {
-          backgroundColor: '#111',
-          borderTopColor: '#444',
-        },
-      }}
-      sceneContainerStyle={{ backgroundColor: '#222' }}
-    >
-      <BottomTab.Screen
-        name="TabOne"
-        component={TestComponent}
-        options={({ navigation }: RootTabScreenProps<'TabOne'>) => ({
-          title: 'Floorplan',
-          tabBarActiveTintColor: '#FF6961',
-          // tabBarInactiveTintColor: "#efefef",
-          // tabBarActiveBackgroundColor: "blue",
-          // tabBarInActiveBackgroundColor: "green",
-          headerShown: false,
-          tabBarIcon: ({ color }) => (
-            <TabBarIcon name="map-marker" color={color} />
-          ),
-          headerRight: () => (
-            <Pressable
-              onPress={() => navigation.navigate('Modal')}
-              style={({ pressed }) => ({
-                opacity: pressed ? 0.5 : 1,
-              })}
-            >
-              <FontAwesome
-                name="info-circle"
-                size={25}
-                color={Colors[colorScheme].text}
-                style={{ marginRight: 15 }}
-              />
-            </Pressable>
-          ),
-        })}
-      />
-      <BottomTab.Screen
-        name="TabTwo"
-        component={TestComponent}
-        options={{
-          headerShown: false,
-          title: 'Rooms',
-          tabBarActiveTintColor: '#FF6961',
-          tabBarIcon: ({ color }) => <TabBarIcon name="list" color={color} />,
-          headerRight: () => (
-            <Pressable
-              onPress={() => { }}
-              style={({ pressed }) => ({
-                opacity: pressed ? 0.5 : 1,
-              })}
-            >
-              <FontAwesome
-                name="info-circle"
-                size={25}
-                color={Colors[colorScheme].text}
-                style={{ marginRight: 15 }}
-              />
-            </Pressable>
-          ),
-        }}
-      />
-      <BottomTab.Screen
-        name="Settings"
-        component={TestComponent}
-        options={{
-          headerShown: false,
-          title: 'Settings',
-          tabBarActiveTintColor: '#FF6961',
-          tabBarIcon: ({ color }) => <TabBarIcon name="gear" color={color} />,
-          headerRight: () => (
-            <Pressable
-              onPress={() => { }}
-              style={({ pressed }) => ({
-                opacity: pressed ? 0.5 : 1,
-              })}
-            >
-              <FontAwesome
-                name="info-circle"
-                size={25}
-                color={Colors[colorScheme].text}
-                style={{ marginRight: 15 }}
-              />
-            </Pressable>
-          ),
-        }}
-      />
-    </BottomTab.Navigator>
-  );
-}
+//   return (
+//     <BottomTab.Navigator
+//       initialRouteName="TabTwo"
+//       screenOptions={{
+//         tabBarStyle: {
+//           backgroundColor: '#111',
+//           borderTopColor: '#444',
+//         },
+//       }}
+//       sceneContainerStyle={{ backgroundColor: '#222' }}
+//     >
+//       <BottomTab.Screen
+//         name="TabOne"
+//         component={TestComponent}
+//         options={({ navigation }: RootTabScreenProps<'TabOne'>) => ({
+//           title: 'Floorplan',
+//           tabBarActiveTintColor: '#FF6961',
+//           // tabBarInactiveTintColor: "#efefef",
+//           // tabBarActiveBackgroundColor: "blue",
+//           // tabBarInActiveBackgroundColor: "green",
+//           headerShown: false,
+//           tabBarIcon: ({ color }) => (
+//             <TabBarIcon name="map-marker" color={color} />
+//           ),
+//           headerRight: () => (
+//             <Pressable
+//               onPress={() => navigation.navigate('Modal')}
+//               style={({ pressed }) => ({
+//                 opacity: pressed ? 0.5 : 1,
+//               })}
+//             >
+//               <FontAwesome
+//                 name="info-circle"
+//                 size={25}
+//                 color={Colors[colorScheme].text}
+//                 style={{ marginRight: 15 }}
+//               />
+//             </Pressable>
+//           ),
+//         })}
+//       />
+//       <BottomTab.Screen
+//         name="TabTwo"
+//         component={TestComponent}
+//         options={{
+//           headerShown: false,
+//           title: 'Rooms',
+//           tabBarActiveTintColor: '#FF6961',
+//           tabBarIcon: ({ color }) => <TabBarIcon name="list" color={color} />,
+//           headerRight: () => (
+//             <Pressable
+//               onPress={() => { }}
+//               style={({ pressed }) => ({
+//                 opacity: pressed ? 0.5 : 1,
+//               })}
+//             >
+//               <FontAwesome
+//                 name="info-circle"
+//                 size={25}
+//                 color={Colors[colorScheme].text}
+//                 style={{ marginRight: 15 }}
+//               />
+//             </Pressable>
+//           ),
+//         }}
+//       />
+//       <BottomTab.Screen
+//         name="Settings"
+//         component={TestComponent}
+//         options={{
+//           headerShown: false,
+//           title: 'Settings',
+//           tabBarActiveTintColor: '#FF6961',
+//           tabBarIcon: ({ color }) => <TabBarIcon name="gear" color={color} />,
+//           headerRight: () => (
+//             <Pressable
+//               onPress={() => { }}
+//               style={({ pressed }) => ({
+//                 opacity: pressed ? 0.5 : 1,
+//               })}
+//             >
+//               <FontAwesome
+//                 name="info-circle"
+//                 size={25}
+//                 color={Colors[colorScheme].text}
+//                 style={{ marginRight: 15 }}
+//               />
+//             </Pressable>
+//           ),
+//         }}
+//       />
+//     </BottomTab.Navigator>
+//   );
+// }
 
-/**
- * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
- */
-function TabBarIcon(props: {
-  name: ComponentProps<typeof FontAwesome>['name'];
-  color: string;
-}) {
-  return <FontAwesome size={30} style={{ marginBottom: -3 }} {...props} />;
-}
+// /**
+//  * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
+//  */
+// function TabBarIcon(props: {
+//   name: ComponentProps<typeof FontAwesome>['name'];
+//   color: string;
+// }) {
+//   return <FontAwesome size={30} style={{ marginBottom: -3 }} {...props} />;
+// }
