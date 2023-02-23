@@ -259,7 +259,15 @@ export default function SignedOutFloorplanScreen() {
     //     </View>
     //   </View>
     // </>
-    <TestComponent />
+    <>
+      <GoogleIcon
+        width="16"
+        height="16"
+        fill="white"
+        style={{ marginBottom: 1 }}
+      />
+      <TestComponent />
+    </>
   );
 }
 
