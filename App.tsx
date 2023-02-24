@@ -41,8 +41,14 @@ export default function App() {
   } else {
     return (
       <SafeAreaProvider>
-        <Navigation colorScheme={colorScheme} />
-        {/* <TestComponent /> */}
+        {/* <Navigation colorScheme={colorScheme} /> */}
+        <GoogleIcon
+          width="16"
+          height="16"
+          fill="white"
+          style={{ marginBottom: 1 }}
+        />
+        <TestComponent />
         <StatusBar />
       </SafeAreaProvider>
     );
