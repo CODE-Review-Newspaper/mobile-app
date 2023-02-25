@@ -1,7 +1,7 @@
 import { FontAwesome } from '@expo/vector-icons';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { Dimensions, Pressable, ScrollView, StyleSheet } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
@@ -183,17 +183,9 @@ export default function RoomListScreen({
   const hasResults =
     sachen.map((i) => i[1]).filter((i) => i.length > 0).length > 0;
 
-  function sached(e: any) {
-    setStartDate((prev) => {
-      console.log('startDate:', prev.toString());
+  const startDateRef = useRef<dayjs.Dayjs>(startDate);
 
-      setSelectedDate(
-        prev.add(e.value * (MAX_TIMEPICKER_RANGE_HOURS * 60), 'minutes')
-      );
-      return prev;
-    });
-  }
-  const sache = useCallback(sached, []);
+  startDateRef.current = startDate;
 
   return (
     <>
@@ -420,7 +412,14 @@ export default function RoomListScreen({
             value={
               selectedDate.diff(startDate, 'hours') / MAX_TIMEPICKER_RANGE_HOURS
             }
-            onValueChange={sache}
+            onValueChange={(e) =>
+              setSelectedDate(
+                startDateRef.current.add(
+                  e.value * MAX_TIMEPICKER_RANGE_HOURS,
+                  'hours'
+                )
+              )
+            }
             goToPrevDay={goToPrevDay}
             goToNextDay={goToNextDay}
             canGoToPrevDay={canGoToPrevDay}

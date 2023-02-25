@@ -297,6 +297,7 @@ export default function ModalScreen({
           selectedDate={dayjs()}
           roomSchedules={{}}
           handleRoomClick={() => {}}
+          userSchedule={[]}
           Assets={
             selectedRoom!.parentId === 'fifthFloor'
               ? FifthFloorAssets
