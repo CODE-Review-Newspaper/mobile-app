@@ -13,10 +13,13 @@ web-build/
 # macOS
 .DS_Store
 ios
-index.js
-metro.config.js
+# index.js
+# metro.config.js
 android
 
 .env
 
 .idea
+
+*.app
+*.tar.gz
