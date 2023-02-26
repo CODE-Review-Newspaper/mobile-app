@@ -3,6 +3,7 @@ import { StyleSheet } from 'react-native';
 
 import { Text } from '../components/Themed';
 import { RoomViewFilter, RoomViewType } from '../screens/RoomListScreen';
+import { TimePickerMode } from '../services/UserPreferences.service';
 
 const styles = StyleSheet.create({
   chipText: {
@@ -134,3 +135,23 @@ export const MapMode = {
 };
 export const DEFAULT_SIGNED_IN_MAP_MODE = MapMode.BOOKING_MODE;
 export const DEFAULT_SIGNED_OUT_MAP_MODE = MapMode.MAP_MODE;
+
+const TimePickerModeImpl = {
+  FULL_DAY: {
+    id: 'FULL_DAY',
+    displayName: 'Full day',
+
+    startHours: 0,
+    endHours: 24,
+  } as TimePickerMode,
+  HALF_DAY: {
+    id: 'HALF_DAY',
+    displayName: 'Half day',
+    startHours: 8,
+    endHours: 20,
+  } as TimePickerMode,
+};
+
+export { TimePickerModeImpl as TimePickerMode };
+
+export const DEFAULT_TIMEPICKER_MODE = TimePickerModeImpl.HALF_DAY;
