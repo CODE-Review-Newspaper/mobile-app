@@ -1,3 +1,4 @@
+import Constants from 'expo-constants';
 import { useContext } from 'react';
 import { Linking, Pressable, StyleSheet } from 'react-native';
 
@@ -10,6 +11,8 @@ export default function SettingsScreen() {
   const { fetchUserEvents } = userLoginController();
 
   const { user, about } = useContext(UserContext);
+
+  const codeConnectVersion = Constants.manifest?.version ?? 'unknown build';
 
   return (
     <View style={styles.container}>
@@ -56,6 +59,16 @@ export default function SettingsScreen() {
           Contribute or open an issue
         </Text>
       </Pressable>
+      <Text
+        style={{
+          color: '#888',
+          fontSize: 16,
+          fontWeight: '900',
+          marginTop: 16,
+        }}
+      >
+        CODE Connect {codeConnectVersion}
+      </Text>
     </View>
   );
 }
