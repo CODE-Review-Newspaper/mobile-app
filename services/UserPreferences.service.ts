@@ -16,6 +16,8 @@ export default class UserPreferences {
     const jsonValue = JSON.stringify(intervalPreference);
 
     await SecureStorage.setItemAsync(this.timePickerIntervalKey, jsonValue);
+
+    return intervalPreference;
   }
 
   static async getTimePickerInterval(): Promise<TimePickerMode> {

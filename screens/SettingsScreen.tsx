@@ -1,10 +1,13 @@
 import Constants from 'expo-constants';
-import { useContext } from 'react';
-import { Linking, Pressable, StyleSheet } from 'react-native';
+import { useContext, useState } from 'react';
+import { Image, Linking, Pressable, StyleSheet, Switch } from 'react-native';
 
+import PanelSelectInput from '../components/PanelSelectInput';
 import { Text, View } from '../components/Themed';
+import PreferencesContext from '../contexts/preferences.context';
 import UserContext from '../contexts/user.context';
 import userLoginController from '../controller/userLogin.controller';
+import { TimePickerMode } from '../data/views.data';
 
 export default function SettingsScreen() {
   const { signOut } = useContext(UserContext);
@@ -14,61 +17,126 @@ export default function SettingsScreen() {
 
   const codeConnectVersion = Constants.manifest?.version ?? 'unknown build';
 
+  const settings = useContext(PreferencesContext);
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>
-        <Text style={{ color: '#222', fontWeight: '700' }}>Signed in as </Text>
-        <Text style={{ color: '#FF6961', fontWeight: '900' }}>
+        {/* <Text style={{ color: '#222', fontWeight: '700' }}>Signed in as </Text> */}
+        <Text style={{ color: '#FF6961', fontWeight: '900', fontSize: 32 }}>
           {user?.name ?? 'Unknown'}
         </Text>
       </Text>
       <Text style={styles.text}>
         {about.isCodeMember ? 'Student' : 'External'}
       </Text>
-      <View
+      {/* <View
         style={styles.separator}
         lightColor="#eee"
         darkColor="rgba(255,255,255,0.1)"
+      /> */}
+
+      <View
+        style={{
+          flexDirection: 'column',
+
+          width: 9 * 16,
+
+          flex: 0,
+
+          backgroundColor: 'transparent',
+        }}
+      >
+        <Image
+          source={{ uri: user?.picture }}
+          style={{
+            width: '100%',
+            aspectRatio: 1,
+            marginVertical: 16,
+
+            borderRadius: 999,
+
+            backgroundColor: '#FF6961',
+          }}
+        />
+
+        <Pressable
+          onPress={signOut}
+          style={({ pressed }) =>
+            pressed ? [styles.button, styles.buttonPressed] : styles.button
+          }
+          accessibilityLabel="Sign out"
+        >
+          <Text style={styles.buttonText}>Sign out</Text>
+        </Pressable>
+      </View>
+
+      <View
+        style={{
+          backgroundColor: 'transparent',
+          height: 32,
+        }}
       />
 
-      <Pressable
-        onPress={signOut}
-        style={({ pressed }) =>
-          pressed ? [styles.button, styles.buttonPressed] : styles.button
-        }
-        accessibilityLabel="Sign out"
+      <View
+        style={{
+          flexDirection: 'column',
+
+          width: '67%',
+
+          backgroundColor: 'transparent',
+        }}
       >
-        <Text style={styles.buttonText}>Sign out</Text>
-      </Pressable>
+        <Text style={styles.text}>Time range</Text>
+        <PanelSelectInput
+          options={Object.values(TimePickerMode).map((i) => ({
+            id: i.id,
+            displayName: i.displayName,
+            isSelected: settings.timePickerMode.id === i.id,
+          }))}
+          onOptionClick={(selected) => {
+            settings.setTimePickerMode(TimePickerMode[selected.id]);
+          }}
+        />
+
+        {/* <View
+          style={{
+            height: 16,
+
+            backgroundColor: 'transparent',
+          }}
+        />
+
+        <Text style={styles.text}>Map style</Text>
+        <PanelSelectInput
+          options={[
+            {
+              id: 'HALF_DAY',
+              displayName: 'Accurate',
+              isSelected: false,
+            },
+            {
+              id: 'FULL_DAY',
+              displayName: 'Functional',
+              isSelected: false,
+            },
+          ]}
+          onOptionClick={() => {}}
+        /> */}
+      </View>
 
       <Pressable
         onPress={() =>
           Linking.openURL('https://github.com/CODE-Review-Newspaper/mobile-app')
         }
-      >
-        <Text
-          style={{
-            color: '#007acc',
-            textDecorationColor: '#007acc',
-            // textDecorationLine: 'underline',
-            fontSize: 16,
-            fontWeight: '900',
-            marginTop: 128,
-          }}
-        >
-          Contribute or open an issue
-        </Text>
-      </Pressable>
-      <Text
         style={{
-          color: '#888',
-          fontSize: 16,
-          fontWeight: '900',
-          marginTop: 16,
+          position: 'absolute',
+
+          bottom: 32,
         }}
       >
-        CODE Connect {codeConnectVersion}
-      </Text>
+        <Text style={styles.link}>CODE Connect {codeConnectVersion}</Text>
+      </Pressable>
     </View>
   );
 }
@@ -85,10 +153,10 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   text: {
-    color: '#222',
-    fontSize: 16,
-    fontWeight: '700',
+    fontSize: 20,
+    fontWeight: '900',
     marginTop: 10,
+    color: '#7c7c7d',
   },
   separator: {
     marginVertical: 30,
@@ -111,7 +179,16 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: '#999',
-    fontWeight: '900',
+
     fontSize: 16,
+    fontWeight: '900',
+  },
+  link: {
+    color: '#007acc',
+    textDecorationColor: '#007acc',
+    textDecorationLine: 'underline',
+
+    fontSize: 16,
+    fontWeight: '900',
   },
 });

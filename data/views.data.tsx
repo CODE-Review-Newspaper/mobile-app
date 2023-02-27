@@ -137,18 +137,18 @@ export const DEFAULT_SIGNED_IN_MAP_MODE = MapMode.BOOKING_MODE;
 export const DEFAULT_SIGNED_OUT_MAP_MODE = MapMode.MAP_MODE;
 
 const TimePickerModeImpl = {
+  HALF_DAY: {
+    id: 'HALF_DAY',
+    displayName: 'Half day (8:00 - 20:00)',
+    startHours: 8,
+    endHours: 20,
+  } as TimePickerMode,
   FULL_DAY: {
     id: 'FULL_DAY',
-    displayName: 'Full day',
+    displayName: 'Full day (0:00 - 24:00)',
 
     startHours: 0,
     endHours: 24,
-  } as TimePickerMode,
-  HALF_DAY: {
-    id: 'HALF_DAY',
-    displayName: 'Half day',
-    startHours: 8,
-    endHours: 20,
   } as TimePickerMode,
 };
 

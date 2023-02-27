@@ -22,6 +22,9 @@ import Colors from '../constants/Colors';
 import CalendarContext, {
   CalendarContextType,
 } from '../contexts/calendar.context';
+import PreferencesContext, {
+  PreferencesContextType,
+} from '../contexts/preferences.context';
 import UserContext, { UserContextType } from '../contexts/user.context';
 import allRoomsController from '../controller/allRooms.controller';
 import bookRoomsController from '../controller/booking.controller';
@@ -32,6 +35,7 @@ import {
   ROOM_SCHEDULES_REFETCHING_INTERVAL_SECONDS_DEFAULT,
   ROOM_SCHEDULES_REFETCHING_INTERVAL_SECONDS_OFFLINE,
 } from '../data/time.data';
+import { DEFAULT_TIMEPICKER_MODE } from '../data/views.data';
 import useColorScheme from '../hooks/useColorScheme';
 import LoadingScreen from '../screens/LoadingScreen';
 import LoginScreen from '../screens/LoginScreen';
@@ -41,6 +45,7 @@ import RoomListScreen from '../screens/RoomListScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import SignedOutFloorplanScreen from '../screens/SignedOutFloorplanScreen';
 import TabOneScreen from '../screens/TabOneScreen';
+import UserPreferences from '../services/UserPreferences.service';
 import {
   RootStackParamList,
   RootTabParamList,
@@ -206,6 +211,20 @@ function RootNavigator() {
       : ROOM_SCHEDULES_REFETCHING_INTERVAL_SECONDS_DEFAULT * 1000
   );
 
+  const [timePickerMode, setTimePickerMode] = useState<any>(
+    DEFAULT_TIMEPICKER_MODE
+  );
+
+  const preferencesValue: PreferencesContextType = {
+    timePickerMode,
+    setTimePickerMode: (value: any) => {
+      UserPreferences.setTimePickerInterval(value).then(setTimePickerMode);
+    },
+  };
+  useEffect(() => {
+    UserPreferences.getTimePickerInterval().then(setTimePickerMode);
+  }, []);
+
   const userContextValue: UserContextType = {
     user,
     isSignedIn,
@@ -237,63 +256,65 @@ function RootNavigator() {
   };
 
   return (
-    <UserContext.Provider value={userContextValue}>
-      <CalendarContext.Provider value={calendarContextValue}>
-        <Stack.Navigator>
-          {(() => {
-            if (isLoadingAuthState)
-              return (
-                <Stack.Screen
-                  name="Root"
-                  component={LoadingScreen}
-                  options={{ headerShown: false }}
-                />
-              );
-
-            // if (!isSignedIn)
-            //   return (
-            //     <Stack.Screen
-            //       name="Root"
-            //       component={LoginScreen}
-            //       options={{ headerShown: false }}
-            //     />
-            //   );
-
-            if (!isSignedIn) {
-              return (
-                <Stack.Screen
-                  name="Root"
-                  component={SignedOutFloorplanScreen}
-                  options={{ headerShown: false }}
-                />
-              );
-            }
-
-            return (
-              <>
-                <Stack.Screen
-                  name="Root"
-                  component={BottomTabNavigator}
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name="NotFound"
-                  component={NotFoundScreen}
-                  options={{ title: 'Oops!' }}
-                />
-                <Stack.Group screenOptions={{ presentation: 'modal' }}>
+    <PreferencesContext.Provider value={preferencesValue}>
+      <UserContext.Provider value={userContextValue}>
+        <CalendarContext.Provider value={calendarContextValue}>
+          <Stack.Navigator>
+            {(() => {
+              if (isLoadingAuthState)
+                return (
                   <Stack.Screen
-                    name="Modal"
-                    component={ModalScreen}
+                    name="Root"
+                    component={LoadingScreen}
                     options={{ headerShown: false }}
                   />
-                </Stack.Group>
-              </>
-            );
-          })()}
-        </Stack.Navigator>
-      </CalendarContext.Provider>
-    </UserContext.Provider>
+                );
+
+              // if (!isSignedIn)
+              //   return (
+              //     <Stack.Screen
+              //       name="Root"
+              //       component={LoginScreen}
+              //       options={{ headerShown: false }}
+              //     />
+              //   );
+
+              if (!isSignedIn) {
+                return (
+                  <Stack.Screen
+                    name="Root"
+                    component={SignedOutFloorplanScreen}
+                    options={{ headerShown: false }}
+                  />
+                );
+              }
+
+              return (
+                <>
+                  <Stack.Screen
+                    name="Root"
+                    component={BottomTabNavigator}
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name="NotFound"
+                    component={NotFoundScreen}
+                    options={{ title: 'Oops!' }}
+                  />
+                  <Stack.Group screenOptions={{ presentation: 'modal' }}>
+                    <Stack.Screen
+                      name="Modal"
+                      component={ModalScreen}
+                      options={{ headerShown: false }}
+                    />
+                  </Stack.Group>
+                </>
+              );
+            })()}
+          </Stack.Navigator>
+        </CalendarContext.Provider>
+      </UserContext.Provider>
+    </PreferencesContext.Provider>
   );
 }
 
