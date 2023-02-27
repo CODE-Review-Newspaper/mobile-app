@@ -12,11 +12,8 @@ import {
 } from 'react-native';
 
 import CalendarContext from '../../contexts/calendar.context';
+import PreferencesContext from '../../contexts/preferences.context';
 import { RoomBookableData, rooms } from '../../data/rooms.data';
-import {
-  MAX_TIMEPICKER_RANGE_DAYS,
-  MAX_TIMEPICKER_RANGE_HOURS,
-} from '../../data/time.data';
 import overlayElementsStyles from '../overlayUI/overlayElements.styles';
 import SegmentedSlider from '../SegmentedSlider';
 import { Text, View } from '../Themed';
@@ -46,6 +43,8 @@ export default function TimePicker({
   goToNextDay,
 }: TimePickerProps) {
   const { userSchedule, startDate } = useContext(CalendarContext);
+
+  const { timePickerMode } = useContext(PreferencesContext);
 
   const meetingsWithRooms =
     userSchedule?.map((i) => {
@@ -82,7 +81,7 @@ export default function TimePicker({
     .filter(
       (i) =>
         i.end.isAfter(startDate) &&
-        i.start.isBefore(startDate.add(MAX_TIMEPICKER_RANGE_HOURS, 'hours'))
+        i.start.isBefore(startDate.add(timePickerMode.rangeHours, 'hours'))
     );
 
   meetingSegments.sort((a, b) => (a.start.isBefore(b.start) ? -1 : 1));
@@ -103,7 +102,7 @@ export default function TimePicker({
           if (isLastSegment) {
             const finalSegment = {
               lengthMins: startDate
-                .add(MAX_TIMEPICKER_RANGE_HOURS, 'hours')
+                .add(timePickerMode.rangeHours, 'hours')
                 .diff(i.end, 'minutes'),
               type: 'BOOKABLE',
             } as const;
@@ -115,8 +114,8 @@ export default function TimePicker({
       : [
           {
             // start: dayjs(),
-            // end: dayjs().add(MAX_TIMEPICKER_RANGE_HOURS, 'nhours'),
-            lengthMins: MAX_TIMEPICKER_RANGE_HOURS * 60,
+            // end: dayjs().add(timePickerMode.rangeHours, 'nhours'),
+            lengthMins: timePickerMode.rangeHours * 60,
             type: 'BOOKABLE',
           } as const,
         ];
@@ -131,8 +130,8 @@ export default function TimePicker({
     ? [
         {
           start: startDate,
-          end: startDate.add(MAX_TIMEPICKER_RANGE_HOURS, 'hours'),
-          lengthMins: MAX_TIMEPICKER_RANGE_HOURS * 60,
+          end: startDate.add(timePickerMode.rangeHours, 'hours'),
+          lengthMins: timePickerMode.rangeHours * 60,
           type: 'BOOKABLE',
         } as const,
       ]
@@ -146,8 +145,8 @@ export default function TimePicker({
         } as const,
         {
           start: startDate.add(minsFromStartOfDay, 'minutes'),
-          end: startDate.add(MAX_TIMEPICKER_RANGE_HOURS, 'hours'),
-          lengthMins: MAX_TIMEPICKER_RANGE_HOURS * 60 - minsFromStartOfDay,
+          end: startDate.add(timePickerMode.rangeHours, 'hours'),
+          lengthMins: timePickerMode.rangeHours * 60 - minsFromStartOfDay,
           type: 'BOOKABLE',
         } as const,
       ];
@@ -209,9 +208,9 @@ export default function TimePicker({
 
           value={value}
           onValueChange={onValueChange}
-          step={1 / ((24 * 60) / 15)}
+          step={1 / ((timePickerMode.rangeHours * 60) / 15)}
           segments={segments.map((i) => ({
-            width: 1 / ((24 * 60) / i.lengthMins),
+            width: 1 / ((timePickerMode.rangeHours * 60) / i.lengthMins),
             color: RoomBookableData[i.type].color,
             isLowerLimit: i.isLowerLimit,
             isUpperLimit: i.isUpperLimit,
@@ -251,7 +250,7 @@ export default function TimePicker({
                     backgroundColor: RoomBookableData[i.type].color,
                     borderRadius: 4,
                     width:
-                      ((MAX_TIMEPICKER_RANGE_HOURS * 4) /
+                      ((timePickerMode.rangeHours * 4) /
                         Math.round(i.lengthMins / 15)) *
                         100 +
                       '%',
@@ -268,7 +267,7 @@ export default function TimePicker({
                   backgroundColor: '#7c7c7c',
                   borderRadius: 4,
                   width:
-                    (1 / MAX_TIMEPICKER_RANGE_HOURS / 4) *
+                    (1 / timePickerMode.rangeHours / 4) *
                       Math.round(
                         dayjs().diff(dayjs().startOf('day'), 'minutes') / 15
                       ) *
@@ -286,7 +285,7 @@ export default function TimePicker({
             height: 30,
 
             position: "absolute",
-            left: (1 / MAX_TIMEPICKER_RANGE_HOURS / 4) * (dayjs().diff(dayjs().startOf("day"), "minutes") / 15) * sliderWidth - 5,
+            left: (1 / timePickerMode.rangeHours / 4) * (dayjs().diff(dayjs().startOf("day"), "minutes") / 15) * sliderWidth - 5,
 
             top: 4
 
@@ -297,7 +296,7 @@ export default function TimePicker({
           }}
           minimumValue={0}
           maximumValue={1}
-          step={1 / MAX_TIMEPICKER_RANGE_HOURS / 4}
+          step={1 / timePickerMode.rangeHours / 4}
           minimumTrackTintColor="#ff6961"
           maximumTrackTintColor="white"
           onValueChange={debounced}
@@ -307,7 +306,7 @@ export default function TimePicker({
           lowerLimit={
             canGoToPrevDay
               ? 0
-              : (1 / MAX_TIMEPICKER_RANGE_HOURS / 4) *
+              : (1 / timePickerMode.rangeHours / 4) *
               (dayjs().diff(dayjs().startOf('day'), 'minutes') / 15)
           }
         />

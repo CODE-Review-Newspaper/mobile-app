@@ -9,6 +9,7 @@ import Sparkles from '../assets/icons/sparkles.svg';
 import { Text, View } from '../components/Themed';
 import TimePicker from '../components/TimePicker';
 import CalendarContext from '../contexts/calendar.context';
+import PreferencesContext from '../contexts/preferences.context';
 import { RoomEntity } from '../data/rooms.data';
 import {
   getTimepickerTitle,
@@ -186,6 +187,12 @@ export default function RoomListScreen({
   const startDateRef = useRef<dayjs.Dayjs>(startDate);
 
   startDateRef.current = startDate;
+
+  const { timePickerMode } = useContext(PreferencesContext);
+
+  const timePickerModeRef = useRef<any>(timePickerMode);
+
+  timePickerModeRef.current = timePickerMode;
 
   return (
     <>
@@ -410,12 +417,12 @@ export default function RoomListScreen({
             }}
             title={getTimepickerTitle(selectedDate)}
             value={
-              selectedDate.diff(startDate, 'hours') / MAX_TIMEPICKER_RANGE_HOURS
+              selectedDate.diff(startDate, 'hours') / timePickerMode.rangeHours
             }
             onValueChange={(e) =>
               setSelectedDate(
                 startDateRef.current.add(
-                  e.value * MAX_TIMEPICKER_RANGE_HOURS,
+                  e.value * timePickerModeRef.current.rangeHours,
                   'hours'
                 )
               )

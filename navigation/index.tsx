@@ -83,6 +83,10 @@ function RootNavigator() {
     hasError: boolean;
   }>({ isLoading: true, hasData: false, hasError: false });
 
+  const [timePickerMode, setTimePickerMode] = useState<any>(
+    DEFAULT_TIMEPICKER_MODE
+  );
+
   const {
     user,
     isSignedIn,
@@ -99,8 +103,8 @@ function RootNavigator() {
 
     return date.set('minutes', roundedMinutes);
   };
-  function getStartDate() {
-    return dayjs().startOf('day');
+  function getStartDate(from = dayjs()) {
+    return from.startOf('day').add(timePickerMode.startHours, 'hours');
   }
   function getSelectedDate() {
     return startOfQuarterHour(dayjs());
@@ -211,9 +215,18 @@ function RootNavigator() {
       : ROOM_SCHEDULES_REFETCHING_INTERVAL_SECONDS_DEFAULT * 1000
   );
 
-  const [timePickerMode, setTimePickerMode] = useState<any>(
-    DEFAULT_TIMEPICKER_MODE
-  );
+  useEffect(() => {
+    const newStartDate = getStartDate(startDate);
+
+    setStartDate(newStartDate);
+
+    if (selectedDate.diff(newStartDate, 'hours') > timePickerMode.rangeHours) {
+      setSelectedDate(newStartDate.add(timePickerMode.rangeHours, 'hours'));
+    }
+    if (selectedDate.diff(newStartDate, 'hours') < 0) {
+      setSelectedDate(newStartDate);
+    }
+  }, [timePickerMode]);
 
   const preferencesValue: PreferencesContextType = {
     timePickerMode,

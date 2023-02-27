@@ -82,12 +82,13 @@ export default function SettingsScreen() {
         style={{
           flexDirection: 'column',
 
-          width: '67%',
+          width: '100%',
+          paddingHorizontal: 16,
 
           backgroundColor: 'transparent',
         }}
       >
-        <Text style={styles.text}>Time range</Text>
+        <Text style={[styles.text, { marginLeft: 12 }]}>Time range</Text>
         <PanelSelectInput
           options={Object.values(TimePickerMode).map((i) => ({
             id: i.id,
@@ -107,7 +108,7 @@ export default function SettingsScreen() {
           }}
         />
 
-        <Text style={styles.text}>Map style</Text>
+        <Text style={[styles.text, { marginLeft: 12 }]}>Map style</Text>
         <PanelSelectInput
           options={[
             {

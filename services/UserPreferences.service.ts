@@ -7,6 +7,7 @@ export interface TimePickerMode {
   displayName: string;
   startHours: number;
   endHours: number;
+  rangeHours: number;
 }
 
 export default class UserPreferences {

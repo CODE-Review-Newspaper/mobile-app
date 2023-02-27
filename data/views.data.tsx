@@ -142,6 +142,7 @@ const TimePickerModeImpl = {
     displayName: 'Half day (8:00 - 20:00)',
     startHours: 8,
     endHours: 20,
+    rangeHours: 12,
   } as TimePickerMode,
   FULL_DAY: {
     id: 'FULL_DAY',
@@ -149,6 +150,7 @@ const TimePickerModeImpl = {
 
     startHours: 0,
     endHours: 24,
+    rangeHours: 24,
   } as TimePickerMode,
 };
 

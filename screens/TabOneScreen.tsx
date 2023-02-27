@@ -13,6 +13,7 @@ import overlayElementsStyles from '../components/overlayUI/overlayElements.style
 import { Text, View } from '../components/Themed';
 import TimePicker from '../components/TimePicker';
 import CalendarContext from '../contexts/calendar.context';
+import PreferencesContext from '../contexts/preferences.context';
 import UserContext from '../contexts/user.context';
 import { RoomEntity, rooms } from '../data/rooms.data';
 import {
@@ -83,6 +84,12 @@ export default function TabOneScreen({
   const startDateRef = useRef<dayjs.Dayjs>(startDate);
 
   startDateRef.current = startDate;
+
+  const { timePickerMode } = useContext(PreferencesContext);
+
+  const timePickerModeRef = useRef<any>(timePickerMode);
+
+  timePickerModeRef.current = timePickerMode;
 
   const floor = selectableFloors[activeFloorIdx];
 
@@ -244,12 +251,12 @@ export default function TabOneScreen({
             }}
             title={getTimepickerTitle(selectedDate)}
             value={
-              selectedDate.diff(startDate, 'hours') / MAX_TIMEPICKER_RANGE_HOURS
+              selectedDate.diff(startDate, 'hours') / timePickerMode.rangeHours
             }
             onValueChange={(e) =>
               setSelectedDate(
                 startDateRef.current.add(
-                  e.value * MAX_TIMEPICKER_RANGE_HOURS,
+                  e.value * timePickerModeRef.current.rangeHours,
                   'hours'
                 )
               )
