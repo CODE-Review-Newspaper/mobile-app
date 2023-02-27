@@ -2,7 +2,15 @@ import { FontAwesome } from '@expo/vector-icons';
 import Slider from '@react-native-community/slider';
 import dayjs from 'dayjs';
 import { useContext, useEffect, useState } from 'react';
-import { Linking, Pressable, StyleSheet, TextInput } from 'react-native';
+import {
+  Linking,
+  NativeSyntheticEvent,
+  Pressable,
+  StyleSheet,
+  TextInput,
+  TextInputKeyPressEventData,
+} from 'react-native';
+import { Keyboard } from 'react-native';
 
 import FifthFloorAssets from '../components/fifthFloor.assetMap';
 import Floorplan, { DisplayMode } from '../components/Floorplan';
@@ -37,6 +45,8 @@ const getRoomDescription = (room: RoomEntity) => {
 
   return 'Unknown room';
 };
+
+const removeNewlines = (str: string) => str.replace(/\n/g, '');
 
 export default function ModalScreen({
   navigation,
@@ -272,7 +282,9 @@ export default function ModalScreen({
               placeholder="Meeting title"
               multiline
               style={styles.titleInput}
-              onChangeText={(e) => setMeetingTitle(e)}
+              onChangeText={(text) => setMeetingTitle(removeNewlines(text))}
+              onKeyPress={quitKeyboardOnEnter}
+              value={meetingTitle}
             />
             {/* <FontAwesome name="pencil" style={{ color: "#222", fontSize: 50 }} /> */}
           </>
@@ -458,3 +470,11 @@ const styles = StyleSheet.create({
     color: 'white',
   },
 });
+
+function quitKeyboardOnEnter(
+  e: NativeSyntheticEvent<TextInputKeyPressEventData>
+) {
+  if (e.nativeEvent.key == 'Enter') {
+    Keyboard.dismiss();
+  }
+}
