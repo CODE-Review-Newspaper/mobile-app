@@ -25,13 +25,13 @@ export default function PanelSelectInput({
         <Pressable
           key={i.id}
           onPress={() => onOptionClick(i)}
-          style={i.isSelected ? styles.selectedOption : styles.unselectedOption}
+          style={({ pressed }) => [i.isSelected ? styles.selectedOption : styles.unselectedOption, pressed && { backgroundColor: i.isSelected ? '#fe746a' : "#848484" }]}
         >
           <View style={styles.iconContainer}>
             {i.isSelected ? (
-              <SelectedCircleIcon width="32" />
+              <SelectedCircleIcon width="22" height="22" />
             ) : (
-              <UnselectedCircleIcon width="32" />
+              <UnselectedCircleIcon width="22" height="22" />
             )}
           </View>
           <Text style={styles.optionText}>{i.displayName}</Text>
@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
   },
   unselectedOption: {
     borderRadius: 4,
-    backgroundColor: '#7c7c7d',
+    backgroundColor: '#7c7c7c',
     height: 48,
     width: '100%',
 
