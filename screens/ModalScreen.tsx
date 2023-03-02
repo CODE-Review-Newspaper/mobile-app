@@ -34,14 +34,12 @@ import { RootTabScreenProps } from '../types';
 
 const getRoomDescription = (room: RoomEntity) => {
   if (room.factoryNumber != null)
-    return `[${room.factoryNumber}] ${room.displayName} - ${
-      RoomCategoryData[room.category].displayName
-    }`;
+    return `[${room.factoryNumber}] ${room.displayName} - ${RoomCategoryData[room.category].displayName
+      }`;
 
   if (room.displayName != null)
-    return `${room.displayName}  - ${
-      RoomCategoryData[room.category].displayName
-    }`;
+    return `${room.displayName}  - ${RoomCategoryData[room.category].displayName
+      }`;
 
   return 'Unknown room';
 };
@@ -59,6 +57,7 @@ export default function ModalScreen({
     createEvent,
     loadRoomSchedules,
     roomSchedules,
+    loadUserSchedule,
   } = useContext(CalendarContext);
 
   useEffect(() => {
@@ -126,6 +125,7 @@ export default function ModalScreen({
 
     // wait before updating state because google api won't immediately return the new event
     setTimeout(loadRoomSchedules, 1000);
+    setTimeout(loadUserSchedule, 1000);
   }
   const selectedRoomSchedule = roomSchedules[selectedRoom!.id];
 
@@ -186,37 +186,37 @@ export default function ModalScreen({
 
   const segments = hasEvents
     ? nextEventsInSelectedRoom.flatMap((i, idx) => {
-        const ding = {
-          start: dayjs(i.start),
-          end: dayjs(i.end),
-          lengthMins: dayjs(i.end).diff(dayjs(i.start), 'minutes'),
-          type: 'UNAVAILABLE',
-        } as const;
-        const dong = {
-          start:
-            idx === 0
-              ? selectedDate
-              : dayjs(nextEventsInSelectedRoom![idx - 1].end),
-          end: dayjs(i.start),
-          lengthMins: dayjs(i.start).diff(
-            idx === 0
-              ? selectedDate
-              : dayjs(nextEventsInSelectedRoom![idx - 1].end),
-            'minutes'
-          ),
-          type: 'BOOKABLE',
-        } as const;
+      const ding = {
+        start: dayjs(i.start),
+        end: dayjs(i.end),
+        lengthMins: dayjs(i.end).diff(dayjs(i.start), 'minutes'),
+        type: 'UNAVAILABLE',
+      } as const;
+      const dong = {
+        start:
+          idx === 0
+            ? selectedDate
+            : dayjs(nextEventsInSelectedRoom![idx - 1].end),
+        end: dayjs(i.start),
+        lengthMins: dayjs(i.start).diff(
+          idx === 0
+            ? selectedDate
+            : dayjs(nextEventsInSelectedRoom![idx - 1].end),
+          'minutes'
+        ),
+        type: 'BOOKABLE',
+      } as const;
 
-        return [dong, ding];
-      })
+      return [dong, ding];
+    })
     : [
-        {
-          start: dayjs(),
-          end: dayjs().add(MAX_MEETING_DURATION_MINS, 'minutes'),
-          lengthMins: MAX_MEETING_DURATION_MINS,
-          type: 'BOOKABLE',
-        } as const,
-      ];
+      {
+        start: dayjs(),
+        end: dayjs().add(MAX_MEETING_DURATION_MINS, 'minutes'),
+        lengthMins: MAX_MEETING_DURATION_MINS,
+        type: 'BOOKABLE',
+      } as const,
+    ];
 
   const [sliderValue, setSliderValue] = useState<any>(null);
 
@@ -308,7 +308,7 @@ export default function ModalScreen({
           isLoading={false}
           selectedDate={dayjs()}
           roomSchedules={{}}
-          handleRoomClick={() => {}}
+          handleRoomClick={() => { }}
           userSchedule={[]}
           Assets={
             selectedRoom!.parentId === 'fifthFloor'
