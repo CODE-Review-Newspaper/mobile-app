@@ -25,7 +25,12 @@ export default function PanelSelectInput({
         <Pressable
           key={i.id}
           onPress={() => onOptionClick(i)}
-          style={({ pressed }) => [i.isSelected ? styles.selectedOption : styles.unselectedOption, pressed && { backgroundColor: i.isSelected ? '#fe746a' : "#848484" }]}
+          style={({ pressed }) => [
+            i.isSelected ? styles.selectedOption : styles.unselectedOption,
+            pressed && {
+              backgroundColor: i.isSelected ? '#fe746a' : '#848484',
+            },
+          ]}
         >
           <View style={styles.iconContainer}>
             {i.isSelected ? (
@@ -57,7 +62,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
 
-    marginTop: 8,
+    marginTop: 4,
   },
   unselectedOption: {
     borderRadius: 4,
@@ -69,7 +74,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
 
-    marginTop: 8,
+    marginTop: 4,
   },
   iconContainer: {
     backgroundColor: 'transparent',

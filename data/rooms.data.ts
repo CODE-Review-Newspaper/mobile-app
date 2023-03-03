@@ -1,8 +1,14 @@
+import FifthFloorAssets from '../components/fifthFloor.assetMap';
+import FourthFloorAssets from '../components/fourthFloor.assetMap';
 import { GoogleTimeFrame } from '../googleClient/google.types';
 
+type Assets = typeof FourthFloorAssets & typeof FifthFloorAssets;
+
+type AssetId = keyof Assets;
+
 export interface BaseMapEntity {
-  id: string; // used in figma
-  parentId: string | null; // id
+  id: AssetId; // used in figma
+  parentId: AssetId | null; // id
 }
 export interface FloorEntity extends BaseMapEntity {
   type: 'FLOOR';
@@ -29,6 +35,8 @@ export interface UnbookableRoomEntity extends BaseMapEntity {
   type: 'ROOM';
   displayName: string;
   factoryNumber: string | null;
+
+  email?: string | null;
 
   category: keyof typeof RoomCategoryData;
   bookable:
@@ -58,7 +66,7 @@ export type MapEntity =
 export const rooms = {
   Cinema: {
     id: 'Cinema',
-    parentId: 'fifthFloor',
+    parentId: 'FifthFloor',
     type: 'ROOM',
 
     bookable: 'UNBOOKABLE',
@@ -68,7 +76,7 @@ export const rooms = {
   },
   Bar: {
     id: 'Bar',
-    parentId: 'fifthFloor',
+    parentId: 'FifthFloor',
     type: 'ROOM',
 
     bookable: 'UNBOOKABLE',
@@ -78,7 +86,7 @@ export const rooms = {
   },
   Dings: {
     id: 'Dings',
-    parentId: 'fifthFloor',
+    parentId: 'FifthFloor',
     type: 'ROOM',
 
     bookable: 'UNBOOKABLE',
@@ -88,7 +96,7 @@ export const rooms = {
   },
   Dangs: {
     id: 'Dangs',
-    parentId: 'fifthFloor',
+    parentId: 'FifthFloor',
     type: 'ROOM',
 
     bookable: 'UNBOOKABLE',
@@ -98,7 +106,7 @@ export const rooms = {
   },
   Dongs: {
     id: 'Dongs',
-    parentId: 'fifthFloor',
+    parentId: 'FifthFloor',
     type: 'ROOM',
 
     bookable: 'UNBOOKABLE',
@@ -132,7 +140,7 @@ export const rooms = {
     factoryNumber: '4.3.1',
     category: 'MEETING_ROOM',
 
-    parentId: 'fourthFloor',
+    parentId: 'FourthFloor',
     type: 'ROOM',
     capacity: 10,
   },
@@ -145,7 +153,7 @@ export const rooms = {
     factoryNumber: '4.2.2',
     category: 'MEETING_ROOM',
 
-    parentId: 'fourthFloor',
+    parentId: 'FourthFloor',
     type: 'ROOM',
 
     capacity: 10,
@@ -159,7 +167,7 @@ export const rooms = {
     factoryNumber: '4.11.12',
     category: 'MEETING_ROOM',
 
-    parentId: 'fourthFloor',
+    parentId: 'FourthFloor',
     type: 'ROOM',
 
     capacity: 4,
@@ -173,7 +181,7 @@ export const rooms = {
     factoryNumber: '4.11.10',
     category: 'MEETING_ROOM',
 
-    parentId: 'fourthFloor',
+    parentId: 'FourthFloor',
     type: 'ROOM',
 
     capacity: 6,
@@ -187,7 +195,7 @@ export const rooms = {
     factoryNumber: '4.11.11',
     category: 'MEETING_ROOM',
 
-    parentId: 'fourthFloor',
+    parentId: 'FourthFloor',
     type: 'ROOM',
 
     capacity: 4,
@@ -201,7 +209,7 @@ export const rooms = {
     factoryNumber: '4.11.9',
     category: 'MEETING_ROOM',
 
-    parentId: 'fourthFloor',
+    parentId: 'FourthFloor',
     type: 'ROOM',
 
     capacity: 4,
@@ -214,7 +222,7 @@ export const rooms = {
     factoryNumber: '4.8.2',
     category: 'MEETING_ROOM',
 
-    parentId: 'fourthFloor',
+    parentId: 'FourthFloor',
     type: 'ROOM',
 
     capacity: 6,
@@ -227,29 +235,71 @@ export const rooms = {
     factoryNumber: '4.8.1',
     category: 'MEETING_ROOM',
 
-    parentId: 'fourthFloor',
+    parentId: 'FourthFloor',
     type: 'ROOM',
     capacity: 6,
   },
-  // BikiniBottom: {
-  //   id: 'BikiniBottom',
-  //   bookable: 'UNBOOKABLE',
+  BikiniBottom: {
+    id: 'BikiniBottom',
+    type: 'AREA',
 
-  //   displayName: 'Bikini Bottom',
-  //   factoryNumber: '4.1',
-  //   category: 'WORKSPACES',
+    displayName: 'Bikini Bottom',
 
-  //   parentId: "fourthFloor",
-  //   type: "ROOM",
-  // },
-  // HallyMcHallface: {
-  //   id: 'HallyMcHallface',
-  //   bookable: 'UNBOOKABLE',
+    factoryNumber: null,
 
-  //   displayName: 'Hally McHallface',
-  //   factoryNumber: '4.8.4',
-  //   category: 'WORKSPACES',
-  // },
+    parentId: 'FourthFloor',
+  },
+  Galaxy: {
+    id: 'Galaxy',
+    type: 'AREA',
+
+    displayName: 'Galaxy',
+
+    factoryNumber: null,
+
+    parentId: 'FourthFloor',
+  },
+  Kitchen: {
+    id: 'Kitchen',
+    type: 'AREA',
+
+    displayName: 'Kitchen',
+
+    factoryNumber: null,
+
+    parentId: 'FourthFloor',
+  },
+
+  BikiniBottomLabel: {
+    id: 'BikiniBottomLabel',
+    parentId: 'BikiniBottom',
+
+    type: 'LABEL',
+  },
+  CinemaLabel: {
+    id: 'CinemaLabel',
+    parentId: 'Cinema',
+
+    type: 'LABEL',
+  },
+  HeavenLabel: {
+    id: 'HeavenLabel',
+    parentId: 'Heaven',
+
+    type: 'LABEL',
+  },
+  GalaxyLabel: {
+    id: 'GalaxyLabel',
+    parentId: 'Galaxy',
+
+    type: 'LABEL',
+  },
+  KitchenLabel: {
+    id: 'KitchenLabel',
+    parentId: 'Kitchen',
+
+    type: 'LABEL',
+  },
   Jungle: {
     id: 'Jungle',
     bookable: 'BOOKABLE',
@@ -259,7 +309,7 @@ export const rooms = {
     factoryNumber: '4.6 / 4.7',
     category: 'LEARNING_UNITS',
 
-    parentId: 'fourthFloor',
+    parentId: 'FourthFloor',
     type: 'ROOM',
 
     capacity: 35,
@@ -272,7 +322,7 @@ export const rooms = {
     factoryNumber: '4.11.4',
     category: 'LEARNING_UNITS',
 
-    parentId: 'fourthFloor',
+    parentId: 'FourthFloor',
     type: 'ROOM',
 
     capacity: 25,
@@ -286,7 +336,7 @@ export const rooms = {
     factoryNumber: '4.11.2',
     category: 'LEARNING_UNITS',
 
-    parentId: 'fourthFloor',
+    parentId: 'FourthFloor',
     type: 'ROOM',
 
     capacity: 20,
@@ -299,7 +349,7 @@ export const rooms = {
     factoryNumber: '5.7',
     category: 'LEARNING_UNITS',
 
-    parentId: 'fifthFloor',
+    parentId: 'FifthFloor',
     type: 'ROOM',
 
     capacity: 50,
@@ -312,7 +362,7 @@ export const rooms = {
     factoryNumber: '4.11.7',
     category: 'LEARNING_UNITS',
 
-    parentId: 'fourthFloor',
+    parentId: 'FourthFloor',
     type: 'ROOM',
 
     capacity: 25,
@@ -325,7 +375,7 @@ export const rooms = {
     factoryNumber: '4.11.6',
     category: 'LEARNING_UNITS',
 
-    parentId: 'fourthFloor',
+    parentId: 'FourthFloor',
     type: 'ROOM',
     capacity: 25,
   },
@@ -337,7 +387,7 @@ export const rooms = {
     factoryNumber: '4.2.1',
     category: 'SILENT_SPACE',
 
-    parentId: 'fourthFloor',
+    parentId: 'FourthFloor',
     type: 'ROOM',
   },
   Spock: {
@@ -348,7 +398,7 @@ export const rooms = {
     factoryNumber: '4.11.3',
     category: 'PROJECT_ROOM',
 
-    parentId: 'fourthFloor',
+    parentId: 'FourthFloor',
     type: 'ROOM',
   },
   Spongebob: {
@@ -359,7 +409,7 @@ export const rooms = {
     factoryNumber: '4.1.6',
     category: 'PROJECT_ROOM',
 
-    parentId: 'fourthFloor',
+    parentId: 'FourthFloor',
     type: 'ROOM',
   },
   Patrick: {
@@ -370,7 +420,7 @@ export const rooms = {
     factoryNumber: '4.1.5',
     category: 'PROJECT_ROOM',
 
-    parentId: 'fourthFloor',
+    parentId: 'FourthFloor',
     type: 'ROOM',
   },
   MrKrabs: {
@@ -382,7 +432,7 @@ export const rooms = {
     factoryNumber: '4.1.3',
     category: 'PROJECT_ROOM',
 
-    parentId: 'fourthFloor',
+    parentId: 'FourthFloor',
     type: 'ROOM',
   },
   Plankton: {
@@ -393,7 +443,7 @@ export const rooms = {
     factoryNumber: '4.1.2',
     category: 'PROJECT_ROOM',
 
-    parentId: 'fourthFloor',
+    parentId: 'FourthFloor',
     type: 'ROOM',
   },
   Squidward: {
@@ -404,7 +454,7 @@ export const rooms = {
     factoryNumber: '4.1.4',
     category: 'PROJECT_ROOM',
 
-    parentId: 'fourthFloor',
+    parentId: 'FourthFloor',
     type: 'ROOM',
   },
   Peace: {
@@ -415,7 +465,7 @@ export const rooms = {
     factoryNumber: '4.8.5',
     category: 'PROJECT_ROOM',
 
-    parentId: 'fourthFloor',
+    parentId: 'FourthFloor',
     type: 'ROOM',
   },
   Roomy: {
@@ -426,7 +476,7 @@ export const rooms = {
     factoryNumber: '4.8.3',
     category: 'PROJECT_ROOM',
 
-    parentId: 'fourthFloor',
+    parentId: 'FourthFloor',
     type: 'ROOM',
   },
   Void: {
@@ -437,7 +487,7 @@ export const rooms = {
     factoryNumber: '4.3.2',
     category: 'WORKSHOP',
 
-    parentId: 'fourthFloor',
+    parentId: 'FourthFloor',
     type: 'ROOM',
   },
   EightBit: {
@@ -449,7 +499,7 @@ export const rooms = {
     factoryNumber: '4.11.8',
     category: 'STUDIO',
 
-    parentId: 'fourthFloor',
+    parentId: 'FourthFloor',
     type: 'ROOM',
     capacity: 2,
   },
@@ -461,7 +511,7 @@ export const rooms = {
     factoryNumber: '4.4',
     category: 'TEAM_HQ',
 
-    parentId: 'fourthFloor',
+    parentId: 'FourthFloor',
     type: 'ROOM',
   },
   Cognito: {
@@ -472,7 +522,7 @@ export const rooms = {
     factoryNumber: '4.4.2',
     category: 'TEAM_HQ',
 
-    parentId: 'fourthFloor',
+    parentId: 'FourthFloor',
     type: 'ROOM',
   },
   Nymeria: {
@@ -483,7 +533,7 @@ export const rooms = {
     factoryNumber: '4.4.3',
     category: 'TEAM_HQ',
 
-    parentId: 'fourthFloor',
+    parentId: 'FourthFloor',
     type: 'ROOM',
   },
   AFF: {
@@ -494,7 +544,7 @@ export const rooms = {
     factoryNumber: '4.4.4',
     category: 'TEAM_HQ',
 
-    parentId: 'fourthFloor',
+    parentId: 'FourthFloor',
     type: 'ROOM',
   },
   Otterspace: {
@@ -505,7 +555,7 @@ export const rooms = {
     factoryNumber: '4.4.5',
     category: 'TEAM_HQ',
 
-    parentId: 'fourthFloor',
+    parentId: 'FourthFloor',
     type: 'ROOM',
   },
   SixMinutes: {
@@ -516,7 +566,7 @@ export const rooms = {
     factoryNumber: '4.4.1',
     category: 'TEAM_HQ',
 
-    parentId: 'fourthFloor',
+    parentId: 'FourthFloor',
     type: 'ROOM',
   },
   Kick: {
@@ -527,7 +577,7 @@ export const rooms = {
     factoryNumber: null,
     category: 'OFFICE_BOOTH',
 
-    parentId: 'fourthFloor',
+    parentId: 'FourthFloor',
     type: 'ROOM',
     capacity: 1,
   },
@@ -539,7 +589,7 @@ export const rooms = {
     factoryNumber: null,
     category: 'OFFICE_BOOTH',
 
-    parentId: 'fourthFloor',
+    parentId: 'FourthFloor',
     type: 'ROOM',
     capacity: 1,
   },
@@ -551,7 +601,7 @@ export const rooms = {
     factoryNumber: null,
     category: 'OFFICE_BOOTH',
 
-    parentId: 'fourthFloor',
+    parentId: 'FourthFloor',
     type: 'ROOM',
     capacity: 1,
   },
@@ -563,18 +613,106 @@ export const rooms = {
     factoryNumber: null,
     category: 'OFFICE_BOOTH',
 
-    parentId: 'fourthFloor',
+    parentId: 'FourthFloor',
     type: 'ROOM',
     capacity: 1,
   },
-  // Galaxy: {
-  //   id: 'Galaxy',
-  //   bookable: 'UNBOOKABLE',
-
-  //   displayName: 'Galaxy',
-  //   factoryNumber: null,
-  //   category: 'WORKSPACES',
-  // },
+  FourthFloorStairs: {
+    id: 'FourthFloorStairs',
+    parentId: 'FourthFloor',
+    type: 'ICON',
+    category: 'NAVIGATION',
+  },
+  FourthFloorStairs2: {
+    id: 'FourthFloorStairs2',
+    parentId: 'FourthFloor',
+    type: 'ICON',
+    category: 'NAVIGATION',
+  },
+  FourthFloorStairs3: {
+    id: 'FourthFloorStairs3',
+    parentId: 'FourthFloor',
+    type: 'ICON',
+    category: 'NAVIGATION',
+  },
+  FourthFloorStairs4: {
+    id: 'FourthFloorStairs4',
+    parentId: 'FourthFloor',
+    type: 'ICON',
+    category: 'NAVIGATION',
+  },
+  FifthFloorStairs: {
+    id: 'FifthFloorStairs',
+    parentId: 'FifthFloor',
+    type: 'ICON',
+    category: 'NAVIGATION',
+  },
+  FifthFloorStairs2: {
+    id: 'FifthFloorStairs2',
+    parentId: 'FifthFloor',
+    type: 'ICON',
+    category: 'NAVIGATION',
+  },
+  FifthFloorStairs3: {
+    id: 'FifthFloorStairs3',
+    parentId: 'FifthFloor',
+    type: 'ICON',
+    category: 'NAVIGATION',
+  },
+  FourthFloorElevator: {
+    id: 'FourthFloorElevator',
+    parentId: 'FourthFloor',
+    type: 'ICON',
+    category: 'NAVIGATION',
+  },
+  FifthFloorElevator: {
+    id: 'FifthFloorElevator',
+    parentId: 'FifthFloor',
+    type: 'ICON',
+    category: 'NAVIGATION',
+  },
+  FourthFloorEntrance: {
+    id: 'FourthFloorEntrance',
+    parentId: 'FourthFloor',
+    type: 'ICON',
+    category: 'NAVIGATION',
+  },
+  FifthFloorEntrance: {
+    id: 'FifthFloorEntrance',
+    parentId: 'FifthFloor',
+    type: 'ICON',
+    category: 'NAVIGATION',
+  },
+  FourthFloorRestrooms1Label: {
+    id: 'FourthFloorRestrooms1Label',
+    parentId: 'FourthFloorRestrooms1',
+    type: 'ICON',
+    category: 'NAVIGATION',
+  },
+  FourthFloorRestrooms2Label: {
+    id: 'FourthFloorRestrooms2Label',
+    parentId: 'FourthFloorRestrooms2',
+    type: 'ICON',
+    category: 'NAVIGATION',
+  },
+  FifthFloorRestrooms1Label: {
+    id: 'FifthFloorRestrooms1Label',
+    parentId: 'FifthFloorRestrooms1',
+    type: 'ICON',
+    category: 'NAVIGATION',
+  },
+  FifthFloorRestrooms2Label: {
+    id: 'FifthFloorRestrooms2Label',
+    parentId: 'FifthFloorRestrooms2',
+    type: 'ICON',
+    category: 'NAVIGATION',
+  },
+  FifthFloorRestrooms3Label: {
+    id: 'FifthFloorRestrooms3Label',
+    parentId: 'FifthFloorRestrooms2',
+    type: 'ICON',
+    category: 'NAVIGATION',
+  },
   FourthFloorRestrooms1: {
     id: 'FourthFloorRestrooms1',
     bookable: 'UNBOOKABLE',
@@ -583,7 +721,7 @@ export const rooms = {
     factoryNumber: null,
     category: 'RESTROOMS',
 
-    parentId: 'fourthFloor',
+    parentId: 'FourthFloor',
     type: 'ROOM',
   },
   FourthFloorRestrooms2: {
@@ -594,7 +732,7 @@ export const rooms = {
     factoryNumber: null,
     category: 'RESTROOMS',
 
-    parentId: 'fourthFloor',
+    parentId: 'FourthFloor',
     type: 'ROOM',
   },
   FifthFloorRestrooms1: {
@@ -605,7 +743,7 @@ export const rooms = {
     factoryNumber: null,
     category: 'RESTROOMS',
 
-    parentId: 'fifthFloor',
+    parentId: 'FifthFloor',
     type: 'ROOM',
   },
   FifthFloorRestrooms2: {
@@ -616,7 +754,7 @@ export const rooms = {
     factoryNumber: null,
     category: 'RESTROOMS',
 
-    parentId: 'fifthFloor',
+    parentId: 'FifthFloor',
     type: 'ROOM',
   },
   FifthFloorRestrooms3: {
@@ -627,10 +765,226 @@ export const rooms = {
     factoryNumber: null,
     category: 'RESTROOMS',
 
-    parentId: 'fifthFloor',
+    parentId: 'FifthFloor',
     type: 'ROOM',
   },
-}; // satisfies Record<string, MapEntity>;
+  JungleLabel: {
+    id: 'JungleLabel',
+    type: 'LABEL',
+
+    parentId: 'Jungle',
+  },
+  SpongebobLabel: {
+    id: 'SpongebobLabel',
+    type: 'LABEL',
+
+    parentId: 'Spongebob',
+  },
+  PatrickLabel: {
+    id: 'PatrickLabel',
+    type: 'LABEL',
+
+    parentId: 'Patrick',
+  },
+  SquidwardLabel: {
+    id: 'SquidwardLabel',
+    type: 'LABEL',
+
+    parentId: 'Squidward',
+  },
+  MrKrabsLabel: {
+    id: 'MrKrabsLabel',
+    type: 'LABEL',
+
+    parentId: 'MrKrabs',
+  },
+  PlanktonLabel: {
+    id: 'PlanktonLabel',
+    type: 'LABEL',
+
+    parentId: 'Plankton',
+  },
+  RoomyLabel: {
+    id: 'RoomyLabel',
+    type: 'LABEL',
+
+    parentId: 'Roomy',
+  },
+  RickLabel: {
+    id: 'RickLabel',
+    type: 'LABEL',
+
+    parentId: 'Rick',
+  },
+  MortyLabel: {
+    id: 'MortyLabel',
+    type: 'LABEL',
+
+    parentId: 'Morty',
+  },
+  PeaceLabel: {
+    id: 'PeaceLabel',
+    type: 'LABEL',
+
+    parentId: 'Peace',
+  },
+  SpockLabel: {
+    id: 'SpockLabel',
+    type: 'LABEL',
+
+    parentId: 'Spock',
+  },
+  PaperLabel: {
+    id: 'PaperLabel',
+    type: 'LABEL',
+
+    parentId: 'Paper',
+  },
+  ScissorsLabel: {
+    id: 'ScissorsLabel',
+    type: 'LABEL',
+
+    parentId: 'Scissors',
+  },
+  RockLabel: {
+    id: 'RockLabel',
+    type: 'LABEL',
+
+    parentId: 'Rock',
+  },
+  LizardLabel: {
+    id: 'LizardLabel',
+    type: 'LABEL',
+
+    parentId: 'Lizard',
+  },
+  AFFLabel: {
+    id: 'AFFLabel',
+    type: 'LABEL',
+
+    parentId: 'AFF',
+  },
+  SixMinutesLabel: {
+    id: 'SixMinutesLabel',
+    type: 'LABEL',
+
+    parentId: 'SixMinutes',
+  },
+  TeamRoomLabel: {
+    id: 'TeamRoomLabel',
+    type: 'LABEL',
+
+    parentId: 'TeamRoom',
+  },
+  CognitoLabel: {
+    id: 'CognitoLabel',
+    type: 'LABEL',
+
+    parentId: 'Cognito',
+  },
+  EightBitLabel: {
+    id: 'EightBitLabel',
+    type: 'LABEL',
+
+    parentId: 'EightBit',
+  },
+  EchoLabel: {
+    id: 'EchoLabel',
+    type: 'LABEL',
+
+    parentId: 'Echo',
+  },
+  WarpLabel: {
+    id: 'WarpLabel',
+    type: 'LABEL',
+
+    parentId: 'Warp',
+  },
+  ZuseLabel: {
+    id: 'ZuseLabel',
+    type: 'LABEL',
+
+    parentId: 'Zuse',
+  },
+  AdaLabel: {
+    id: 'AdaLabel',
+    type: 'LABEL',
+
+    parentId: 'Ada',
+  },
+  SilentSpaceLabel: {
+    id: 'SilentSpaceLabel',
+    type: 'LABEL',
+
+    parentId: 'Space',
+  },
+  HiLabel: {
+    id: 'HiLabel',
+    type: 'LABEL',
+
+    parentId: 'Hi',
+  },
+  HatLabel: {
+    id: 'HatLabel',
+    type: 'LABEL',
+
+    parentId: 'Hat',
+  },
+  KickLabel: {
+    id: 'KickLabel',
+    type: 'LABEL',
+
+    parentId: 'Kick',
+  },
+  ClapLabel: {
+    id: 'ClapLabel',
+    type: 'LABEL',
+
+    parentId: 'Clap',
+  },
+  NymeriaLabel: {
+    id: 'NymeriaLabel',
+    type: 'LABEL',
+
+    parentId: 'Nymeria',
+  },
+  OuterspaceLabel: {
+    id: 'OuterspaceLabel',
+    type: 'LABEL',
+
+    parentId: 'Otterspace',
+  },
+  R2Label: {
+    id: 'R2Label',
+    type: 'LABEL',
+
+    parentId: 'R2',
+  },
+  D2Label: {
+    id: 'D2Label',
+    type: 'LABEL',
+
+    parentId: 'D2',
+  },
+  VoidLabel: {
+    id: 'VoidLabel',
+    type: 'LABEL',
+
+    parentId: 'Void',
+  },
+  FourthFloorLabel: {
+    id: 'FourthFloorLabel',
+    type: 'LABEL',
+
+    parentId: 'FourthFloor',
+  },
+  FifthFloorLabel: {
+    id: 'FifthFloorLabel',
+    type: 'LABEL',
+
+    parentId: 'FifthFloor',
+  },
+}; // satisfies Record<AssetId, MapEntity>;
 
 export const RoomCategoryData = {
   PROJECT_ROOM: {
@@ -644,6 +998,8 @@ export const RoomCategoryData = {
     bookingModeColor: '#D9D9D9',
     displayName: 'Office booth',
     showInLegend: true,
+
+    labelBookingModeColor: '#222',
   },
   TEAM_HQ: {
     mapModeColor: '#BEFBCF',
@@ -680,6 +1036,8 @@ export const RoomCategoryData = {
     bookingModeColor: 'transparent',
     displayName: 'Silent space',
     showInLegend: false,
+
+    labelBookingModeColor: '#222',
   },
   WORKSPACES: {
     mapModeColor: 'transparent',
@@ -739,7 +1097,7 @@ export const RoomBookableData = {
     showInLegend: false,
   },
   BOOKED_BY_SELF: {
-    color: '#9f6aaf',
+    color: '#ce49fa',
     displayName: 'You have this room',
     showInLegend: true,
   },

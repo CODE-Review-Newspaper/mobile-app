@@ -1,28 +1,19 @@
-import { FontAwesome } from '@expo/vector-icons';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { useCallback, useContext, useEffect, useRef, useState } from 'react';
-import { Dimensions, Pressable, ScrollView, StyleSheet } from 'react-native';
+import { useContext, useRef, useState } from 'react';
+import { Pressable, ScrollView, StyleSheet } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
-import Sparkles from '../assets/icons/sparkles.svg';
 import { Text, View } from '../components/Themed';
 import TimePicker from '../components/TimePicker';
 import CalendarContext from '../contexts/calendar.context';
 import PreferencesContext from '../contexts/preferences.context';
 import { RoomEntity } from '../data/rooms.data';
-import {
-  getTimepickerTitle,
-  MAX_TIMEPICKER_RANGE_HOURS,
-} from '../data/time.data';
+import { getTimepickerTitle } from '../data/time.data';
 import { DEFAULT_ROOM_VIEW, RoomView } from '../data/views.data';
 import { RootTabScreenProps } from '../types';
 
 dayjs.extend(relativeTime);
-
-// const cardColor = "white"
-// const textColor = "#222"
-// const borderColor = "#ccc"
 
 const backgroundColor = '#111';
 const cardColor = '#222';

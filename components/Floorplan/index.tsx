@@ -144,7 +144,43 @@ export default function Floorplan({
                 const isAvailable = !isUnavailable;
 
                 const color = (() => {
-                  if (!(i.id in rooms)) return 'black';
+                  if (!(i.id in rooms)) return 'red';
+
+                  if (rooms[i.id].type === 'ICON') {
+                    if (displayMode.id !== 'MAP_MODE') {
+                      return 'transparent';
+                    }
+
+                    return '#222';
+                  }
+
+                  if (rooms[i.id].type === 'LABEL') {
+                    const parent = rooms[rooms[i.id].parentId];
+
+                    const sache =
+                      RoomCategoryData[parent.category]?.labelBookingModeColor;
+
+                    if (sache != null) {
+                      return sache;
+                    }
+
+                    if (parent.type === 'FLOOR') {
+                      return 'white';
+                    }
+
+                    if (displayMode.id === 'HIGHLIGHT_MODE') {
+                      return 'transparent';
+                    }
+
+                    if (displayMode.id === 'BOOKING_MODE') {
+                      return '#222';
+                    }
+
+                    if (displayMode.id === 'MAP_MODE') {
+                      return '#222';
+                    }
+                    return 'red';
+                  }
 
                   const roomCategory = RoomCategoryData[rooms[i.id].category];
 
