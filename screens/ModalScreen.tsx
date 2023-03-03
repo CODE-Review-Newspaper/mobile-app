@@ -243,10 +243,10 @@ export default function ModalScreen({
           top: 16,
 
           backgroundColor: 'rgba(0, 0, 0, 0.04)',
-          borderRadius: 4,
+          borderRadius: 999,
         }}
       >
-        <FontAwesome name="close" style={{ color: '#222', fontSize: 16 }} />
+        <FontAwesome name="close" style={{ color: '#222', fontSize: 20 }} />
       </Pressable>
       {(() => {
         if (state === 'LOADING')
