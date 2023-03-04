@@ -8,6 +8,7 @@
 import Slider, { SliderProps } from '@react-native-community/slider';
 import debounce from 'lodash/debounce';
 import { useCallback, useState } from 'react';
+import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
 
 import { View } from './Themed';
 
@@ -41,6 +42,11 @@ export default function SegmentedSlider({
 
   function startSlide() {
     setIsSliding(true);
+
+    ReactNativeHapticFeedback.trigger('impactLight', {
+      enableVibrateFallback: false,
+      ignoreAndroidSystemSettings: false,
+    });
   }
   function endSlide() {
     setIsSliding(false);

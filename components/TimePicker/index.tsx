@@ -184,7 +184,7 @@ export default function TimePicker({
             color: 'white',
             marginHorizontal: 16,
             position: 'absolute',
-            right: 48 + 8 + 46 + 8 + 10,
+            right: 48 + 56,
             top: 16,
           }}
         >
@@ -194,7 +194,7 @@ export default function TimePicker({
         <Pressable
           style={({ pressed }) => [
             styles.nowButton,
-            { position: 'absolute', right: 48 + 8, top: 10 },
+            { position: 'absolute', right: borderOffset, top: 10 },
             pressed ? { transform: [{ scale: 0.95 }] } : {},
           ]}
           onPress={goToToday}
@@ -240,7 +240,7 @@ export default function TimePicker({
               {
                 position: 'absolute',
                 top: 10,
-                right: borderOffset,
+                right: borderOffset + 64 + 8,
               },
             ]}
           >
