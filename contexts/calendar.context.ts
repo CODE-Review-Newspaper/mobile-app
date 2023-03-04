@@ -32,6 +32,7 @@ export interface CalendarContextType {
 
   goToPrevDay: () => any;
   goToNextDay: () => any;
+  goToToday: () => any;
 
   canGoToPrevDay: boolean;
   canGoToNextDay: boolean;

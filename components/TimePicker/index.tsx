@@ -30,6 +30,7 @@ export interface TimePickerProps {
   canGoToNextDay: boolean;
   goToPrevDay: () => any;
   goToNextDay: () => any;
+  selectedDate: dayjs.Dayjs;
 }
 export default function TimePicker({
   style,
@@ -41,8 +42,9 @@ export default function TimePicker({
   canGoToNextDay,
   goToPrevDay,
   goToNextDay,
+  selectedDate,
 }: TimePickerProps) {
-  const { userSchedule, startDate } = useContext(CalendarContext);
+  const { userSchedule, startDate, goToToday } = useContext(CalendarContext);
 
   const { timePickerMode } = useContext(PreferencesContext);
 
@@ -154,6 +156,52 @@ export default function TimePicker({
   return (
     <View style={[styles.datePicker, style]}>
       <View style={styles.upperRow}>
+        <View
+          style={{
+            backgroundColor: 'transparent',
+            flexDirection: 'column',
+            top: 6,
+            position: 'absolute',
+            left: 48 + 8,
+          }}
+        >
+          <Text style={{ fontSize: 16, fontWeight: '700', color: '#7c7c7c' }}>
+            {selectedDate.format(
+              Dimensions.get('window').width >= 430
+                ? 'ddd, MMM D'
+                : 'ddd, MMM D'
+            )}
+          </Text>
+          <Text style={{ fontSize: 16, fontWeight: '700', color: '#7c7c7c' }}>
+            {selectedDate.format('H:mm')}
+          </Text>
+        </View>
+
+        <Text
+          style={{
+            fontSize: 16,
+            fontWeight: '900',
+            color: 'white',
+            marginHorizontal: 16,
+            position: 'absolute',
+            right: 48 + 8 + 46 + 8 + 10,
+            top: 16,
+          }}
+        >
+          {selectedDate.from(dayjs())}
+        </Text>
+
+        <Pressable
+          style={({ pressed }) => [
+            styles.nowButton,
+            { position: 'absolute', right: 48 + 8, top: 10 },
+            pressed ? { transform: [{ scale: 0.95 }] } : {},
+          ]}
+          onPress={goToToday}
+        >
+          <Text style={styles.nowButtonText}>NOW</Text>
+        </Pressable>
+
         {canGoToPrevDay && (
           <Pressable
             onPress={goToPrevDay}
@@ -161,7 +209,7 @@ export default function TimePicker({
               overlayElementsStyles.smallOverlaySquare,
               {
                 position: 'absolute',
-                top: 0,
+                top: 10,
                 left: borderOffset,
               },
             ]}
@@ -172,7 +220,8 @@ export default function TimePicker({
             />
           </Pressable>
         )}
-        <View style={overlayElementsStyles.smallOverlayElement}>
+
+        {/* <View style={overlayElementsStyles.smallOverlayElement}>
           <Text
             style={[
               overlayElementsStyles.smallOverlayText,
@@ -181,7 +230,8 @@ export default function TimePicker({
           >
             {title}
           </Text>
-        </View>
+        </View> */}
+
         {canGoToNextDay && (
           <Pressable
             onPress={goToNextDay}
@@ -189,7 +239,7 @@ export default function TimePicker({
               overlayElementsStyles.smallOverlaySquare,
               {
                 position: 'absolute',
-                top: 0,
+                top: 10,
                 right: borderOffset,
               },
             ]}
@@ -364,5 +414,20 @@ const styles = StyleSheet.create({
     fontWeight: '700',
 
     color: 'white',
+  },
+  nowButton: {
+    alignItems: 'center',
+    justifyContent: 'center',
+
+    height: 32,
+    paddingHorizontal: 10,
+
+    backgroundColor: 'white',
+    borderRadius: 4,
+  },
+  nowButtonText: {
+    fontSize: 16,
+    fontWeight: '900',
+    color: '#222',
   },
 });

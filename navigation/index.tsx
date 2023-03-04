@@ -109,6 +109,9 @@ function RootNavigator() {
   function getSelectedDate() {
     return startOfQuarterHour(dayjs());
   }
+  function getEndDate(from = dayjs()) {
+    return from.add(DEFAULT_MEETING_DURATION_MINS, 'minutes');
+  }
 
   function goToPrevDay() {
     setStartDate((prev) => prev.subtract(1, 'day'));
@@ -120,6 +123,14 @@ function RootNavigator() {
     setEndDate((prev) => prev.add(1, 'day'));
     setSelectedDate((prev) => prev.add(1, 'day'));
   }
+  function goToToday() {
+    setStartDate(getStartDate());
+
+    const newSelectedDate = getSelectedDate();
+
+    setSelectedDate(newSelectedDate);
+    setEndDate(newSelectedDate);
+  }
 
   const [selectedRoom, setSelectedRoom] =
     useState<CalendarContextType['selectedRoom']>(null);
@@ -130,7 +141,7 @@ function RootNavigator() {
     CalendarContextType['selectedDate']
   >(getSelectedDate());
   const [endDate, setEndDate] = useState<CalendarContextType['endDate']>(
-    selectedDate.add(DEFAULT_MEETING_DURATION_MINS, 'minutes')
+    getEndDate(selectedDate)
   );
   const [roomSchedules, setRoomSchedules] = useState<
     CalendarContextType['roomSchedules']
@@ -263,6 +274,7 @@ function RootNavigator() {
     loadUserSchedule,
     goToPrevDay,
     goToNextDay,
+    goToToday,
     canGoToPrevDay,
     canGoToNextDay,
     ...roomScheduleState,

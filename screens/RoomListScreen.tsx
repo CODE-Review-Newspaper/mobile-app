@@ -407,6 +407,7 @@ export default function RoomListScreen({
               backgroundColor: 'transparent',
             }}
             title={getTimepickerTitle(selectedDate)}
+            selectedDate={selectedDate}
             value={
               selectedDate.diff(startDate, 'hours') / timePickerMode.rangeHours
             }

@@ -250,6 +250,7 @@ export default function TabOneScreen({
               backgroundColor: 'transparent',
             }}
             title={getTimepickerTitle(selectedDate)}
+            selectedDate={selectedDate}
             value={
               selectedDate.diff(startDate, 'hours') / timePickerMode.rangeHours
             }
