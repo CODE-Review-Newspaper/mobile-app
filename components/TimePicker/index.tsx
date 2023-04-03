@@ -18,7 +18,7 @@ import overlayElementsStyles from '../overlayUI/overlayElements.styles';
 import SegmentedSlider from '../SegmentedSlider';
 import { Text, View } from '../Themed';
 
-function handleOverlappingSegments(segments: any[]) {}
+function handleOverlappingSegments(segments: any[]) { }
 
 export interface TimePickerProps {
   style: StyleProp<ViewStyle>;
@@ -91,36 +91,36 @@ export default function TimePicker({
   const segments =
     meetingSegments.length > 0
       ? meetingSegments.flatMap((i, idx) => {
-          const isLastSegment = idx === meetingSegments.length - 1;
+        const isLastSegment = idx === meetingSegments.length - 1;
 
-          const prevDate =
-            idx === 0 ? startDate.startOf('day') : meetingSegments[idx - 1].end;
+        const prevDate =
+          idx === 0 ? startDate.startOf('day') : meetingSegments[idx - 1].end;
 
-          const inBetweenSegment = {
-            lengthMins: i.start.diff(prevDate, 'minutes'),
+        const inBetweenSegment = {
+          lengthMins: i.start.diff(prevDate, 'minutes'),
+          type: 'BOOKABLE',
+        } as const;
+
+        if (isLastSegment) {
+          const finalSegment = {
+            lengthMins: startDate
+              .add(timePickerMode.rangeHours, 'hours')
+              .diff(i.end, 'minutes'),
             type: 'BOOKABLE',
           } as const;
 
-          if (isLastSegment) {
-            const finalSegment = {
-              lengthMins: startDate
-                .add(timePickerMode.rangeHours, 'hours')
-                .diff(i.end, 'minutes'),
-              type: 'BOOKABLE',
-            } as const;
-
-            return [inBetweenSegment, i, finalSegment];
-          }
-          return [inBetweenSegment, i];
-        })
+          return [inBetweenSegment, i, finalSegment];
+        }
+        return [inBetweenSegment, i];
+      })
       : [
-          {
-            // start: dayjs(),
-            // end: dayjs().add(timePickerMode.rangeHours, 'nhours'),
-            lengthMins: timePickerMode.rangeHours * 60,
-            type: 'BOOKABLE',
-          } as const,
-        ];
+        {
+          // start: dayjs(),
+          // end: dayjs().add(timePickerMode.rangeHours, 'nhours'),
+          lengthMins: timePickerMode.rangeHours * 60,
+          type: 'BOOKABLE',
+        } as const,
+      ];
 
   const borderOffset = 16; // 26;
 
@@ -130,28 +130,28 @@ export default function TimePicker({
 
   const segmentss = canGoToPrevDay
     ? [
-        {
-          start: startDate,
-          end: startDate.add(timePickerMode.rangeHours, 'hours'),
-          lengthMins: timePickerMode.rangeHours * 60,
-          type: 'BOOKABLE',
-        } as const,
-      ]
+      {
+        start: startDate,
+        end: startDate.add(timePickerMode.rangeHours, 'hours'),
+        lengthMins: timePickerMode.rangeHours * 60,
+        type: 'BOOKABLE',
+      } as const,
+    ]
     : [
-        {
-          start: startDate,
-          end: startDate.add(minsFromStartOfDay, 'minutes'),
-          lengthMins: minsFromStartOfDay,
-          type: 'UNBOOKABLE',
-          isLowerLimit: true,
-        } as const,
-        {
-          start: startDate.add(minsFromStartOfDay, 'minutes'),
-          end: startDate.add(timePickerMode.rangeHours, 'hours'),
-          lengthMins: timePickerMode.rangeHours * 60 - minsFromStartOfDay,
-          type: 'BOOKABLE',
-        } as const,
-      ];
+      {
+        start: startDate,
+        end: startDate.add(minsFromStartOfDay, 'minutes'),
+        lengthMins: minsFromStartOfDay,
+        type: 'UNBOOKABLE',
+        isLowerLimit: true,
+      } as const,
+      {
+        start: startDate.add(minsFromStartOfDay, 'minutes'),
+        end: startDate.add(timePickerMode.rangeHours, 'hours'),
+        lengthMins: timePickerMode.rangeHours * 60 - minsFromStartOfDay,
+        type: 'BOOKABLE',
+      } as const,
+    ];
 
   return (
     <View style={[styles.datePicker, style]}>
