@@ -96,7 +96,7 @@ export default function userLoginController() {
     const authState = new AuthSession.TokenResponse(authConfig);
 
     if (authState == null) return null;
-
+    
     return authState;
   }
 
